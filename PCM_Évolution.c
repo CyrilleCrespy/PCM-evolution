@@ -86,9 +86,16 @@ int choixNomDeFichier()
 		scanf("%hhu", &choix) ;
 		if (choix == 1)
 		{
-			remove(nomDeFichier) ;
-			printf("Fichier supprim%s.\n", é) ;
-			return 1 ;
+			if (remove(nomDeFichier) == 0)
+			{
+				printf("Fichier supprim%s.\n", é) ;
+				return 1 ;
+			}
+			else
+			{
+				perror("Suppression du fichier impossible.\n") ;
+				return 0 ;
+			}
 		}
 		else
 		{
@@ -108,6 +115,7 @@ int verificationExistanceDuFichier ()
 	fichier = fopen(nomDeFichier, "r") ;
 	if (fichier != NULL)
 	{
+		fclose(fichier) ;
 		return 1 ; //Fiche du même nom déjà existante
 	}
 	else
