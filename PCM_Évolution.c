@@ -118,8 +118,8 @@ int verificationExistanceDuFichier ()
 
 int entreeStats(char *caracteristiques[])
 {
-	//printf("%s, %d", caracteristiques[6], *caracteristiques[6]) ;
-	int compteurDeNotes, note = 0 ;
+	int compteurDeNotes = 0 ;
+	int note = 0 ;
 	while(compteurDeNotes < 14)
 	{
 		while(note < 50 || note > 85)
