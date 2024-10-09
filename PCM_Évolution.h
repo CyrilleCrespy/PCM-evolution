@@ -9,7 +9,6 @@ int calculAmelioration(int caracteristique) ;
 void enregistrer(int coureur[]) ;
 
 #define Linux
-
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"
