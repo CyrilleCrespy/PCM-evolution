@@ -207,7 +207,7 @@ coureur[12], é, é, coureur[13]) ;
 int calculAmelioration(int caracteristique)
 {
 	int choix = 0 ;	
-	printf("Tu as actuellement %d dans cette caractéristique.\n", caracteristique) ;
+	printf("Tu as actuellement %s dans cette caractéristique.\n", caracteristique) ;
 	if (caracteristique < 60)
 	{
 		printf("Veux-tu d%spenser 500 points de cha%sne pour un point de plus ?\n", é, î) ;
