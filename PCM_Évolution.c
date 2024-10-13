@@ -24,18 +24,16 @@ char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibili
 FILE* fichier = NULL ;
 char paves[10] ;
 int points ;
-char *types[7] = {"Courses par étapes", "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-"Baroud", "Classiques du Nord"} ;
 
 int main(int argc, char *argv[])
 {
-	static char paves[10] ;
+	char paves[10] ;
 	sprintf(paves, "pav%ss", é) ;
-	static char acceleration[20] ;
+	char acceleration[20] ;
 	sprintf(acceleration, "acc%sl%sration", é, é) ;
-	static char resistance[15] ;
+	char resistance[15] ;
 	sprintf(resistance, "r%ssistance", é) ;
-	static char recuperation[20] ;
+	char recuperation[20] ;
 	sprintf(recuperation, "r%scup%sration", é, é) ;
 	unsigned char choix = 5 ;
 	char *caracteristiques[14] = {"plaine", "montagne", "moyenne montagne", "vallon",\
@@ -120,6 +118,11 @@ int choixStyle()
 
 	int style ;
 	int compteurDeNotes = 0 ;
+
+	char cpe[30] ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques du Nord"} ;
 
 	system(clear) ; //Appel système différent selon le SE.
 	printf("Veuillez choisir un style principal.\n") ;
@@ -217,6 +220,11 @@ int modification(int nouveau)
 
 	int maximum[14] = {0} ;
 
+	char cpe[30] ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques du Nord"} ;
+
 	fichier = fopen(nomDeFichier, "r") ;
 	fscanf(fichier, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d", &style, &coureur[0], &coureur[1], &coureur[2],\
 &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7], &coureur[8], &coureur[9], &coureur[10],\
@@ -230,7 +238,7 @@ int modification(int nouveau)
 	if(nouveau == 1)
 	{
 		points = 50 ;
-		printf("En tant que nouveau coureur, tu as droit à 50 points.\n") ;
+		printf("En tant que nouveau coureur, tu as droit %s 50 points.\n", à) ;
 	}
 
 	else
