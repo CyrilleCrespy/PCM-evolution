@@ -1,5 +1,5 @@
 /* Ceci est un programme développé spécifiquement pour les besoins des carrières collaboratives
- * sur Pro cycling manager. Il permet de créer des fiches de coureurs, et de savoir quelles évolutions
+ * sur Pro cycling manager. Il permet de créer des fiches de coureur, et de savoir quelles évolutions
  * sont possibles en fonction du nombre de points de chaînes disponibles pour l'utilisateur.
 Copyright (C) 2024  Cyrille Crespy
 
@@ -24,6 +24,8 @@ char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibili
 FILE* fichier = NULL ;
 char paves[10] ;
 int points ;
+char *types[7] = {"Courses par étapes", "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques du Nord"} ;
 
 int main(int argc, char *argv[])
 {
@@ -69,14 +71,16 @@ int creation(char *caracteristiques[])
 	{
 		fichierOK = choixNomDeFichier(caracteristiques) ;
 	}
-	entreeStats(caracteristiques) ;
+	choixStyle() ;
+	entreeStats() ;
+	return 0 ;
 }
 
 int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
 	printf("Veuillez choisir un nom de fichier.\n") ;
-	scanf("%s", &nomDeFichier) ;
+	scanf("%s", &nomDeFichier[0]) ;
 	int fichierOuvert = verificationExistanceDuFichier(nomDeFichier) ;
 	if (fichierOuvert == 1)
 	{
@@ -109,6 +113,59 @@ int choixNomDeFichier()
 	}
 }
 
+int choixStyle()
+{
+	int principal = -1;
+	int secondaire = -1;
+
+	int style ;
+	int compteurDeNotes = 0 ;
+
+	system(clear) ; //Appel système différent selon le SE.
+	printf("Veuillez choisir un style principal.\n") ;
+	while (compteurDeNotes < 7)
+	{
+		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
+		compteurDeNotes ++ ;
+	}
+	while (principal <= 0 || principal > 14) 
+	{
+		scanf("%d", &principal) ;
+		if (principal <= 0 || principal > 14)
+		{
+			printf("Valeur invalide.\n") ;
+		}
+	}
+	principal = ((principal -1) * 14) ; //On se prépare à former la variable qui cumulera les deux.
+	compteurDeNotes = 0 ; //On propose à nouveau tous les choix.
+	
+	system(clear) ;
+	printf("Veuillez choisir un style secondaire.\n") ;
+	while (compteurDeNotes < 7)
+	{	
+		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
+		compteurDeNotes ++ ;
+	}
+	while (secondaire + 1 <= 0 || secondaire + 1 > 15)
+	{
+		scanf("%d", &secondaire) ;
+		if (secondaire + 1 <=0 || secondaire + 1 > 15)
+		{
+			printf("Valeur invalide.\n") ;
+		}
+	}
+
+	style = principal + secondaire ;
+	printf("Le stye a été correctement entré. Code : %d\n", style) ;
+	printf("Appuyez sur Entrée pour continuer.\n") ;
+	getchar() ;
+	system(clear) ;
+	fichier = fopen(nomDeFichier, "w+") ;
+	fprintf(fichier, "%d\n", style) ;
+	fclose(fichier) ;
+	return 0 ;
+}
+
 int verificationExistanceDuFichier ()
 {
 	FILE* fichier = NULL ;
@@ -124,66 +181,81 @@ int verificationExistanceDuFichier ()
 	}
 }
 
-int entreeStats(char *caracteristiques[])
+int entreeStats()
 {
 	int compteurDeNotes = 0 ;
-	int note = 0 ;
 	while(compteurDeNotes < 14)
 	{
-		while(note < 50 || note > 85)
-		{
-			printf("Entrez la note de %s, qui doit %stre entre 50 et 85.\n", caracteristiques[compteurDeNotes], ê) ;
-			getc(stdin) ;
-			scanf("%d", &note) ;
-			printf("Note de %s : %d enregistr%se.\n", caracteristiques[compteurDeNotes], note, é) ;
-			if (note < 50 || note > 85)
-			{
-				printf("Note non valide. veuillez s%slectionner entre 50 et 85 inclus.\n", é) ;
-			}
-			else
-			{
-				fichier = fopen(nomDeFichier, "a") ;
-				fprintf(fichier, "%d\n", note) ;
-				fclose(fichier) ;
-			}
-		}
+		fichier = fopen(nomDeFichier, "a") ;
+		fprintf(fichier, "%d\n", 50) ;
+		fclose(fichier) ;
 		compteurDeNotes ++ ;
-		note = 0 ;
 	}
-	modification() ;
+	modification(1) ;
+	return 0 ;
 }
 
 int demandeNomDeFichier()
 {
 	printf("Veuillez choisir un nom de fichier.\n") ;
-	scanf("%s", &nomDeFichier) ;
-	modification() ;
+	scanf("%s", &nomDeFichier[0]) ;
+	modification(0) ;
+	return 0 ;
 }
 
-int modification()
+int modification(int nouveau)
 {
-	fichier = fopen(nomDeFichier, "r") ;
+	FILE* fichier = NULL ;
+	system(clear) ;
 	int choix = 999 ;
 	points = 0 ;
 	int coureur[14] = {0} ;
-	fscanf(fichier, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d", &coureur[0], &coureur[1], &coureur[2],\
+	int style = 0 ;
+	int principal = 0 ;
+	int secondaire = 0 ;
+	int compteur ;
+
+	int maximum[14] = {0} ;
+
+	fichier = fopen(nomDeFichier, "r") ;
+	fscanf(fichier, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d", &style, &coureur[0], &coureur[1], &coureur[2],\
 &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7], &coureur[8], &coureur[9], &coureur[10],\
 &coureur[11], &coureur[12], &coureur[13]) ;
+	principal = style / 14 ;
+	secondaire = (style % 14) - 1 ;
+	fclose(fichier) ;
 
-	printf("Combien de points de cha%sne as-tu ?\n", î) ;
-	scanf("%d", &points) ;
+	printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
+
+	if(nouveau == 1)
+	{
+		points = 50 ;
+		printf("En tant que nouveau coureur, tu as droit à 50 points.\n") ;
+	}
+
+	else
+	{
+		printf("Combien de points d'am%slioration as-tu ?\n", î) ;
+		scanf("%d", &points) ;
+	}
+
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
+	}
 
 	while (choix != 0)
 	{
-		printf("1. Plaine : %d.\n2. Montagne : %d.\n3. Moyenne montagne : %d.\n4. Vallon : %d.\n\
-5. Contre-la-montre : %d.\n6. Prologue : %d.\n7. Pav%ss : %d.\n8. Sprint : %d\n\
-9. Acc%sl%sration : %d.\n10. Descente : %d.\n11. Baroud : %d.\n12. Endurance : %d.\n\
-13. R%ssistance : %d.\n14. R%scup%sration : %d.\n15. Sauvegarder les changements.\n", coureur[0], coureur[1], coureur[2], coureur[3],\
-coureur[4], coureur[5], é, coureur[6], coureur[7], é, é, coureur[8], coureur[9], coureur[10], coureur[11], é,\
-coureur[12], é, é, coureur[13]) ;
-		printf("Tu as %d points de cha%sne restants.\n", points, î) ;
+		printf("1. Plaine : %d (max : %d).\n2. Montagne : %d (max : %d).\n3. Moyenne montagne (max : %d): %d.\n4. Vallon (max : %d): %d.\n\
+5. Contre-la-montre : %d (max : %d).\n6. Prologue : %d (max : %d).\n7. Pav%ss : %d (max : %d).\n8. Sprint : %d (max : %d).\n\
+9. Acc%sl%sration : %d (max : %d).\n10. Descente : %d (max : %d).\n11. Baroud : %d (max : %d).\n12. Endurance : %d (max : %d).\n\
+13. R%ssistance : %d (max : %d).\n14. R%scup%sration : %d (max : %d).\n15. Sauvegarder les changements.\n", coureur[0], maximum[0], coureur[1],\
+maximum[1], coureur[2], maximum[2], coureur[3], maximum[3], coureur[4], maximum[4], coureur[5], maximum[5], é, coureur[6], maximum[6],\
+coureur[7], maximum[7], é, é, coureur[8], maximum[8], coureur[9], maximum[9], coureur[10], maximum[10], coureur[11], maximum[11], é,\
+coureur[12], maximum[12], é, é, coureur[13], maximum[13]) ;
+		printf("Tu as %d points d'am%slioration restants.\n", points, î) ;
 
-		if (points < 500)
+		if (points < 1)
 		{
 			printf("Tu n'as pas assez de points pour am%sliorer ton coureur. %s la prochaine !\n", é, À) ;
 			return 0 ;
@@ -199,17 +271,18 @@ coureur[12], é, é, coureur[13]) ;
 		}
 		else if (choix == 15)
 		{
-			enregistrer(coureur) ;
+			enregistrer(style, coureur) ;
 			return 0 ;
 		}
 		else if (coureur[choix-1] >= 85)
 		{
-			printf("Cette caract%sristique est d%sj%s au maximum.\n", é, é, à) ;
+			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
 			continue ;
 		}
 
 		coureur[choix-1] = calculAmelioration(coureur[choix-1]) ; //La liste commençant à l'indice 0, on compense.
 	}
+	return 0 ;
 }
 
 int calculAmelioration(int caracteristique)
@@ -218,12 +291,12 @@ int calculAmelioration(int caracteristique)
 	printf("Tu as actuellement %d dans cette caract%sristique.\n", caracteristique, é) ;
 	if (caracteristique < 60)
 	{
-		printf("Veux-tu d%spenser 500 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-tu d%spenser 1 point d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 500 ;
+			points -- ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -232,14 +305,14 @@ int calculAmelioration(int caracteristique)
 			return 0 ;
 		}
 	}
-	else if (caracteristique < 65 && points >= 800)
+	else if (caracteristique <= 65 && points >= 800)
 	{
-		printf("Veux-tu d%spenser 800 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-tu d%spenser 2 points d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 800 ;
+			points = points - 2 ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -248,14 +321,14 @@ int calculAmelioration(int caracteristique)
 			return 0 ;
 		}
 	}
-	else if (caracteristique < 70 && points >= 1000)
+	else if (caracteristique <= 70 && points >= 1000)
 	{
-		printf("Veux-tu d%spenser 1000 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-tu d%spenser 3 points d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 1000 ;
+			points = points - 3 ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -264,14 +337,14 @@ int calculAmelioration(int caracteristique)
 			return 0 ;
 		}
 	}
-	else if (caracteristique < 75 && points >= 1500)
+	else if (caracteristique <= 75 && points >= 1500)
 	{
-		printf("Veux-Tu d%spenser 1 500 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-Tu d%spenser 4 points d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 1500 ;
+			points = points - 4 ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -280,14 +353,14 @@ int calculAmelioration(int caracteristique)
 			return 0 ;
 		}
 	}
-	else if (caracteristique < 80 && points >= 2000)
+	else if (caracteristique <= 80 && points >= 2000)
 	{
-		printf("Veux-tu d%spenser 2 000 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-tu d%spenser 5 points d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 2000 ;
+			points = points - 5 ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -298,12 +371,12 @@ int calculAmelioration(int caracteristique)
 	}
 	else if (caracteristique < 85 && points >= 3000)
 	{
-		printf("Veux-tu d%spenser 3 000 points de cha%sne pour un point de plus ?\n", é, î) ;
+		printf("Veux-tu d%spenser 6 d'am%slioration pour un point de plus ?\n", é, î) ;
 		printf("1. Oui\n2. Non\n") ;
 		scanf("%d", &choix) ;
 		if (choix == 1)
 		{
-			points = points - 3000 ;
+			points = points - 6 ;
 			caracteristique ++ ;
 			return caracteristique ;
 		}
@@ -313,16 +386,30 @@ int calculAmelioration(int caracteristique)
 			return 0 ;
 		}
 	}
+	return 0 ;
 }
 
-void enregistrer(int coureur[])
+void enregistrer(int style, int coureur[])
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
+	fprintf(fichier, "%d\n", style) ;
 	int compteurDeNotes = 0 ;
 	while(compteurDeNotes < 14)
 	{
 		fprintf(fichier, "%d\n", coureur[compteurDeNotes]) ;
 		compteurDeNotes ++ ;
 	}
+}
+
+int determinerNotesMax(int principal, int secondaire, int compteur)
+{
+	int maximumDetermine ;
+	int positionInitiale ;
+	fichier = fopen("combinaisons", "r") ;
+	positionInitiale = ((principal) * 42 * 7) + (secondaire) * 42 + (compteur * 3) ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &maximumDetermine) ;
+	fclose(fichier) ;
+	return maximumDetermine ;
 }

@@ -1,14 +1,16 @@
 int creation(char *caracteristiques[]) ; //Choix 1 du menu
 int choixNomDeFichier() ; 
 int verificationExistanceDuFichier() ;
-int entreeStats(char *caracteristiques[]) ;
+int choixStyle() ;
+int entreeStats() ;
 int demandeNomDeFichier() ;
-int modification() ;
+int modification(int points) ;
 int lireStats() ;
-int calculAmelioration(int caracteristique) ;
-void enregistrer(int coureur[]) ;
+int calculAmelioration() ;
+void enregistrer(int style, int coureur[]) ;
+int determinerNotesMax(int principal, int secondaire, int compteur) ;
 
-#define Linux
+#define Windows
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"
@@ -17,6 +19,7 @@ void enregistrer(int coureur[]) ;
 #define À "\xB7"
 #define ê "\x88"
 #define î "\x8C"
+#define clear "cls"
 
 #else //Pour les systèmes d'exploitation normalement constitués
 #define é "é"
@@ -26,4 +29,5 @@ void enregistrer(int coureur[]) ;
 #define ê "Ê"
 #define è "È"
 #define î "î"
+#define clear "clear"
 #endif
