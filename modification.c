@@ -95,7 +95,7 @@ void modification(int nouveau, char *caracteristiques[])
 			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
 		}
 
-		coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, points, maximum, choix) ; //La liste commençant à l'indice 0, on compense.
+		coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix) ; //La liste commençant à l'indice 0, on compense.
 	}
 }
 

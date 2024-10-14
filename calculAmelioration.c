@@ -1,4 +1,4 @@
-int calculAmelioration(int noteActuelle, int limiteMax, int points, int maximum[], int choix)
+int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix)
 {
 	int coutEvolution[50] = {0} ;
 	int augmentationMax = 0 ;
@@ -17,7 +17,7 @@ int calculAmelioration(int noteActuelle, int limiteMax, int points, int maximum[
 			break ;
 		}
 		coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 60) + (noteFictive / 65) + (noteFictive / 70) + (noteFictive / 75) + (noteFictive / 80) ;
-		if (coutEvolution[compteur] > points)
+		if (coutEvolution[compteur] > *points)
 		{
 			continuerBoucle = 0 ;
 			coutEvolution[compteur] = 0 ; //L'achat étant impossible, on passe son coût à 0 pour qu'il ne soit pas proposé.
@@ -42,13 +42,14 @@ int calculAmelioration(int noteActuelle, int limiteMax, int points, int maximum[
 	printf("Augmentation(s) possible(s).\n") ;
 	while (compteur < augmentationMax)
 	{
-		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur, compteur, coutEvolution[compteur - 1], é, à, noteActuelle + compteur) ;
+		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur, compteur, coutEvolution[compteur], é, à, noteActuelle + compteur) ;
 		compteur ++ ;
 	}
 	scanf("%d", &augmentationVoulue) ;
 	if (coutEvolution[augmentationVoulue] != 0)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
+		*points = *points - coutEvolution[compteur] ;
 	}
 	return noteActuelle ;
 }
