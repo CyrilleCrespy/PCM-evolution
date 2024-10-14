@@ -53,7 +53,7 @@ void modification(int nouveau, char *caracteristiques[])
 		scanf("%d", &points) ;
 	}
 	
-	printf("Une %svolution co%ste \n un point jusqu'à la note 60, puis deux points jusqu'à 65, trois jusqu'à 70, quatre jusqu'à 75, cinq jusqu'à 80, puis six.\n", é, û) ;
+	printf("Une %svolution co%ste :\n- 1 point jusqu'%s la note 60.\n- 2 points jusqu'%s 65\n- 3 points jusqu'%s 70\n- quatre points jusqu'%s 75\n- cinq points jusqu'%s 80\n- six points jusqu'%s 85.\n", é, û, é, é, é, é, é) ;
 
 	limiteMax = determinerLimitePotentiel(potentiel) ;
 
