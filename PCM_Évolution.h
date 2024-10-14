@@ -11,7 +11,7 @@ void enregistrer(int style, int coureur[], int potentiel) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
 
-#define Linux
+#define Windows
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"
@@ -20,6 +20,7 @@ int determinerLimitePotentiel(int potentiel) ;
 #define À "\xB7"
 #define ê "\x88"
 #define î "\x8C"
+#define û "\x96"
 #define clear "cls"
 
 #else //Pour les systèmes d'exploitation normalement constitués
@@ -30,5 +31,6 @@ int determinerLimitePotentiel(int potentiel) ;
 #define ê "Ê"
 #define è "È"
 #define î "î"
+#define û "û"
 #define clear "clear"
 #endif

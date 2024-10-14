@@ -8,7 +8,7 @@ int creation(char *caracteristiques[])
 		fichierOK = choixNomDeFichier(caracteristiques) ;
 	}
 	choixStyle() ;
-	entreeStats() ;
+	entreeStats(caracteristiques) ;
 	return 0 ;
 }
 

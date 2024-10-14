@@ -41,8 +41,9 @@ void modification(int nouveau, char *caracteristiques[])
 
 	if(nouveau == 1)
 	{
-		points = 50 ;
-		printf("En tant que nouveau coureur, tu as droit %s 50 points.\n", à) ;
+		points = 200 ;
+		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
+		printf("Une %svolution co%ste \n", é, û) ;
 		printf("Tu d%smarres au potentiel 3 et tu ne pourras pas augmenter (tout de suite) de note au-dessus de 70.\n", é) ;
 		potentiel = 3 ;
 	}
@@ -60,11 +61,12 @@ void modification(int nouveau, char *caracteristiques[])
 		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
 	}
 
+	compteur = 0 ;
 	while (choix != 0)
 	{
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
-			printf("%d. %s : %d (max : %d).\n", compteur + 1, caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
+			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
 		}
 		printf("Tu as %d points d'am%slioration restants.\n", points, î) ;
 		printf("Limite de chaque note avec le potentiel actuel (qui est de %d sur 8) : %d.\n", potentiel, limiteMax) ;
