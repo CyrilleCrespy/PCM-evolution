@@ -1,13 +1,13 @@
 int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix)
 {
-	int coutEvolution[50] = {0} ;
+	int coutEvolution[50] = {-1} ;
 	int augmentationMax = 0 ;
 	int noteFictive = noteActuelle ;
 	int continuerBoucle = 1 ;
 	int compteur = 0 ;
 	int augmentationVoulue ;
 	
-	coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 60) + (noteFictive / 65) + (noteFictive / 70) + (noteFictive / 75) + (noteFictive / 80) ;
+	//coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 60) + (noteFictive / 65) + (noteFictive / 70) + (noteFictive / 75) + (noteFictive / 80) ;
 	
 	while (continuerBoucle == 1)
 	{
@@ -49,7 +49,8 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 	if (coutEvolution[augmentationVoulue] != 0)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
-		*points = *points - coutEvolution[compteur] ;
+		printf("%\n", coutEvolution[compteur]) ;
+		*points = *points - coutEvolution[augmentationVoulue] ;
 	}
 	return noteActuelle ;
 }

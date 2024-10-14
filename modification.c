@@ -43,7 +43,6 @@ void modification(int nouveau, char *caracteristiques[])
 	{
 		points = 200 ;
 		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
-		printf("Une %svolution co%ste \n", é, û) ;
 		printf("Tu d%smarres au potentiel 3 et tu ne pourras pas augmenter (tout de suite) de note au-dessus de 70.\n", é) ;
 		potentiel = 3 ;
 	}
@@ -53,6 +52,8 @@ void modification(int nouveau, char *caracteristiques[])
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
 		scanf("%d", &points) ;
 	}
+	
+	printf("Une %svolution co%ste \n un point jusqu'à la note 60, puis deux points jusqu'à 65, trois jusqu'à 70, quatre jusqu'à 75, cinq jusqu'à 80, puis six.\n", é, û) ;
 
 	limiteMax = determinerLimitePotentiel(potentiel) ;
 
