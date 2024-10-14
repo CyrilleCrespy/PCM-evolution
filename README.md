@@ -1,18 +1,18 @@
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-# Ceci est un programme développé spécifiquement pour les besoins des carrières collaboratives
-# sur Pro cycling manager. Il permet de créer des fiches de coureur, et de savoir quelles évolutions
-# sont possibles en fonction du nombre de points de chaînes disponibles pour l'utilisateur.
-# Copyright (C) 2024  Cyrille Crespy
+Ceci est un programme développé spécifiquement pour les besoins des carrières collaboratives
+sur Pro cycling manager. Il permet de créer des fiches de coureur, et de savoir quelles évolutions
+sont possibles en fonction du nombre de points de chaînes disponibles pour l'utilisateur.
+Copyright (C) 2024  Cyrille Crespy
 
 Le programme nécessite la présence du fichier combinaisons, qui doit être fourni dans l'archive où se trouve ce fichier texte.
 
