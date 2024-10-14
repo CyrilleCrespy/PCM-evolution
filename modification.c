@@ -65,6 +65,7 @@ void modification(int nouveau, char *caracteristiques[])
 	compteur = 0 ;
 	while (choix != 0)
 	{
+		enregistrer(style, coureur, potentiel) ;
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
 			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
@@ -84,11 +85,6 @@ void modification(int nouveau, char *caracteristiques[])
 		if (choix == 0)
 		{
 			printf("Merci d'avoir utilis%s PCM %svolution !\n", é, É) ;
-			exit(EXIT_SUCCESS) ;
-		}
-		else if (choix == 15)
-		{
-			enregistrer(style, coureur, potentiel) ;
 			exit(EXIT_SUCCESS) ;
 		}
 		else if (coureur[choix-1] >= 85 || coureur[choix-1] >= maximum[choix-1] || coureur[choix-1] >= limiteMax)
@@ -131,6 +127,7 @@ void enregistrer(int style, int coureur[], int potentiel)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
+	printf("%d POTENTIEL\n", potentiel) ;
 	fprintf(fichier, "%d\n", style) ;
 	fprintf(fichier, "%d\n", potentiel) ;
 	int compteurDeNotes = 0 ;
@@ -139,4 +136,5 @@ void enregistrer(int style, int coureur[], int potentiel)
 		fprintf(fichier, "%d\n", coureur[compteurDeNotes]) ;
 		compteurDeNotes ++ ;
 	}
+	fclose(fichier) ;
 }
