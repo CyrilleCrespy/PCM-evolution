@@ -41,8 +41,6 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	int compteur = 0 ;
 	int augmentationVoulue ;
 	
-	//coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 60) + (noteFictive / 65) + (noteFictive / 70) + (noteFictive / 75) + (noteFictive / 80) ;
-	
 	while (continuerBoucle == 1)
 	{
 		if(noteFictive >= limiteMax || noteFictive >= maximum[choix -1])
