@@ -7,7 +7,7 @@ int demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[]) ;
 int lireStats() ;
 int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int notesInitiales) ;
-void enregistrer(int style, int coureur[], int potentiel) ;
+void enregistrer(int style, int coureur[], int potentiel, int primaire, int secondaire) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
 void corrigerNomDeFichier() ;

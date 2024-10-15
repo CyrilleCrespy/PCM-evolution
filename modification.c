@@ -16,7 +16,7 @@ void modification(int nouveau, char *caracteristiques[])
 	points = 0 ;
 	int coureur[14] = {0} ;
 	int style = 0 ;
-	int principal = 0 ;
+	int primaire = 0 ;
 	int secondaire = 0 ;
 	int compteur ;
 	int limiteMax ;
@@ -42,11 +42,11 @@ void modification(int nouveau, char *caracteristiques[])
 		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
 	}
 	
-	principal = style / 14 ;
+	primaire = style / 14 ;
 	secondaire = (style % 14) - 1 ;
 	fclose(fichier) ;
 
-	printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
+	printf("Ton style primaire est %s et ton style secondaire %s.\n", types[primaire], types[secondaire]) ;
 
 	if(nouveau == 1)
 	{
@@ -71,7 +71,7 @@ void modification(int nouveau, char *caracteristiques[])
 
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
+		maximum[compteur] = determinerNotesMax(primaire, secondaire, compteur) ;
 	}
 
 	compteur = 0 ;
@@ -79,7 +79,7 @@ void modification(int nouveau, char *caracteristiques[])
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel) ;
+		enregistrer(style, coureur, potentiel, primaire, secondaire) ;
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
 			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
@@ -178,6 +178,7 @@ int augmenterPotentiel (int potentiel)
 			printf("Entrée invalide") ;
 		}
 	}
+	return potentiel ;
 }
 
 int determinerLimitePotentiel(int potentiel)
@@ -207,17 +208,39 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel)
+void enregistrer(int style, int coureur[], int potentiel, int primaire, int secondaire)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
-	fprintf(fichier, "%d\n", style) ;
-	fprintf(fichier, "%d\n", potentiel) ;
-	int compteurDeNotes = 0 ;
-	while(compteurDeNotes < 14)
+	char *types[7] = {"courses par étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
+"baroud", "classiques du Nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
+	
+	if (primaire == secondaire)
 	{
-		fprintf(fichier, "%d\n", coureur[compteurDeNotes]) ;
-		compteurDeNotes ++ ;
+		fprintf(fichier, "%d spécialité unique : %s\n", style, types[primaire]) ;
 	}
+	else
+	{
+		fprintf(fichier, "%d spécialité primaire : %s ; spécialité secondaire : %s\n", style, types[primaire], types[secondaire]) ;
+	}
+	
+	fprintf(fichier, "%d potentiel\n", potentiel) ;
+	
+	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
+	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
+	fprintf(fichier, "%d plaine\n", coureur[0]) ;
+	fprintf(fichier, "%d montagne\n", coureur[1]) ;
+	fprintf(fichier, "%d moyenne montagne\n", coureur[2]) ;
+	fprintf(fichier, "%d vallon\n", coureur[3]) ;
+	fprintf(fichier, "%d contre-la-montre\n", coureur[4]) ;
+	fprintf(fichier, "%d prologue\n", coureur[5]) ;
+	fprintf(fichier, "%d pavés\n", coureur[6]) ;
+	fprintf(fichier, "%d sprint\n", coureur[7]) ;
+	fprintf(fichier, "%d accélération\n", coureur[8]) ;
+	fprintf(fichier, "%d descente\n", coureur[9]) ;
+	fprintf(fichier, "%d baroud\n", coureur[10]) ;
+	fprintf(fichier, "%d endurance\n", coureur[11]) ;
+	fprintf(fichier, "%d résistance\n", coureur[12]) ;
+	fprintf(fichier, "%d récupération\n", coureur[13]) ;
 	fclose(fichier) ;
 }
