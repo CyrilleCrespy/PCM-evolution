@@ -45,7 +45,7 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	
 	while (continuerBoucle == 1)
 	{
-		if(noteFictive >= limiteMax || noteFictive >= maximum[choix -1])
+		if(noteFictive > limiteMax || noteFictive > maximum[choix -1])
 		{
 			continuerBoucle = 0 ;
 			break ;
