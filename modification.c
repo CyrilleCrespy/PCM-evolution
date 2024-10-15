@@ -33,7 +33,7 @@ void modification(int nouveau, char *caracteristiques[])
 	int notesInitiales[14] = {0} ;
 
 	fichier = fopen(nomDeFichier, "r") ;
-	fscanf(fichier, "%d%*s%*s%*s%*s%*s%*s%*s%*s%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d",\
+	fscanf(fichier, "%d%*s%*s%*s%*s%*s%*s%*s%*s%*s%d%*s%d%*s%d%*s%d%*s%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d",\
 &style, &potentiel, &coureur[0], &coureur[1], &coureur[2], &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7],\
 &coureur[8], &coureur[9], &coureur[10], &coureur[11], &coureur[12], &coureur[13]) ;
 	
@@ -55,6 +55,7 @@ void modification(int nouveau, char *caracteristiques[])
 		potentiel = 3 ;
 		nouveau = 0 ;
 	}
+
 	else
 	{
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
@@ -65,14 +66,12 @@ void modification(int nouveau, char *caracteristiques[])
 	{
 		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
 	}
-
 	
 	printf("Une %svolution co%ste :\n%s 1 point jusqu'%s la note 60.\n%s 2 points jusqu'%s 65\n%s 3 points jusqu'%s 70\n%s 4 points jusqu'%s 75\n%s 5 points jusqu'%s 80\n%s 6 points jusqu'%s 85.\n",\
 é, û, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à) ;
 	printf("Appuie sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
 
-	system(clear) ;
 
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
@@ -85,6 +84,7 @@ void modification(int nouveau, char *caracteristiques[])
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
 		enregistrer(style, coureur, potentiel, primaire, secondaire) ;
+		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
 			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
@@ -207,7 +207,7 @@ int determinerLimitePotentiel(int potentiel)
 	}
 	else
 	{
-		printf("Potentiel invalide.\n") ;
+		printf("Potentiel invalide (%d).\n", potentiel) ;
 		exit(EXIT_FAILURE) ;
 	}
 	return limiteMax ;
