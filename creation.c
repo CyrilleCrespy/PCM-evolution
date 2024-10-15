@@ -45,7 +45,9 @@ int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
 	printf("Veuillez choisir le nom et le pr%snom de votre coureur, s%spar%ss par une espace.\n", é, é, é) ;
-	scanf("%s", &nomDeFichier[0]) ;
+	getchar() ;
+	fgets(nomDeFichier, 255, stdin) ;
+	corrigerNomDeFichier() ;
 	int fichierOuvert = verificationExistanceDuFichier(nomDeFichier) ;
 	if (fichierOuvert == 1)
 	{
@@ -75,6 +77,19 @@ int choixNomDeFichier()
 	else 
 	{
 		return 1 ;
+	}
+}
+
+void corrigerNomDeFichier()
+{
+	int compteur ;
+	for (compteur = 0 ; compteur < 255 ; compteur ++)
+	{
+		if (nomDeFichier[compteur] == 36 || nomDeFichier[compteur] == 39 || nomDeFichier[compteur] == 10)
+		{
+			nomDeFichier[compteur] = '\0' ;
+		}
+	compteur ++ ;
 	}
 }
 

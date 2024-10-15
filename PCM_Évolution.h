@@ -10,6 +10,7 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 void enregistrer(int style, int coureur[], int potentiel) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
+void corrigerNomDeFichier() ;
 
 #define Linux
 #ifdef Windows
