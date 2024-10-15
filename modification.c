@@ -33,9 +33,9 @@ void modification(int nouveau, char *caracteristiques[])
 	int notesInitiales[14] = {0} ;
 
 	fichier = fopen(nomDeFichier, "r") ;
-	fscanf(fichier, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d", &style, &potentiel, &coureur[0], &coureur[1], &coureur[2],\
-&coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7], &coureur[8], &coureur[9], &coureur[10],\
-&coureur[11], &coureur[12], &coureur[13]) ;
+	fscanf(fichier, "%d%*s%*s%*s%*s%*s%*s%*s%*s%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d",\
+&style, &potentiel, &coureur[0], &coureur[1], &coureur[2], &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7],\
+&coureur[8], &coureur[9], &coureur[10], &coureur[11], &coureur[12], &coureur[13]) ;
 
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
@@ -217,7 +217,7 @@ void enregistrer(int style, int coureur[], int potentiel, int primaire, int seco
 	
 	if (primaire == secondaire)
 	{
-		fprintf(fichier, "%d spécialité unique : %s\n", style, types[primaire]) ;
+		fprintf(fichier, "%d spécialité primaire : %s ; spécialité secondaire : aucune\n", style, types[primaire]) ;
 	}
 	else
 	{
