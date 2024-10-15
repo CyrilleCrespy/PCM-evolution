@@ -6,13 +6,15 @@ int entreeStats() ;
 int demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[]) ;
 int lireStats() ;
-int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix) ;
+int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int notesInitiales) ;
 void enregistrer(int style, int coureur[], int potentiel) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
 void corrigerNomDeFichier() ;
+int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum[], int choix) ;
+int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 
-#define Linux
+#define Windows
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"

@@ -29,10 +29,18 @@ void modification(int nouveau, char *caracteristiques[])
 	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
 "Baroud", "Classiques du Nord"} ;
 
+	int notesInitiales[14] = {0} ;
+
 	fichier = fopen(nomDeFichier, "r") ;
 	fscanf(fichier, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d", &style, &potentiel, &coureur[0], &coureur[1], &coureur[2],\
 &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7], &coureur[8], &coureur[9], &coureur[10],\
 &coureur[11], &coureur[12], &coureur[13]) ;
+
+	for(compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
+	}
+	
 	principal = style / 14 ;
 	secondaire = (style % 14) - 1 ;
 	fclose(fichier) ;
@@ -69,6 +77,7 @@ void modification(int nouveau, char *caracteristiques[])
 	compteur = 0 ;
 	while (choix != 0)
 	{
+		system(clear) ;
 		enregistrer(style, coureur, potentiel) ;
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -96,7 +105,7 @@ void modification(int nouveau, char *caracteristiques[])
 			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
 		}
 
-		coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix) ; //La liste commençant à l'indice 0, on compense.
+		coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix, notesInitiales[choix-1]) ; //La liste commençant à l'indice 0, on compense.
 	}
 }
 
