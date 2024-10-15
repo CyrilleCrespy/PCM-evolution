@@ -88,13 +88,13 @@ void modification(int nouveau, char *caracteristiques[])
 		coutPotentiel = calculCoutPotentiel(potentiel) ;
 		if (coutPotentiel != 0)
 		{
-			printf("15. Augmenter le potentiel (%d) pour %d points de cha%sne (assurez-vous des les avoir).\n", potentiel, coutPotentiel, î) ;
+			printf("15. Augmenter le potentiel (%d) pour %d points de cha%sne (assures-toi des les avoir).\n", potentiel, coutPotentiel, î) ;
 		}
 		
 		printf("Tu as %d points d'am%slioration restants.\n", points, î) ;
 		printf("Limite de chaque note avec le potentiel actuel (qui est de %d sur 8) : %d.\n", potentiel, limiteMax) ;
 
-		printf("Entrez 0 pour quitter le programme, ou le chiffre correspondant %s la note que vous voulez changer.\n", à) ;
+		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
 		scanf("%d", &choix) ;
 
 		if (choix == 0)
@@ -152,8 +152,8 @@ int augmenterPotentiel (int potentiel)
 	int choix = 0 ;
 	system(clear) ;
 	printf("ATTENTION. Il te faut avoir assez de points de cha%sne.\n", î) ;
-	printf("Toute modification sera vérifi%se, n'essaie pas de tricher.\n", é) ;
-	printf("Tu risques une sanctin en cas de tentative de fraude.\n") ;
+	printf("Toute modification sera v%srifi%se, n'essaie pas de tricher.\n", é, é) ;
+	printf("Tu risques une sanction en cas de tentative de fraude.\n") ;
 	printf("Tape Entr%se si tu as compris.\n", é) ;
 	getchar() ;
 	getchar() ;

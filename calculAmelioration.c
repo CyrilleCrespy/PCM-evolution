@@ -6,7 +6,7 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 	{
 		system(clear) ;
 		printf("Voulez-vous augmenter ou diminuer la note ?\n") ;
-		printf("Rappel : vous ne pourrez pas descendre la note en-dessous du niveau qu'elle avait avant la derni%sre sauvegarde.\n", è) ;
+		printf("Rappel : vous ne pourrez pas descendre la note en-dessous du niveau qu'elle avait au d%sbut de la session.\n", è, é) ;
 		printf("0. Annuler.\n") ;
 		printf("1 Augmenter.\n") ;
 		printf("2 Diminuer.\n") ;
