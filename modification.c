@@ -53,7 +53,12 @@ void modification(int nouveau, char *caracteristiques[])
 		points = 200 ;
 		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
 		printf("Tu d%smarres au potentiel 3 et tu ne pourras pas augmenter (tout de suite) de note au-dessus de 70.\n", é) ;
+		for (compteur = 0 ; compteur < 14 ; compteur ++)
+		{
+			coureur[compteur] = 50 ;
+		}
 		potentiel = 3 ;
+		nouveau = 0 ;
 	}
 
 	else
