@@ -53,7 +53,7 @@ void modification(int nouveau, char *caracteristiques[])
 		scanf("%d", &points) ;
 	}
 	
-	printf("Une %svolution co%ste :\n%s 1 point jusqu'%s la note 60.\n%s 2 points jusqu'%s 65\n%s 3 points jusqu'%s 70\n%s quatre points jusqu'%s 75\n%s cinq points jusqu'%s 80\n%s six points jusqu'%s 85.\n",\
+	printf("Une %svolution co%ste :\n%s 1 point jusqu'%s la note 60.\n%s 2 points jusqu'%s 65\n%s 3 points jusqu'%s 70\n%s 4 points jusqu'%s 75\n%s 5 points jusqu'%s 80\n%s 6 points jusqu'%s 85.\n",\
 é, û, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à) ;
 	printf("Appuie sur Entrée pour continuer.\n") ;
 	getchar() ;
