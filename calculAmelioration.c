@@ -72,7 +72,7 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	system(clear) ;
 
 	printf("Augmentation(s) possible(s).\n") ;
-	while (compteur < augmentationMax)
+	while (compteur <= augmentationMax)
 	{
 		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur, compteur, coutEvolution[compteur], é, à, noteActuelle + compteur) ;
 		compteur ++ ;
