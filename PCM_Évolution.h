@@ -21,7 +21,7 @@ int determinerLimitePotentiel(int potentiel) ;
 #define ê "\x88"
 #define î "\x8C"
 #define û "\x96"
-#define ─ "\xC4"
+#define tiret "\xC4"
 #define clear "cls"
 
 #else //Pour les systèmes d'exploitation normalement constitués
@@ -33,6 +33,6 @@ int determinerLimitePotentiel(int potentiel) ;
 #define è "È"
 #define î "î"
 #define û "û"
-#define ─ "─"
+#define tiret "─"
 #define clear "clear"
 #endif
