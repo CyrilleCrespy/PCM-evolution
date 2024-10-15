@@ -36,11 +36,6 @@ void modification(int nouveau, char *caracteristiques[])
 	fscanf(fichier, "%d%*s%*s%*s%*s%*s%*s%*s%*s%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d",\
 &style, &potentiel, &coureur[0], &coureur[1], &coureur[2], &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7],\
 &coureur[8], &coureur[9], &coureur[10], &coureur[11], &coureur[12], &coureur[13]) ;
-
-	for(compteur = 0 ; compteur < 14 ; compteur ++)
-	{
-		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
-	}
 	
 	primaire = style / 14 ;
 	secondaire = (style % 14) - 1 ;
@@ -60,12 +55,17 @@ void modification(int nouveau, char *caracteristiques[])
 		potentiel = 3 ;
 		nouveau = 0 ;
 	}
-
 	else
 	{
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
 		scanf("%d", &points) ;
 	}
+	
+	for(compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
+	}
+
 	
 	printf("Une %svolution co%ste :\n%s 1 point jusqu'%s la note 60.\n%s 2 points jusqu'%s 65\n%s 3 points jusqu'%s 70\n%s 4 points jusqu'%s 75\n%s 5 points jusqu'%s 80\n%s 6 points jusqu'%s 85.\n",\
 é, û, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à) ;
@@ -237,6 +237,7 @@ void enregistrer(int style, int coureur[], int potentiel, int primaire, int seco
 	fprintf(fichier, "%d montagne\n", coureur[1]) ;
 	fprintf(fichier, "%d moyenne montagne\n", coureur[2]) ;
 	fprintf(fichier, "%d vallon\n", coureur[3]) ;
+	getchar() ;
 	fprintf(fichier, "%d contre-la-montre\n", coureur[4]) ;
 	fprintf(fichier, "%d prologue\n", coureur[5]) ;
 	fprintf(fichier, "%d pavés\n", coureur[6]) ;
