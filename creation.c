@@ -44,7 +44,7 @@ int entreeStats(char *caracteristiques[])
 int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
-	printf("Veuillez choisir le nom et le pr%snom de votre coureur, s%par%ss par une espace.\n", é, é, é) ;
+	printf("Veuillez choisir le nom et le pr%snom de votre coureur, s%spar%ss par une espace.\n", é, é, é) ;
 	scanf("%s", &nomDeFichier[0]) ;
 	int fichierOuvert = verificationExistanceDuFichier(nomDeFichier) ;
 	if (fichierOuvert == 1)

@@ -49,7 +49,6 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 	if (coutEvolution[augmentationVoulue] != 0)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
-		printf("%\n", coutEvolution[compteur]) ;
 		*points = *points - coutEvolution[augmentationVoulue] ;
 	}
 	return noteActuelle ;
