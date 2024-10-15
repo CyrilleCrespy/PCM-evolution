@@ -23,6 +23,7 @@ void modification(int nouveau, char *caracteristiques[])
 	int choix = 999 ;
 	int maximum[14] = {0} ;
 	int potentiel ;
+	int coutPotentiel = 0 ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -67,7 +68,6 @@ void modification(int nouveau, char *caracteristiques[])
 	getchar() ;
 
 	system(clear) ;
-	limiteMax = determinerLimitePotentiel(potentiel) ;
 
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
@@ -77,20 +77,22 @@ void modification(int nouveau, char *caracteristiques[])
 	compteur = 0 ;
 	while (choix != 0)
 	{
+		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
 		enregistrer(style, coureur, potentiel) ;
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
 			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
 		}
+		
+		coutPotentiel = calculCoutPotentiel(potentiel) ;
+		if (coutPotentiel != 0)
+		{
+			printf("15. Augmenter le potentiel (%d) pour %d points de cha%sne (assurez-vous des les avoir).\n", potentiel, coutPotentiel, î) ;
+		}
+		
 		printf("Tu as %d points d'am%slioration restants.\n", points, î) ;
 		printf("Limite de chaque note avec le potentiel actuel (qui est de %d sur 8) : %d.\n", potentiel, limiteMax) ;
-
-		if (points < 1)
-		{
-			printf("Tu n'as pas assez de points pour am%sliorer ton coureur. %s la prochaine !\n", é, À) ;
-			exit(EXIT_SUCCESS) ;
-		}
 
 		printf("Entrez 0 pour quitter le programme, ou le chiffre correspondant %s la note que vous voulez changer.\n", à) ;
 		scanf("%d", &choix) ;
@@ -104,8 +106,77 @@ void modification(int nouveau, char *caracteristiques[])
 		{
 			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
 		}
+		if (choix > 0 && choix <=14)
+		{
+			coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix, notesInitiales[choix-1]) ; //La liste commençant à l'indice 0, on compense.
+		}
+		else if (choix == 15)
+		{
+			potentiel = augmenterPotentiel(potentiel) ;
+		}
+		else
+		{
+			printf("Entrée invalide, merci de ne taper qu'un nombre entre 0 et 15.\n") ;
+		}
+	}
+}
 
-		coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix, notesInitiales[choix-1]) ; //La liste commençant à l'indice 0, on compense.
+int calculCoutPotentiel(int potentiel)
+{
+	int coutPotentiel ;
+	if(potentiel >= 3 && potentiel < 8)
+		{
+			coutPotentiel = 1000 ;
+		}
+	else if(potentiel == 4)
+		{
+			coutPotentiel = 2000 ;
+		}
+	else if(potentiel == 5)
+		{
+			coutPotentiel = 3000 ;
+		}
+	else if(potentiel == 6)
+		{
+			coutPotentiel = 4000 ;
+		}
+	else if(potentiel == 7)
+		{
+			coutPotentiel = 5000 ;
+		}
+	return coutPotentiel ;
+}
+
+int augmenterPotentiel (int potentiel)
+{
+	int choix = 0 ;
+	system(clear) ;
+	printf("ATTENTION. Il te faut avoir assez de points de cha%sne.\n", î) ;
+	printf("Toute modification sera vérifi%se, n'essaie pas de tricher.\n", é) ;
+	printf("Tu risques une sanctin en cas de tentative de fraude.\n") ;
+	printf("Tape Entr%se si tu as compris.\n", é) ;
+	getchar() ;
+	getchar() ;
+	printf("Confirmer le choix ?\n") ;
+	printf("1. Oui\n") ;
+	printf("2. Non\n") ;
+	while (choix != 1 && choix != 2)
+	{
+		scanf("%d", &choix) ;
+		if (choix == 1)
+		{
+			potentiel ++ ;
+			printf("%d", potentiel) ;
+			return potentiel ;
+		}
+		else if (choix == 2)
+		{
+			return potentiel ;
+		}
+		else
+		{
+			printf("Entrée invalide") ;
+		}
 	}
 }
 
