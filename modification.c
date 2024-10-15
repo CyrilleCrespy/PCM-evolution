@@ -127,7 +127,6 @@ void enregistrer(int style, int coureur[], int potentiel)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
-	printf("%d POTENTIEL\n", potentiel) ;
 	fprintf(fichier, "%d\n", style) ;
 	fprintf(fichier, "%d\n", potentiel) ;
 	int compteurDeNotes = 0 ;
