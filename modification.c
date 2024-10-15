@@ -96,7 +96,7 @@ void modification(int nouveau, char *caracteristiques[])
 			printf("15. Augmenter le potentiel (%d) pour %d points de cha%sne (assures-toi des les avoir).\n", potentiel, coutPotentiel, î) ;
 		}
 		
-		printf("Tu as %d points d'am%slioration restants.\n", points, î) ;
+		printf("Tu as %d points d'am%slioration restants.\n", points, é) ;
 		printf("Limite de chaque note avec le potentiel actuel (qui est de %d sur 8) : %d.\n", potentiel, limiteMax) ;
 
 		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
@@ -129,7 +129,7 @@ void modification(int nouveau, char *caracteristiques[])
 int calculCoutPotentiel(int potentiel)
 {
 	int coutPotentiel ;
-	if(potentiel >= 3 && potentiel < 8)
+	if(potentiel == 3)
 		{
 			coutPotentiel = 1000 ;
 		}
