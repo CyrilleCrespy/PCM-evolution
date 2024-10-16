@@ -34,50 +34,85 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 
 int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum[], int choix)
 {
-	int coutEvolution[50] = {-1} ;
+	int coutEvolution[50] = {0} ;
 	int augmentationMax = 0 ;
 	int noteFictive = noteActuelle ;
 	int continuerBoucle = 1 ;
 	int compteur = 0 ;
 	int augmentationVoulue ;
+	int raisons[3] = {0} ;
 	
 	while (continuerBoucle == 1)
 	{
-		if(noteFictive >= limiteMax || noteFictive >= maximum[choix -1])
+		noteFictive ++ ;
+		augmentationMax ++ ;
+		
+		coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
+		if(noteFictive > limiteMax)
 		{
 			continuerBoucle = 0 ;
-			break ;
+			augmentationMax -- ;
+			raisons[0] = 1 ;
 		}
-		coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
+		if(noteFictive > maximum[choix - 1])
+		{
+			augmentationMax -- ;
+			raisons[1] = 1 ;
+			continuerBoucle = 0 ;
+		}
 		if (coutEvolution[compteur] > *points)
 		{
+			augmentationMax -- ;
+			raisons[2] = 1 ;
 			continuerBoucle = 0 ;
-			coutEvolution[compteur] = 0 ; //L'achat étant impossible, on passe son coût à 0 pour qu'il ne soit pas proposé.
 		}
-		else
+		if (raisons[0] == 0 && raisons[1] == 0 && raisons[2] == 0)
 		{
-			noteFictive ++ ;
-			augmentationMax ++ ;
 			compteur ++ ;
 			coutEvolution[compteur] = coutEvolution[compteur-1] ; //Le prochain achat coûtera le coût du précédent, plus le complément calculé dans la prochaine itération de la boucle.
 		}
 	}
 	
-	if (augmentationMax == 0)
+
+	
+	compteur = 0 ;
+	system(clear) ;
+
+	if (augmentationMax > 0)
 	{
+		printf("Augmentation(s) possible(s).\n") ;
+	}
+	while (compteur < augmentationMax)
+	{
+		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur + 1, compteur + 1, coutEvolution[compteur], é, à, noteActuelle + compteur) ;
+		compteur ++ ;
+	}
+	printf ("Voici la ou les raison(s) qui ne permettent pas d'augmenter au-del%s de ces possibilit%ss :\n", à, é) ;
+	if (raisons[0] == 1)
+	{
+		printf("Potentiel trop faible pour augmenter davantage (note maximale du potentiel : %d).\n", limiteMax) ;
+	}
+	if (raisons[1] == 1)
+	{
+		printf("La note atteint d%sj%s le plafond (%d) permis par ce type de coureur.\n", é, à, maximum[choix - 1]) ;
+	}
+	if (raisons[2] == 1)
+	{
+		printf("Tu n'as plus assez de points d'%svolution pour augmenter davantage.\n", é) ;
+	}
+	
+	if (augmentationMax > 0)
+	{
+		printf("Tape 0 pour annuler cette demande") ;
+		scanf("%d", &augmentationVoulue) ;
+	}
+	else
+	{
+		printf("Appuie sur Entr%se pour continuer.\n", é) ;
+		getchar() ;
 		return noteActuelle ;
 	}
 	
-	compteur = 1 ;
-	system(clear) ;
-
-	printf("Augmentation(s) possible(s).\n") ;
-	while (compteur <= augmentationMax)
-	{
-		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur, compteur, coutEvolution[compteur], é, à, noteActuelle + compteur) ;
-		compteur ++ ;
-	}
-	scanf("%d", &augmentationVoulue) ;
 	if (coutEvolution[augmentationVoulue] != 0)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
@@ -88,12 +123,14 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 
 int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 {
-	int pointsRedonnes[50] = {-1} ;
+	int pointsRedonnes[50] ;
 	int diminutionMax = noteActuelle - noteInitiale ;
 	int noteFictive = noteActuelle ;
 	int continuerBoucle = 1 ;
 	int compteur = 0 ;
 	int diminutionVoulue ;
+	
+	pointsRedonnes[0] = -1 ;
 	
 	if (diminutionMax == 0) //Si aucune amélioration n'a été faite depuis le lancement.
 	{
@@ -126,6 +163,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 		printf("%d. Diminuer la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur, compteur, pointsRedonnes[compteur], é, à, noteActuelle - compteur) ;
 		compteur ++ ;
 	}
+	printf("Tape 0 pour annuler cette demande") ;
 	scanf("%d", &diminutionVoulue) ;
 	if (pointsRedonnes[diminutionVoulue] != 0)
 	{

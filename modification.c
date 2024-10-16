@@ -107,7 +107,7 @@ void modification(int nouveau, char *caracteristiques[])
 			printf("Merci d'avoir utilis%s PCM %svolution !\n", é, É) ;
 			exit(EXIT_SUCCESS) ;
 		}
-		else if (coureur[choix-1] >= 85 || coureur[choix-1] >= maximum[choix-1] || coureur[choix-1] >= limiteMax)
+		else if (coureur[choix-1] >= 85)
 		{
 			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
 		}

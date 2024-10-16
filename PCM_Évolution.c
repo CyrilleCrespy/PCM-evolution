@@ -30,17 +30,17 @@ int points ;
 int main(int argc, char *argv[])
 {
 	char paves[10] ;
-	sprintf(paves, "pav%ss", é) ;
+	sprintf(paves, "Pav%ss", é) ;
 	char acceleration[20] ;
-	sprintf(acceleration, "acc%sl%sration", é, é) ;
+	sprintf(acceleration, "Rcc%sl%sration", é, é) ;
 	char resistance[15] ;
-	sprintf(resistance, "r%ssistance", é) ;
+	sprintf(resistance, "R%ssistance", é) ;
 	char recuperation[20] ;
-	sprintf(recuperation, "r%scup%sration", é, é) ;
+	sprintf(recuperation, "R%scup%sration", é, é) ;
 	unsigned char choix = 5 ;
-	char *caracteristiques[14] = {"plaine", "montagne", "moyenne montagne", "vallon",\
-"contre-la-montre", "prologue", paves, "sprint", acceleration, "descente", "baroud",\
-"endurance", resistance, recuperation} ;
+	char *caracteristiques[14] = {"Plaine", "Montagne", "Moyenne montagne", "Vallon",\
+"Contre-la-montre", "Prologue", paves, "Sprint", acceleration, "Descente", "Baroud",\
+"Endurance", resistance, recuperation} ;
 
 	while(choix != 0) //Répétion du menu tant que l'utilisateur n'a pas demandé à quitter.
 	{
