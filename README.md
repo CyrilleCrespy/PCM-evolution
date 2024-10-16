@@ -26,6 +26,11 @@ Version 0.2 : commit f1a39166052462b8c159cac85f5cf8e830ce8ac8
 => refonte du système de création, établissement de styles de coureurs liés à des notes maximales
 => passage d'une comptabilité en points de chaîne à une comptabilité en points d'évolution
 
+Version 0.3 :
+=> prise en charge du potentiel
+=> fichier sauvegarde plus lisible
+
 Projets à venir :
-=> prise en compte de l'évolution (0.3)
+=> gestion des erreurs (typiquement des entrées qui ne sont pas des int) (0.4)
+=> sauvegarde automatique de secours restaurables, en cas d'interruption du programme inopiné qui ferait péter la fiche (0.5)
 => interface graphique (1.0)
