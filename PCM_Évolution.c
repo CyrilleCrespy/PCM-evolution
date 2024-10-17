@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	char paves[10] ;
 	sprintf(paves, "Pav%ss", é) ;
 	char acceleration[20] ;
-	sprintf(acceleration, "Rcc%sl%sration", é, é) ;
+	sprintf(acceleration, "Acc%sl%sration", é, é) ;
 	char resistance[15] ;
 	sprintf(resistance, "R%ssistance", é) ;
 	char recuperation[20] ;

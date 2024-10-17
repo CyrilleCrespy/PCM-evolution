@@ -62,6 +62,8 @@ void modification(int nouveau, char *caracteristiques[])
 		scanf("%d", &points) ;
 	}
 	
+	getchar() ;
+	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
@@ -71,8 +73,7 @@ void modification(int nouveau, char *caracteristiques[])
 é, û, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à) ;
 	printf("Appuie sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
-
-
+	
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		maximum[compteur] = determinerNotesMax(primaire, secondaire, compteur) ;
@@ -237,7 +238,6 @@ void enregistrer(int style, int coureur[], int potentiel, int primaire, int seco
 	fprintf(fichier, "%d montagne\n", coureur[1]) ;
 	fprintf(fichier, "%d moyenne montagne\n", coureur[2]) ;
 	fprintf(fichier, "%d vallon\n", coureur[3]) ;
-	getchar() ;
 	fprintf(fichier, "%d contre-la-montre\n", coureur[4]) ;
 	fprintf(fichier, "%d prologue\n", coureur[5]) ;
 	fprintf(fichier, "%d pavés\n", coureur[6]) ;
