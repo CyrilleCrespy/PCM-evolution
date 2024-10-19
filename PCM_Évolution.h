@@ -1,13 +1,15 @@
 int creation(char *caracteristiques[]) ; //Choix 1 du menu
 int choixNomDeFichier() ; 
 int verificationExistanceDuFichier() ;
-int choixStyle() ;
-int entreeStats() ;
+int choixPrincipal() ;
+int choixSecondaire() ;
+int calculStyle(int principal, int secondaire) ;
+int choixTaille() ;
 int demandeNomDeFichier(char *caracteristiques[]) ;
-void modification(int points, char *caracteristiques[]) ;
+void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
 int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int notesInitiales) ;
-void enregistrer(int style, int coureur[], int potentiel, int primaire, int secondaire) ;
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille5) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
 void corrigerNomDeFichier() ;
@@ -16,7 +18,7 @@ int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 int calculCoutPotentiel(int potentiel) ;
 int augmenterPotentiel(int potentiel) ;
 
-#define Windows
+#define Linux
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"

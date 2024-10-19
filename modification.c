@@ -5,18 +5,18 @@ int demandeNomDeFichier(char *caracteristiques[])
 {
 	printf("Veuillez choisir un nom de fichier.\n") ;
 	scanf("%s", &nomDeFichier[0]) ;
-	modification(0, caracteristiques) ;
+	modification(0, caracteristiques, 150) ;
 	return 0 ;
 }
 
-void modification(int nouveau, char *caracteristiques[])
+void modification(int nouveau, char *caracteristiques[], int taille)
 {
 	FILE* fichier = NULL ;
 	system(clear) ;
 	points = 0 ;
-	int coureur[14] = {0} ;
+	int coureur[21] = {0} ;
 	int style = 0 ;
-	int primaire = 0 ;
+	int principal = 0 ;
 	int secondaire = 0 ;
 	int compteur ;
 	int limiteMax ;
@@ -33,26 +33,25 @@ void modification(int nouveau, char *caracteristiques[])
 	int notesInitiales[14] = {0} ;
 
 	fichier = fopen(nomDeFichier, "r") ;
-	fscanf(fichier, "%d%*s%*s%*s%*s%*s%*s%*s%*s%*s%d%*s%d%*s%d%*s%d%*s%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d%*s%d",\
-&style, &potentiel, &coureur[0], &coureur[1], &coureur[2], &coureur[3], &coureur[4], &coureur[5], &coureur[6], &coureur[7],\
-&coureur[8], &coureur[9], &coureur[10], &coureur[11], &coureur[12], &coureur[13]) ;
+	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
+	fscanf(fichier, "%d%*s", &taille) ;
+	fscanf(fichier, "%d%*s", &potentiel) ;
+	for(compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		fscanf(fichier, "%d%*s", &coureur[compteur]) ;
+	}
 	
-	primaire = style / 14 ;
+	principal = style / 14 ;
 	secondaire = (style % 14) - 1 ;
 	fclose(fichier) ;
 
-	printf("Ton style primaire est %s et ton style secondaire %s.\n", types[primaire], types[secondaire]) ;
+	printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
 
 	if(nouveau == 1)
 	{
 		points = 200 ;
 		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
 		printf("Tu d%smarres au potentiel 3 et tu ne pourras pas augmenter (tout de suite) de note au-dessus de 70.\n", é) ;
-		for (compteur = 0 ; compteur < 14 ; compteur ++)
-		{
-			coureur[compteur] = 50 ;
-		}
-		potentiel = 3 ;
 		nouveau = 0 ;
 	}
 
@@ -76,7 +75,7 @@ void modification(int nouveau, char *caracteristiques[])
 	
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		maximum[compteur] = determinerNotesMax(primaire, secondaire, compteur) ;
+		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
 	}
 
 	compteur = 0 ;
@@ -84,7 +83,9 @@ void modification(int nouveau, char *caracteristiques[])
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel, primaire, secondaire) ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille) ;
+		
+		printf("Tu mesures %d centimètres.\n", taille) ;
 		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -214,39 +215,40 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int primaire, int secondaire)
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
-	char *types[7] = {"courses par étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
-"baroud", "classiques du Nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
+	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
+"baroud", "classiques_du_Nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
 	
-	if (primaire == secondaire)
+	if (principal == secondaire)
 	{
-		fprintf(fichier, "%d spécialité primaire : %s ; spécialité secondaire : aucune\n", style, types[primaire]) ;
+		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : aucune\n", style, types[principal]) ;
 	}
 	else
 	{
-		fprintf(fichier, "%d spécialité primaire : %s ; spécialité secondaire : %s\n", style, types[primaire], types[secondaire]) ;
+		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : %s\n", style, types[principal], types[secondaire]) ;
 	}
 	
-	fprintf(fichier, "%d potentiel\n", potentiel) ;
+	fprintf(fichier, u8"%d taille\n", taille) ;
+	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
 	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
-	fprintf(fichier, "%d plaine\n", coureur[0]) ;
-	fprintf(fichier, "%d montagne\n", coureur[1]) ;
-	fprintf(fichier, "%d moyenne montagne\n", coureur[2]) ;
-	fprintf(fichier, "%d vallon\n", coureur[3]) ;
-	fprintf(fichier, "%d contre-la-montre\n", coureur[4]) ;
-	fprintf(fichier, "%d prologue\n", coureur[5]) ;
-	fprintf(fichier, "%d pavés\n", coureur[6]) ;
-	fprintf(fichier, "%d sprint\n", coureur[7]) ;
-	fprintf(fichier, "%d accélération\n", coureur[8]) ;
-	fprintf(fichier, "%d descente\n", coureur[9]) ;
-	fprintf(fichier, "%d baroud\n", coureur[10]) ;
-	fprintf(fichier, "%d endurance\n", coureur[11]) ;
-	fprintf(fichier, "%d résistance\n", coureur[12]) ;
-	fprintf(fichier, "%d récupération\n", coureur[13]) ;
+	fprintf(fichier, u8"%d plaine\n", coureur[0]) ;
+	fprintf(fichier, u8"%d montagne\n", coureur[1]) ;
+	fprintf(fichier, u8"%d moyenne_montagne\n", coureur[2]) ;
+	fprintf(fichier, u8"%d vallon\n", coureur[3]) ;
+	fprintf(fichier, u8"%d contre-la-montre\n", coureur[4]) ;
+	fprintf(fichier, u8"%d prologue\n", coureur[5]) ;
+	fprintf(fichier, u8"%d pavés\n", coureur[6]) ;
+	fprintf(fichier, u8"%d sprint\n", coureur[7]) ;
+	fprintf(fichier, u8"%d accélération\n", coureur[8]) ;
+	fprintf(fichier, u8"%d descente\n", coureur[9]) ;
+	fprintf(fichier, u8"%d baroud\n", coureur[10]) ;
+	fprintf(fichier, u8"%d endurance\n", coureur[11]) ;
+	fprintf(fichier, u8"%d résistance\n", coureur[12]) ;
+	fprintf(fichier, u8"%d récupération\n", coureur[13]) ;
 	fclose(fichier) ;
 }

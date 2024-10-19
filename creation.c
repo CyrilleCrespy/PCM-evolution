@@ -3,13 +3,55 @@ FILE* fichier = NULL ;
 int creation(char *caracteristiques[])
 {
 	int fichierOK = 0 ;
+	int taille = 0 ;
+	int notesBase[14] = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50} ;
+	int principal ;
+	int secondaire ;
+	int style ;
+	
 	while (fichierOK != 1)
 	{
 		fichierOK = choixNomDeFichier(caracteristiques) ;
 	}
-	choixStyle() ;
-	entreeStats(caracteristiques) ;
+	
+	principal = choixPrincipal() ;
+	secondaire = choixSecondaire(principal) ;
+	style = calculStyle(principal, secondaire) ;
+	taille = choixTaille() ;
+	/*choixPoids() ;
+	choixDateDeNaissance() ;
+	choixNationalite() ;
+	choixCoursesFavorites() ;*/
+	enregistrer(style, notesBase, 3, principal, secondaire, taille) ;
+	modification(1, caracteristiques, taille) ;
 	return 0 ;
+}
+
+int choixTaille()
+{
+	int taille = 0 ;
+	int confirmation = 0 ;
+	while ((taille < 150 || taille > 200) && confirmation != 1)
+	{
+		printf("Entrez votre taille en centimètres (entre 150 et 200).\n") ;
+		scanf("%d", &taille) ;
+		if (taille < 150)
+		{
+			printf("C'est trop petit pour le jeu (désolé).\n") ;
+		}
+		else if (taille > 200)
+		{
+			printf("C'est trop grand pour le jeu (désolé).\n") ;
+		}
+		else
+		{
+			printf("Taille entrée : %d centimètres.\n", taille) ;
+			printf("0. Annuler \n") ;
+			printf("1. Confirmer \n") ;
+			scanf("%d", &confirmation) ;
+		}
+	}
+	return taille ;
 }
 
 int verificationExistanceDuFichier()
@@ -25,20 +67,6 @@ int verificationExistanceDuFichier()
 	{
 		return 0 ; 
 	}
-}
-
-int entreeStats(char *caracteristiques[])
-{
-	int compteurDeNotes = 0 ;
-	while(compteurDeNotes < 14)
-	{
-		fichier = fopen(nomDeFichier, "a") ;
-		fprintf(fichier, "%d\n", 50) ;
-		fclose(fichier) ;
-		compteurDeNotes ++ ;
-	}
-	modification(1, caracteristiques) ;
-	return 0 ;
 }
 
 int choixNomDeFichier()
@@ -93,19 +121,14 @@ void corrigerNomDeFichier()
 	}
 }
 
-int choixStyle()
+int choixPrincipal()
 {
 	int principal = -1;
-	int secondaire = -1;
-
-	int style ;
-	int compteurDeNotes = 0 ;
-
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
 	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
 "Baroud", "Classiques du Nord"} ;
-
+	int compteurDeNotes = 0 ;
 	system(clear) ; //Appel système différent selon le SE.
 	printf("Veuillez choisir un style principal.\n") ;
 	while (compteurDeNotes < 7)
@@ -113,23 +136,41 @@ int choixStyle()
 		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
 		compteurDeNotes ++ ;
 	}
-	while (principal <= 0 || principal > 14) 
+	while (principal <= 0 || principal > 7) 
 	{
 		scanf("%d", &principal) ;
-		if (principal <= 0 || principal > 14)
+		if (principal <= 0 || principal > 7)
 		{
 			printf("Valeur invalide.\n") ;
 		}
 	}
-	principal = ((principal -1) * 14) ; //On se prépare à former la variable qui cumulera les deux.
-	compteurDeNotes = 0 ; //On propose à nouveau tous les choix.
+	return (principal - 1) ;
+}
+
+int choixSecondaire(int principal)
+{
+	int secondaire = -1 ;
+	char cpe[30] ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	int compteurDeNotes = 0 ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques du Nord"} ;
 	
 	system(clear) ;
 	printf("Veuillez choisir un style secondaire.\n") ;
 	while (compteurDeNotes < 7)
 	{	
-		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
-		compteurDeNotes ++ ;
+		if (compteurDeNotes == principal)
+		{
+			printf("%d. Pas de spécialité secondaire\n", compteurDeNotes + 1) ;
+			compteurDeNotes ++ ;
+		}
+		else
+		{
+			printf("%d. %s\n", compteurDeNotes + 1, types[compteurDeNotes]) ;
+			compteurDeNotes ++ ;
+		}
 	}
 	while (secondaire + 1 <= 0 || secondaire + 1 > 15)
 	{
@@ -139,15 +180,18 @@ int choixStyle()
 			printf("Valeur invalide.\n") ;
 		}
 	}
+	return (secondaire - 1) ;
+}
 
-	style = principal + secondaire ;
+int calculStyle(int principal, int secondaire)
+{
+	int style ;
+	principal = ((principal) * 14) ;
+	style = principal + secondaire + 1 ;
 	printf("Le stye a été correctement entré. Code : %d\n", style) ;
-	printf("Appuyez sur Entrée pour continuer.\n") ;
+	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
 	system(clear) ;
-	fichier = fopen(nomDeFichier, "w+") ;
-	fprintf(fichier, "%d\n", style) ;
-	fprintf(fichier, "3\n") ; //Tous les nouveaux coureurs commencent au potentiel 3
-	fclose(fichier) ;
-	return 0 ;
+	
+	return style ;
 }
