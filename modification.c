@@ -24,6 +24,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int maximum[14] = {0} ;
 	int potentiel ;
 	int coutPotentiel = 0 ;
+	int poids ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -35,6 +36,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fichier = fopen(nomDeFichier, "r") ;
 	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
 	fscanf(fichier, "%d%*s", &taille) ;
+	fscanf(fichier, "%d%*s", &poids) ;
 	fscanf(fichier, "%d%*s", &potentiel) ;
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
@@ -83,9 +85,10 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille) ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids) ;
 		
 		printf("Tu mesures %d centimètres.\n", taille) ;
+		printf("Tu pèses %d kilos.\n", poids) ;
 		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -182,7 +185,7 @@ int augmenterPotentiel (int potentiel)
 		}
 		else
 		{
-			printf("Entrée invalide") ;
+			printf("Entr%se invalide", é) ;
 		}
 	}
 	return potentiel ;
@@ -215,7 +218,7 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille)
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
@@ -232,6 +235,7 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	}
 	
 	fprintf(fichier, u8"%d taille\n", taille) ;
+	fprintf(fichier, u8"%d taille\n", poids) ;
 	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,

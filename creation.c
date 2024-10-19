@@ -8,6 +8,7 @@ int creation(char *caracteristiques[])
 	int principal ;
 	int secondaire ;
 	int style ;
+	int poids ;
 	
 	while (fichierOK != 1)
 	{
@@ -18,11 +19,11 @@ int creation(char *caracteristiques[])
 	secondaire = choixSecondaire(principal) ;
 	style = calculStyle(principal, secondaire) ;
 	taille = choixTaille() ;
-	/*choixPoids() ;
-	choixDateDeNaissance() ;
+	poids = choixPoids() ;
+	/*choixDateDeNaissance() ;
 	choixNationalite() ;
 	choixCoursesFavorites() ;*/
-	enregistrer(style, notesBase, 3, principal, secondaire, taille) ;
+	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids) ;
 	modification(1, caracteristiques, taille) ;
 	return 0 ;
 }
@@ -33,7 +34,7 @@ int choixTaille()
 	int confirmation = 0 ;
 	while ((taille < 150 || taille > 200) && confirmation != 1)
 	{
-		printf("Entrez votre taille en centimètres (entre 150 et 200).\n") ;
+		printf("Entre votre taille en centim%stres (entre 150 et 200).\n", è) ;
 		scanf("%d", &taille) ;
 		if (taille < 150)
 		{
@@ -52,6 +53,33 @@ int choixTaille()
 		}
 	}
 	return taille ;
+}
+
+int choixPoids()
+{
+	int poids = 0 ;
+	int confirmation = 0 ;
+	while ((poids < 150 || poids > 200) && confirmation != 1)
+	{
+		printf("Entre ta taille en centim%stres (entre 150 et 200).\n", è) ;
+		scanf("%d", &poids) ;
+		if (poids < 50)
+		{
+			printf("C'est trop peu pour le jeu (d%ssol%s).\n", é, é) ;
+		}
+		else if (poids > 100)
+		{
+			printf("C'est trop pour le jeu (d%ssol%s).\n", é, é) ;
+		}
+		else
+		{
+			printf("Taille entr%se : %d centimètres.\n", é, poids) ;
+			printf("0. Annuler \n") ;
+			printf("1. Confirmer \n") ;
+			scanf("%d", &confirmation) ;
+		}
+	}
+	return poids ;
 }
 
 int verificationExistanceDuFichier()
@@ -163,7 +191,7 @@ int choixSecondaire(int principal)
 	{	
 		if (compteurDeNotes == principal)
 		{
-			printf("%d. Pas de spécialité secondaire\n", compteurDeNotes + 1) ;
+			printf("%d. Pas de sp%scialit%s secondaire\n", compteurDeNotes + 1, é, é) ;
 			compteurDeNotes ++ ;
 		}
 		else
@@ -188,7 +216,7 @@ int calculStyle(int principal, int secondaire)
 	int style ;
 	principal = ((principal) * 14) ;
 	style = principal + secondaire + 1 ;
-	printf("Le stye a été correctement entré. Code : %d\n", style) ;
+	printf("Le stye a %st%s correctement entr%s. Code : %d\n", é, é, é, style) ;
 	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
 	system(clear) ;
