@@ -24,11 +24,11 @@ int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 int calculCoutPotentiel(int potentiel) ;
 int augmenterPotentiel(int potentiel) ;
 
-#define Linux
+#define Windows
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"
-#define è "\x9A"
+#define è "\x8A"
 #define à "\x85"
 #define À "\xB7"
 #define ê "\x88"
