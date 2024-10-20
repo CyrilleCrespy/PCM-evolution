@@ -27,6 +27,11 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int poids ;
 	int mois ;
 	int jour ;
+	int fichierOuvert = 0 ;
+	char nationalite[100] ;
+	char course1[100] ;
+	char course2[100] ;
+	char course3[100] ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -36,6 +41,11 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int notesInitiales[14] = {0} ;
 
 	fichier = fopen(nomDeFichier, "r") ;
+	fichierOuvert = verificationExistanceDuFichier() ;
+	if (fichierOuvert == 0)
+	{
+		perror("Impossible de créer le fichier.\n") ;
+	}
 	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
 	fscanf(fichier, "%d%*s", &taille) ;
 	fscanf(fichier, "%d%*s", &poids) ;
@@ -43,6 +53,10 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fgetc(fichier) ; //Pour ignorer le / de la date
 	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
 	fscanf(fichier, "%d%*s", &potentiel) ;
+	fscanf(fichier, "%s", &nationalite[0]) ;
+	fscanf(fichier, "%s", &course1[0]) ;
+	fscanf(fichier, "%s", &course2[0]) ;
+	fscanf(fichier, "%s", &course3[0]) ;
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		fscanf(fichier, "%d%*s", &coureur[compteur]) ;
@@ -90,11 +104,14 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour) ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 		
 		printf("Tu mesures %d centimètres.\n", taille) ;
 		printf("Tu pèses %d kilos.\n", poids) ;
 		printf("Tu es né le %d/%d.\n", jour, mois) ;
+		printf("Course favorite 1 : %s\n", course1) ;
+		printf("Course favorite 2 : %s\n", course2) ;
+		printf("Course favorite 3 : %s\n", course3) ;
 		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -224,12 +241,21 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour)
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3)
 {
+	int fichierOuvert = 0 ;
+	
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
 	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
-"baroud", "classiques_du_Nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
+"baroud", "classiques_du_nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
+
+	fichierOuvert = verificationExistanceDuFichier() ;
+	if (fichierOuvert == 0)
+	{
+		printf("Erreur lors de la création de %s", nomDeFichier) ;
+		perror("Impossible.\n") ;
+	}
 	
 	if (principal == secondaire)
 	{
@@ -244,6 +270,10 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%d poids\n", poids) ;
 	fprintf(fichier, u8"%d/%d date de naissance\n", jour, mois) ;
 	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
+	fprintf(fichier, u8"%s\n", nationalite) ;
+	fprintf(fichier, u8"%s\n", course1) ;
+	fprintf(fichier, u8"%s\n", course2) ;
+	fprintf(fichier, u8"%s\n", course3) ;
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
 	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.

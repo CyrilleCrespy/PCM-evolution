@@ -12,6 +12,10 @@ int creation(char *caracteristiques[])
 	int jourMax = 0 ;
 	int mois ;
 	int jour ;
+	char nationalite[100] ;
+	char course1[100] ;
+	char course2[100] ;
+	char course3[100] ;
 	
 	while (fichierOK != 1)
 	{
@@ -37,9 +41,14 @@ int creation(char *caracteristiques[])
 		jourMax = 31 ;
 	}
 	jour = choixJourDeNaissance(jourMax) ;
-	/*choixNationalite() ;
-	choixCoursesFavorites() ;*/
-	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour) ;
+	
+	strcpy(nationalite,choixNationalite()) ;
+	
+	strcpy(course1, choixCourseFavorite(1)) ;
+	strcpy(course2, choixCourseFavorite(2)) ;
+	strcpy(course3, choixCourseFavorite(3)) ;
+	
+	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 	modification(1, caracteristiques, taille) ;
 	return 0 ;
 }
@@ -62,7 +71,7 @@ int verificationExistanceDuFichier()
 int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
-	printf("Veuillez choisir le nom et le pr%snom de votre coureur, s%spar%ss par une espace.\n", é, é, é) ;
+	printf("Entre le num%sro d'inscription qui t'a %st%s donn%s.\n", é, é, é, é) ;
 	getchar() ;
 	fgets(nomDeFichier, 255, stdin) ;
 	corrigerNomDeFichier() ;
@@ -117,7 +126,7 @@ int choixTaille()
 	int confirmation = 0 ;
 	while ((taille < 150 || taille > 200) && confirmation != 1)
 	{
-		printf("Entre votre taille en centim%stres (entre 150 et 200).\n", è) ;
+		printf("Entre ta taille en centim%stres (entre 150 et 200).\n", è) ;
 		scanf("%d", &taille) ;
 		if (taille < 150)
 		{
@@ -129,7 +138,7 @@ int choixTaille()
 		}
 		else
 		{
-			printf("Taille entrée : %d centim%stres.\n", taille, è) ;
+			printf("Taille entr%se : %d centim%stres.\n", é, taille, è) ;
 			printf("0. Annuler \n") ;
 			printf("1. Confirmer \n") ;
 			scanf("%d", &confirmation) ;
@@ -230,6 +239,101 @@ int choixPrincipal()
 		}
 	}
 	return (principal - 1) ;
+}
+
+char *choixNationalite()
+{
+	static char nationalite[100] = {0} ;
+	char premiereLettre ;
+	while (nationalite[0] == 0)
+	{
+		printf("Choisis ta nationalit%s.\n", é) ;
+		printf("Premi%sre lettre (en majuscule) ?\n", è) ;
+		getchar() ;
+		scanf("%c", &premiereLettre) ;
+		strcpy(nationalite, propositionDonnees(1, premiereLettre)) ;
+	}
+	return nationalite ;
+}
+
+char *choixCourseFavorite(int iteration)
+{
+	static char courseFavorite[100] ;
+	char premiereLettre ;
+	int compteur ;
+	
+	compteur = 0 ;
+	memset(courseFavorite, 0, 50) ;
+	
+	printf("%c", courseFavorite[0]) ;
+	
+	while (courseFavorite[0] == 0)
+	{
+		printf("Choisis ta course favorite n°%d.\n", iteration) ;
+		printf("Premi%sre lettre (en majuscule) ?\n", è) ;
+		getchar() ;
+		scanf("%c", &premiereLettre) ;
+		strcpy(courseFavorite, propositionDonnees(2, premiereLettre)) ;
+	}
+	return courseFavorite ;
+}
+
+char *propositionDonnees(int typeFichiers, char premiereLettre)
+{
+	FILE* fichier = NULL ;
+	if (typeFichiers == 1)
+	{
+		fichier = fopen("pays", "r") ;
+	}
+	else if (typeFichiers == 2)
+	{
+		fichier = fopen("courses", "r") ;
+	}
+	char lettreFichier = '0' ;
+	char dump[500] ;
+	char *affichage[100] ;
+	int compteur ;
+	static char donnee[100] ;
+	int choix ;
+	
+	compteur = 0 ;
+	while(premiereLettre != lettreFichier) //On écarte les données qui précèdent la lettre désirée.
+	{
+		lettreFichier = fgetc(fichier) ;
+		if(premiereLettre != lettreFichier)
+		{
+			fgets(dump, 500, fichier) ;
+		}
+	}
+	while (1)
+	{
+		while (premiereLettre == lettreFichier)
+		{
+			fseek(fichier, -1, SEEK_CUR) ; //On se repositionne en début de ligne pour compenser le fgetc.
+			affichage[compteur] = malloc(sizeof(char[100])) ;
+			fgets(affichage[compteur], 500, fichier) ;
+			printf("%d. %s", compteur + 1, affichage[compteur]) ;
+			compteur ++ ;
+			lettreFichier = fgetc(fichier) ;
+		}
+		printf("Entre le num%sro de ton choix (0 pour annuler).\n", é) ;
+		scanf("%d", &choix) ;
+		if (choix == 0)
+		{
+			memset(donnee, 0, 100) ;
+			return donnee ;
+		}
+		else if (choix > 0 && choix <= compteur + 1)
+		{
+			strcpy(donnee, affichage[choix - 1]) ;
+			return donnee ;
+		}
+		else
+		{
+			printf("Entr%se invalide.\n", é) ;
+		}
+	}
+	return donnee ;
 }
 
 int choixSecondaire(int principal)
