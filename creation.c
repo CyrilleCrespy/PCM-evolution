@@ -9,6 +9,9 @@ int creation(char *caracteristiques[])
 	int secondaire ;
 	int style ;
 	int poids ;
+	int jourMax = 0 ;
+	int mois ;
+	int jour ;
 	
 	while (fichierOK != 1)
 	{
@@ -20,66 +23,25 @@ int creation(char *caracteristiques[])
 	style = calculStyle(principal, secondaire) ;
 	taille = choixTaille() ;
 	poids = choixPoids() ;
-	/*choixDateDeNaissance() ;
-	choixNationalite() ;
+	mois = choixMoisDeNaissance() ;
+	if (mois == 2)
+	{
+		jourMax = 28 ;
+	}
+	else if (mois % 2 == 0)
+	{
+		jourMax = 30 ;
+	}
+	else
+	{
+		jourMax = 31 ;
+	}
+	jour = choixJourDeNaissance(jourMax) ;
+	/*choixNationalite() ;
 	choixCoursesFavorites() ;*/
-	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids) ;
+	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour) ;
 	modification(1, caracteristiques, taille) ;
 	return 0 ;
-}
-
-int choixTaille()
-{
-	int taille = 0 ;
-	int confirmation = 0 ;
-	while ((taille < 150 || taille > 200) && confirmation != 1)
-	{
-		printf("Entre votre taille en centim%stres (entre 150 et 200).\n", è) ;
-		scanf("%d", &taille) ;
-		if (taille < 150)
-		{
-			printf("C'est trop petit pour le jeu (désolé).\n") ;
-		}
-		else if (taille > 200)
-		{
-			printf("C'est trop grand pour le jeu (désolé).\n") ;
-		}
-		else
-		{
-			printf("Taille entrée : %d centimètres.\n", taille) ;
-			printf("0. Annuler \n") ;
-			printf("1. Confirmer \n") ;
-			scanf("%d", &confirmation) ;
-		}
-	}
-	return taille ;
-}
-
-int choixPoids()
-{
-	int poids = 0 ;
-	int confirmation = 0 ;
-	while ((poids < 150 || poids > 200) && confirmation != 1)
-	{
-		printf("Entre ta taille en centim%stres (entre 150 et 200).\n", è) ;
-		scanf("%d", &poids) ;
-		if (poids < 50)
-		{
-			printf("C'est trop peu pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else if (poids > 100)
-		{
-			printf("C'est trop pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else
-		{
-			printf("Taille entr%se : %d centimètres.\n", é, poids) ;
-			printf("0. Annuler \n") ;
-			printf("1. Confirmer \n") ;
-			scanf("%d", &confirmation) ;
-		}
-	}
-	return poids ;
 }
 
 int verificationExistanceDuFichier()
@@ -147,6 +109,101 @@ void corrigerNomDeFichier()
 		}
 	compteur ++ ;
 	}
+}
+
+int choixTaille()
+{
+	int taille = 0 ;
+	int confirmation = 0 ;
+	while ((taille < 150 || taille > 200) && confirmation != 1)
+	{
+		printf("Entre votre taille en centim%stres (entre 150 et 200).\n", è) ;
+		scanf("%d", &taille) ;
+		if (taille < 150)
+		{
+			printf("C'est trop petit pour le jeu (désolé).\n") ;
+		}
+		else if (taille > 200)
+		{
+			printf("C'est trop grand pour le jeu (désolé).\n") ;
+		}
+		else
+		{
+			printf("Taille entrée : %d centim%stres.\n", taille, è) ;
+			printf("0. Annuler \n") ;
+			printf("1. Confirmer \n") ;
+			scanf("%d", &confirmation) ;
+		}
+	}
+	return taille ;
+}
+
+int choixPoids()
+{
+	int poids = 0 ;
+	int confirmation = 0 ;
+	while ((poids < 150 || poids > 200) && confirmation != 1)
+	{
+		printf("Entre ton poids en kilos (entre 50 et 100).\n") ;
+		scanf("%d", &poids) ;
+		if (poids < 50)
+		{
+			printf("C'est trop peu pour le jeu (d%ssol%s).\n", é, é) ;
+		}
+		else if (poids > 100)
+		{
+			printf("C'est trop pour le jeu (d%ssol%s).\n", é, é) ;
+		}
+		else
+		{
+			printf("Taille entr%se : %d kilos.\n", é, poids) ;
+			printf("0. Annuler \n") ;
+			printf("1. Confirmer \n") ;
+			scanf("%d", &confirmation) ;
+		}
+	}
+	return poids ;
+}
+
+int choixMoisDeNaissance()
+{
+	int mois = 0 ;
+	printf("Nous allons choisir ta date de naissance pour ton coureur n%s en 2006.\n", é) ;
+	printf("Choisis un mois.\n") ;
+	printf("1.  Janvier\n2.  F%svrier\n3.  Mars\n4.  Avril\n5.  Mai\n6.  Juin\n7.  Juillet\n8.  Ao%st\n\
+9.  Septembre\n10. Octobre\n11. Novembre\n12. D%scembre\n", é, û, é) ;
+	while (mois < 1 || mois > 12)
+	{
+		scanf("%d", &mois) ;
+		if (mois < 1 || mois > 12)
+		{
+			printf("Mois invalide.\n") ;
+		}
+		else
+		{
+			return mois ;
+		}
+	}
+	return 0 ;
+}
+
+int choixJourDeNaissance(int jourMax)
+{
+	printf("Choisis un jour du mois, entre 1 et %d.\n", jourMax) ;
+	int jour = 0 ;
+	while(jour < 1 || jour > jourMax)
+	{
+		scanf("%d", &jour) ;
+		if (jour < 1 || jour > jourMax)
+		{
+			printf("Mois invalide.\n") ;
+		}
+		else
+		{
+			return jour ;
+		}
+	}
+	return 0 ;
 }
 
 int choixPrincipal()

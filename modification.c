@@ -25,6 +25,8 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int potentiel ;
 	int coutPotentiel = 0 ;
 	int poids ;
+	int mois ;
+	int jour ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -37,6 +39,9 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
 	fscanf(fichier, "%d%*s", &taille) ;
 	fscanf(fichier, "%d%*s", &poids) ;
+	fscanf(fichier, "%d", &jour) ;
+	fgetc(fichier) ; //Pour ignorer le / de la date
+	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
 	fscanf(fichier, "%d%*s", &potentiel) ;
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
@@ -85,10 +90,11 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids) ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour) ;
 		
 		printf("Tu mesures %d centimètres.\n", taille) ;
 		printf("Tu pèses %d kilos.\n", poids) ;
+		printf("Tu es né le %d/%d.\n", jour, mois) ;
 		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -218,7 +224,7 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids)
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour)
 {
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "w+") ;
@@ -235,7 +241,8 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	}
 	
 	fprintf(fichier, u8"%d taille\n", taille) ;
-	fprintf(fichier, u8"%d taille\n", poids) ;
+	fprintf(fichier, u8"%d poids\n", poids) ;
+	fprintf(fichier, u8"%d/%d date de naissance\n", jour, mois) ;
 	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,

@@ -27,8 +27,9 @@ char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibili
 char paves[10] ;
 int points ;
 
-int main(int argc, char *argv[])
+int main(void)
 {
+	system(clear) ;
 	char paves[10] ;
 	sprintf(paves, "Pav%ss", é) ;
 	char acceleration[20] ;

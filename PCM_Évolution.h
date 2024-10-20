@@ -6,11 +6,13 @@ int choixSecondaire() ;
 int calculStyle(int principal, int secondaire) ;
 int choixTaille() ;
 int choixPoids() ;
+int choixMoisDeNaissance() ;
+int choixJourDeNaissance(int jourMax) ;
 int demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
 int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int notesInitiales) ;
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids) ;
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int determinerLimitePotentiel(int potentiel) ;
 void corrigerNomDeFichier() ;
@@ -35,10 +37,10 @@ int augmenterPotentiel(int potentiel) ;
 #else //Pour les systèmes d'exploitation normalement constitués
 #define é "é"
 #define É "É"
+#define è "è"
 #define à "à"
 #define À "À"
 #define ê "Ê"
-#define è "È"
 #define î "î"
 #define û "û"
 #define tiret "─"
