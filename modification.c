@@ -58,8 +58,6 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fscanf(fichier, "%s %*s %*s %*s", &course2[0]) ;
 	fscanf(fichier, "%s %*s %*s %*s", &course3[0]) ;
 	
-	exit(EXIT_SUCCESS) ;
-	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		fscanf(fichier, "%d%*s", &coureur[compteur]) ;
