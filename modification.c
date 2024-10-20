@@ -52,11 +52,14 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fscanf(fichier, "%d", &jour) ;
 	fgetc(fichier) ; //Pour ignorer le / de la date
 	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
-	fscanf(fichier, "%d%*s", &potentiel) ;
-	fscanf(fichier, "%s", &nationalite[0]) ;
-	fscanf(fichier, "%s", &course1[0]) ;
-	fscanf(fichier, "%s", &course2[0]) ;
-	fscanf(fichier, "%s", &course3[0]) ;
+	fscanf(fichier, "%d %*s", &potentiel) ;
+	fscanf(fichier, "%s %*s", &nationalite[0]) ;
+	fscanf(fichier, "%s %*s %*s %*s", &course1[0]) ;
+	fscanf(fichier, "%s %*s %*s %*s", &course2[0]) ;
+	fscanf(fichier, "%s %*s %*s %*s", &course3[0]) ;
+	
+	exit(EXIT_SUCCESS) ;
+	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		fscanf(fichier, "%d%*s", &coureur[compteur]) ;
@@ -109,6 +112,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		printf("Tu mesures %d centimètres.\n", taille) ;
 		printf("Tu pèses %d kilos.\n", poids) ;
 		printf("Tu es né le %d/%d.\n", jour, mois) ;
+		printf("Pays : %s\n", nationalite) ;
 		printf("Course favorite 1 : %s\n", course1) ;
 		printf("Course favorite 2 : %s\n", course2) ;
 		printf("Course favorite 3 : %s\n", course3) ;
@@ -270,10 +274,10 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%d poids\n", poids) ;
 	fprintf(fichier, u8"%d/%d date de naissance\n", jour, mois) ;
 	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
-	fprintf(fichier, u8"%s\n", nationalite) ;
-	fprintf(fichier, u8"%s\n", course1) ;
-	fprintf(fichier, u8"%s\n", course2) ;
-	fprintf(fichier, u8"%s\n", course3) ;
+	fprintf(fichier, u8"%s nationalité\n", nationalite) ;
+	fprintf(fichier, u8"%s course favorite 1\n", course1) ;
+	fprintf(fichier, u8"%s course favorite 2\n", course2) ;
+	fprintf(fichier, u8"%s course favorite 3\n", course3) ;
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
 	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.

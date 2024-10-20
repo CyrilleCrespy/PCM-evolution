@@ -260,16 +260,12 @@ char *choixCourseFavorite(int iteration)
 {
 	static char courseFavorite[100] ;
 	char premiereLettre ;
-	int compteur ;
 	
-	compteur = 0 ;
 	memset(courseFavorite, 0, 50) ;
-	
-	printf("%c", courseFavorite[0]) ;
 	
 	while (courseFavorite[0] == 0)
 	{
-		printf("Choisis ta course favorite n°%d.\n", iteration) ;
+		printf("Choisis ta course favorite n%s%d.\n", symboleNumero, iteration) ;
 		printf("Premi%sre lettre (en majuscule) ?\n", è) ;
 		getchar() ;
 		scanf("%c", &premiereLettre) ;

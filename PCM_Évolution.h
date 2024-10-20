@@ -36,6 +36,7 @@ int augmenterPotentiel(int potentiel) ;
 #define û "\x96"
 #define tiret "\xC4"
 #define clear "cls"
+#define symboleNumero "\xA7"
 
 #else //Pour les systèmes d'exploitation normalement constitués
 #define é "é"
@@ -48,4 +49,5 @@ int augmenterPotentiel(int potentiel) ;
 #define û "û"
 #define tiret "─"
 #define clear "clear"
+#define symboleNumero "°"
 #endif
