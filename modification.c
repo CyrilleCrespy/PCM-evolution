@@ -106,8 +106,8 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 		
 		printf("Tu mesures %d centimètres.\n", taille) ;
-		printf("Tu pèses %d kilos.\n", poids) ;
-		printf("Tu es né le %d/%d.\n", jour, mois) ;
+		printf("Tu p%sses %d kilos.\n", è, poids) ;
+		printf("Tu es n%s le %d/%d.\n", é, jour, mois) ;
 		printf("Pays : %s\n", nationalite) ;
 		printf("Course favorite 1 : %s\n", course1) ;
 		printf("Course favorite 2 : %s\n", course2) ;
