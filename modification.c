@@ -98,12 +98,13 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
 	}
 
+	enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
+
 	compteur = 0 ;
 	while (choix != 0)
 	{
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 		
 		printf("Tu mesures %d centim%stres.\n", taille, è) ;
 		printf("Tu p%sses %d kilos.\n", è, poids) ;
