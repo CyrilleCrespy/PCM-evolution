@@ -67,8 +67,6 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	secondaire = (style % 14) - 1 ;
 	fclose(fichier) ;
 
-	printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
-
 	if(nouveau == 1)
 	{
 		points = 200 ;
@@ -114,6 +112,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		printf("Course favorite 1 : %s\n", course1) ;
 		printf("Course favorite 2 : %s\n", course2) ;
 		printf("Course favorite 3 : %s\n", course3) ;
+		printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
 		
 		for (compteur = 0 ; compteur < 14 ; compteur ++)
 		{
@@ -255,7 +254,7 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fichierOuvert = verificationExistanceDuFichier() ;
 	if (fichierOuvert == 0)
 	{
-		printf("Erreur lors de la création de %s", nomDeFichier) ;
+		printf("Erreur lors de la cr%sation de %s", é, nomDeFichier) ;
 		perror("Impossible.\n") ;
 	}
 	
