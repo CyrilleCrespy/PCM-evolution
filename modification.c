@@ -248,11 +248,12 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	int fichierOuvert = 0 ;
 	
 	FILE* fichier = NULL ;
+	correctionString(nomDeFichier) ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
+	correctionString(nationalite) ;
+	correctionString(course1) ;
+	correctionString(course2) ;
+	correctionString(course3) ;
 	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
-	if ((nomDeFichier[strlen(nomDeFichier) - 1] = '\0') == 1)
-	{
-		printf("Conversion de %s effectuée.\n", nomDeFichier) ;
-	}
 	fichier = fopen(nomDeFichier, "w+") ;
 	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
 "baroud", "classiques_du_nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
@@ -261,12 +262,6 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	{
 		printf("Fichier supprim%s.\n", é) ;
 	}
-	
-	correctionString(nomDeFichier) ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
-	correctionString(nationalite) ;
-	correctionString(course1) ;
-	correctionString(course2) ;
-	correctionString(course3) ;
 
 	fichierOuvert = verificationExistanceDuFichier() ;
 	if (fichierOuvert == 0)
@@ -314,9 +309,8 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 
 void correctionString(char *string)
 {
-	if (string[strlen(string) -1 == '\r'] || string[strlen(string) -1 == '\n'])
+	if (string[strlen(string) == '\r'])
 	{
-		string[strlen(string) - 1] = '\0' ;
-		printf("Conversion de %s effectuée.\n", string) ;
+		string[strlen(string)] = '\0' ;
 	}
 }
