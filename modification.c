@@ -105,7 +105,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		system(clear) ;
 		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 		
-		printf("Tu mesures %d centimètres.\n", taille) ;
+		printf("Tu mesures %d centim%stres.\n", taille, è) ;
 		printf("Tu p%sses %d kilos.\n", è, poids) ;
 		printf("Tu es n%s le %d/%d.\n", é, jour, mois) ;
 		printf("Pays : %s\n", nationalite) ;
@@ -247,14 +247,30 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	int fichierOuvert = 0 ;
 	
 	FILE* fichier = NULL ;
+	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
+	if ((nomDeFichier[strlen(nomDeFichier) - 1] = '\0') == 1)
+	{
+		printf("Conversion de %s effectuée.\n", nomDeFichier) ;
+	}
 	fichier = fopen(nomDeFichier, "w+") ;
 	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
 "baroud", "classiques_du_nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
 
+	if (remove(nomDeFichier) == 0) //Suppression du fichier avec les données
+	{
+		printf("Fichier supprim%s.\n", é) ;
+	}
+	
+	correctionString(nomDeFichier) ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
+	correctionString(nationalite) ;
+	correctionString(course1) ;
+	correctionString(course2) ;
+	correctionString(course3) ;
+
 	fichierOuvert = verificationExistanceDuFichier() ;
 	if (fichierOuvert == 0)
 	{
-		printf("Erreur lors de la cr%sation de %s", é, nomDeFichier) ;
+		printf("Erreur lors de la cr%sation de %s\n", é, nomDeFichier) ;
 		perror("Impossible.\n") ;
 	}
 	
@@ -293,4 +309,13 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%d résistance\n", coureur[12]) ;
 	fprintf(fichier, u8"%d récupération\n", coureur[13]) ;
 	fclose(fichier) ;
+}
+
+void correctionString(char *string)
+{
+	if (string[strlen(string) -1 == '\r'] || string[strlen(string) -1 == '\n'])
+	{
+		string[strlen(string) - 1] = '\0' ;
+		printf("Conversion de %s effectuée.\n", string) ;
+	}
 }

@@ -23,6 +23,7 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 int calculCoutPotentiel(int potentiel) ;
 int augmenterPotentiel(int potentiel) ;
+void correctionString(char *string) ;
 
 #define Windows
 #ifdef Windows
