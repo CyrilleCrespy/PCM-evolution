@@ -50,17 +50,28 @@ int main(void)
 		printf("1. Cr%sation de fiche coureur.\n", é) ;
 		printf("2. Modification de fiche coureur.\n") ;
 		printf("Quitter avec 0.\n") ;
-		scanf("%hhu", &choix) ;
-		supressionEspace() ;
-		if (choix == 1)
+		if (scanf("%hhu", &choix) == 1)
 		{
-			creation(caracteristiques) ;
-			return 0 ;
+			supressionEspace() ;
+			if (choix == 1)
+			{
+				creation(caracteristiques) ;
+				return 0 ;
+			}
+			else if (choix == 2)
+			{
+				demandeNomDeFichier(caracteristiques) ;
+				return 0 ;
+			}
+			else
+			{
+				printf("Merci de taper 1 ou 2.\n") ;
+			}
 		}
-		else if (choix == 2)
+		else
 		{
-			demandeNomDeFichier(caracteristiques) ;
-			return 0 ;
+			printf("Entr%se incorrecte. Merci de ne taper qu'un chiffre : 1 ou 2.\n", é) ;
+			viderBuffer() ; //Permet d'éviter que la boucle ne se relance pas avec l'affichage du menu en boucle.
 		}
 	}
 	return -1 ;
