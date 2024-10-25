@@ -111,7 +111,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 		return noteActuelle ;
 	}
 	
-	if (augmentationVoulue != 0 && augmentationVoulue < augmentationMax)
+	if (augmentationVoulue != 0 && augmentationVoulue <= augmentationMax)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
 		*points = *points - coutEvolution[augmentationVoulue - 1] ;

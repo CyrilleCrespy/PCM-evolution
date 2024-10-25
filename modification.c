@@ -109,7 +109,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	while (choix != 0)
 	{
 		compteur = 0 ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales) ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales, maximum) ;
 		system(clear) ;
 		
 		printf("\nTu mesures %d centim%stres.\n", taille, è) ;
@@ -151,7 +151,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	}
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[])
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[])
 {	
 	FILE* fichier = NULL ;
 	supressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
@@ -213,5 +213,32 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%d récupération (+ %d)\n", coureur[13], coureur[13] - notesInitiales[13]) ;
 	
 	fprintf(fichier, u8"%d point(s) dépensé(s).\n", pointsDepenses) ;
+	fclose(fichier) ;
+	if(maximum != NULL)
+	{
+		enregistrerMax(maximum) ;
+	}
+}
+
+void enregistrerMax(int maximum[])
+{
+	FILE* fichier = NULL ;
+	char fichierMax[255] ;
+	int compteur = 0 ;
+	
+	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	fichier = fopen(fichierMax, "w+") ;
+	if(fichier == NULL)
+	{
+		printf("Erreur, impossible d'ouvrir %s. Dans modification.c, void enregistrerMax.\n", fichierMax) ;
+	}
+	else
+	{
+		while (compteur < 14)
+		{
+			fprintf(fichier, "%d\n", maximum[compteur]) ;
+			compteur ++ ;
+		}
+	}
 	fclose(fichier) ;
 }

@@ -71,7 +71,7 @@ int determinerNotesMax(int principal, int secondaire, int compteur)
 	int maximumDetermine ;
 	int positionInitiale ;
 	fichier = fopen("combinaisons", "r") ;
-	positionInitiale = ((principal) * 42 * 7) + (secondaire) * 42 + (compteur * 3) ;
+	positionInitiale = ((principal * 7) + (secondaire * 42) + (compteur * 3)) ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;
@@ -131,12 +131,6 @@ void corrigerNomDeFichier()
 		{
 			nomProvisoire[compteur + espaces] = '\0' ;
 		}
-		/*else if (nomDeFichier[compteur] == 32)
-		{
-			nomProvisoire[compteur + espaces] = '\\' ;
-			nomProvisoire[compteur + espaces + 1] = ' ' ;
-			espaces ++ ;
-		}*/
 		else
 		{
 			nomProvisoire[compteur + espaces] = nomDeFichier[compteur] ;

@@ -49,7 +49,7 @@ int creation(char *caracteristiques[])
 	strcpy(course3, choixCourseFavorite(3)) ;
 	
 	pointsDepenses = 0 ;
-	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase) ;
+	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase, NULL) ;
 	modification(1, caracteristiques, taille) ;
 	return 0 ;
 }
@@ -72,6 +72,8 @@ int verificationExistanceDuFichier()
 int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
+	char fichierMax[255] = {0} ;
+	
 	printf("Entre ton pr%snom suivi de ton nom, s%spar%ss par un espace.\n", é, é, é) ;
 	getchar() ;
 	fgets(nomDeFichier, 250, stdin) ;
@@ -80,25 +82,35 @@ int choixNomDeFichier()
 	if (fichierOuvert == 1)
 	{
 		printf("Fiche d%sj%s existante. Voulez-vous supprimer l'ancien  %s ?\n", é, à, nomDeFichier) ;
-		printf("1. Oui\n") ;
+		printf("1. Oui\n") ;	
 		printf("2. Non\n") ;
 		scanf("%hhu", &choix) ;
 		if (choix == 1)
 		{
 			if (remove(nomDeFichier) == 0)
 			{
-				printf("Fichier supprim%s.\n", é) ;
+				printf("Fichier coureur supprim%s.\n", é) ;
+			}
+			else
+			{
+				perror("Suppression du fichier coureur impossible.\n") ;
+				return 0 ;
+			}
+			sprintf(fichierMax, "%s_max", nomDeFichier) ;
+			if (remove(fichierMax) == 0)
+			{
+				printf("Fichier max supprim%s.\n", é) ;
 				return 1 ;
 			}
 			else
 			{
-				perror("Suppression du fichier impossible.\n") ;
+				perror("Suppression du fichier max impossible.\n") ;
 				return 0 ;
 			}
 		}
 		else
 		{
-			printf("Fichier pr%sserv%s.\n", é, é) ;
+			printf("Fichier coureur pr%sserv%s.\n", é, é) ;
 			return 0 ;
 		}
 	}
