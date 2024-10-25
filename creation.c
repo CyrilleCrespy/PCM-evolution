@@ -71,7 +71,7 @@ int verificationExistanceDuFichier()
 
 int choixNomDeFichier()
 {
-	unsigned char choix = 0 ;
+	int choix = 0 ;
 	char fichierMax[255] = {0} ;
 	
 	printf("Entre ton pr%snom suivi de ton nom, s%spar%ss par un espace.\n", é, é, é) ;
@@ -84,7 +84,7 @@ int choixNomDeFichier()
 		printf("Fiche d%sj%s existante. Voulez-vous supprimer l'ancien  %s ?\n", é, à, nomDeFichier) ;
 		printf("1. Oui\n") ;	
 		printf("2. Non\n") ;
-		scanf("%hhu", &choix) ;
+		choix = verificationEntreeNumerique(0, 2) ;
 		if (choix == 1)
 		{
 			if (remove(nomDeFichier) == 0)
@@ -124,25 +124,12 @@ int choixTaille()
 {
 	int taille = 0 ;
 	int confirmation = 0 ;
-	while ((taille < 150 || taille > 200) && confirmation != 1)
+	while (confirmation == 0)
 	{
 		printf("Entre ta taille en centim%stres (entre 150 et 200).\n", è) ;
-		scanf("%d", &taille) ;
-		if (taille < 150)
-		{
-			printf("C'est trop petit pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else if (taille > 200)
-		{
-			printf("C'est trop grand pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else
-		{
-			printf("Taille entr%se : %d centim%stres.\n", é, taille, è) ;
-			printf("0. Annuler \n") ;
-			printf("1. Confirmer \n") ;
-			scanf("%d", &confirmation) ;
-		}
+		taille = verificationEntreeNumerique (150, 200) ;
+		printf("Taille entr%se : %d centim%stres.\n", é, taille, è) ;
+		confirmation = confirmationEntree() ;
 	}
 	return taille ;
 }
@@ -151,25 +138,13 @@ int choixPoids()
 {
 	int poids = 0 ;
 	int confirmation = 0 ;
-	while ((poids < 150 || poids > 200) && confirmation != 1)
+	
+	while (confirmation == 0)
 	{
 		printf("Entre ton poids en kilos (entre 50 et 100).\n") ;
-		scanf("%d", &poids) ;
-		if (poids < 50)
-		{
-			printf("C'est trop peu pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else if (poids > 100)
-		{
-			printf("C'est trop pour le jeu (d%ssol%s).\n", é, é) ;
-		}
-		else
-		{
-			printf("Poids entr%s : %d kilos.\n", é, poids) ;
-			printf("0. Annuler \n") ;
-			printf("1. Confirmer \n") ;
-			scanf("%d", &confirmation) ;
-		}
+		poids = verificationEntreeNumerique(50, 100) ;
+		printf("Poids entr%s : %d kilos.\n", é, poids) ;
+		confirmation = confirmationEntree() ;
 	}
 	return poids ;
 }
@@ -177,42 +152,33 @@ int choixPoids()
 int choixMoisDeNaissance()
 {
 	int mois = 0 ;
-	printf("Nous allons choisir ta date de naissance pour ton coureur n%s en 2006.\n", é) ;
-	printf("Choisis un mois.\n") ;
-	printf("1.  Janvier\n2.  F%svrier\n3.  Mars\n4.  Avril\n5.  Mai\n6.  Juin\n7.  Juillet\n8.  Ao%st\n\
-9.  Septembre\n10. Octobre\n11. Novembre\n12. D%scembre\n", é, û, é) ;
-	while (mois < 1 || mois > 12)
+	int confirmation = 0 ;
+	
+	while (confirmation == 0)
 	{
-		scanf("%d", &mois) ;
-		if (mois < 1 || mois > 12)
-		{
-			printf("Mois invalide.\n") ;
-		}
-		else
-		{
-			return mois ;
-		}
+		printf("Nous allons choisir ta date de naissance pour ton coureur n%s en 2006.\n", é) ;
+		printf("Choisis un mois.\n") ;
+		printf("1.  Janvier\n2.  F%svrier\n3.  Mars\n4.  Avril\n5.  Mai\n6.  Juin\n7.  Juillet\n8.  Ao%st\n\
+9.  Septembre\n10. Octobre\n11. Novembre\n12. D%scembre\n", é, û, é) ;
+		mois = verificationEntreeNumerique(1, 12) ;
+		confirmation = confirmationEntree() ;
 	}
-	return 0 ;
+	return mois ;
 }
 
 int choixJourDeNaissance(int jourMax)
 {
-	printf("Choisis un jour du mois, entre 1 et %d.\n", jourMax) ;
 	int jour = 0 ;
-	while(jour < 1 || jour > jourMax)
+	int confirmation = 0 ;
+	
+	while(confirmation == 0)
 	{
-		scanf("%d", &jour) ;
-		if (jour < 1 || jour > jourMax)
-		{
-			printf("Mois invalide.\n") ;
-		}
-		else
-		{
-			return jour ;
-		}
+		printf("Choisis un jour du mois, entre 1 et %d.\n", jourMax) ;
+		jour = verificationEntreeNumerique(1, jourMax) ;
+		confirmation = confirmationEntree() ;
+		return jour ;
 	}
-	return 0 ;
+	exit(EXIT_FAILURE) ;
 }
 
 int choixPrincipal()
@@ -230,15 +196,37 @@ int choixPrincipal()
 		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
 		compteurDeNotes ++ ;
 	}
-	while (principal <= 0 || principal > 7) 
-	{
-		scanf("%d", &principal) ;
-		if (principal <= 0 || principal > 7)
+	principal = verificationEntreeNumerique(1, 7) ;
+	return (principal - 1) ;
+}
+
+int choixSecondaire(int principal)
+{
+	int secondaire = -1 ;
+	char cpe[30] ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	int compteurDeNotes = 0 ;
+	sprintf(cpe, "Courses par %stapes", é) ;
+	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques du Nord"} ;
+	
+	system(clear) ;
+	printf("Veuillez choisir un style secondaire.\n") ;
+	while (compteurDeNotes < 7)
+	{	
+		if (compteurDeNotes == principal)
 		{
-			printf("Valeur invalide.\n") ;
+			printf("%d. Pas de sp%scialit%s secondaire\n", compteurDeNotes + 1, é, é) ;
+			compteurDeNotes ++ ;
+		}
+		else
+		{
+			printf("%d. %s\n", compteurDeNotes + 1, types[compteurDeNotes]) ;
+			compteurDeNotes ++ ;
 		}
 	}
-	return (principal - 1) ;
+	secondaire = principal = verificationEntreeNumerique(1, 7) ;
+	return (secondaire - 1) ;
 }
 
 char *choixNationalite()
@@ -328,61 +316,18 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 			lettreFichier = fgetc(fichier) ;
 		}
 		printf("Entre le num%sro de ton choix (0 pour annuler).\n", é) ;
-		scanf("%d", &choix) ;
+		choix = verificationEntreeNumerique(1, compteur) ;
 		if (choix == 0)
 		{
 			memset(donnee, 0, 100) ;
 			return donnee ;
 		}
-		else if (choix > 0 && choix <= compteur + 1)
-		{
-			strcpy(donnee, affichage[choix - 1]) ;
-			donnee[strlen(donnee) - 1] = '\0' ;
-			return donnee ;
-		}
-		else
-		{
-			printf("Entr%se invalide.\n", é) ;
-		}
+		strcpy(donnee, affichage[choix - 1]) ;
+		donnee[strlen(donnee) - 1] = '\0' ;
+		return donnee ;
 	}
 	fclose(fichier) ;
 	return donnee ;
-}
-
-int choixSecondaire(int principal)
-{
-	int secondaire = -1 ;
-	char cpe[30] ;
-	sprintf(cpe, "Courses par %stapes", é) ;
-	int compteurDeNotes = 0 ;
-	sprintf(cpe, "Courses par %stapes", é) ;
-	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-"Baroud", "Classiques du Nord"} ;
-	
-	system(clear) ;
-	printf("Veuillez choisir un style secondaire.\n") ;
-	while (compteurDeNotes < 7)
-	{	
-		if (compteurDeNotes == principal)
-		{
-			printf("%d. Pas de sp%scialit%s secondaire\n", compteurDeNotes + 1, é, é) ;
-			compteurDeNotes ++ ;
-		}
-		else
-		{
-			printf("%d. %s\n", compteurDeNotes + 1, types[compteurDeNotes]) ;
-			compteurDeNotes ++ ;
-		}
-	}
-	while (secondaire + 1 <= 0 || secondaire + 1 > 15)
-	{
-		scanf("%d", &secondaire) ;
-		if (secondaire + 1 <=0 || secondaire + 1 > 15)
-		{
-			printf("Valeur invalide.\n") ;
-		}
-	}
-	return (secondaire - 1) ;
 }
 
 int calculStyle(int principal, int secondaire)

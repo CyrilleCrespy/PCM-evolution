@@ -38,40 +38,34 @@ int main(void)
 	sprintf(resistance, "R%ssistance", é) ;
 	char recuperation[20] ;
 	sprintf(recuperation, "R%scup%sration", é, é) ;
-	unsigned char choix = 5 ;
+	int choix = 5 ;
 	char *caracteristiques[14] = {"Plaine", "Montagne", "Moyenne montagne", "Vallon",\
 "Contre-la-montre", "Prologue", paves, "Sprint", acceleration, "Descente", "Baroud",\
 "Endurance", resistance, recuperation} ;
 
-	while(choix != 0) //Répétion du menu tant que l'utilisateur n'a pas demandé à quitter.
+	while (choix != 0) //Répétion du menu tant que l'utilisateur n'a pas demandé à quitter.
 	{
 		printf("Bienvenue dans PCM %svolution.\n", É) ; //Variable définie selon l'OS pour les accents.
 		printf("Menu.\n") ;
 		printf("1. Cr%sation de fiche coureur.\n", é) ;
 		printf("2. Modification de fiche coureur.\n") ;
 		printf("Quitter avec 0.\n") ;
-		if (scanf("%hhu", &choix) == 1)
+		choix = verificationEntreeNumerique(0, 2) ;
+		supressionEspace() ;
+		if (choix == 1)
 		{
-			supressionEspace() ;
-			if (choix == 1)
-			{
-				creation(caracteristiques) ;
-				return 0 ;
-			}
-			else if (choix == 2)
-			{
-				demandeNomDeFichier(caracteristiques) ;
-				return 0 ;
-			}
-			else
-			{
-				printf("Merci de taper 1 ou 2.\n") ;
-			}
+			creation(caracteristiques) ;
+			return 0 ;
+		}
+		else if (choix == 2)
+		{
+			demandeNomDeFichier(caracteristiques) ;
+			return 0 ;
 		}
 		else
 		{
-			printf("Entr%se incorrecte. Merci de ne taper qu'un chiffre : 1 ou 2.\n", é) ;
-			viderBuffer() ; //Permet d'éviter que la boucle ne se relance pas avec l'affichage du menu en boucle.
+			printf("Merci d'avoir utilis%s PCM %svolution !\n", é, É) ;
+			exit(EXIT_SUCCESS) ;
 		}
 	}
 	return -1 ;
@@ -148,4 +142,32 @@ void corrigerNomDeFichier()
 		}
 	}
 	memcpy(nomDeFichier, nomProvisoire, 250) ;
+}
+
+int verificationEntreeNumerique(int min, int max)
+{
+	int donneeVerifiee = 255 ;
+	while (donneeVerifiee < min || donneeVerifiee > max)
+	{
+		if ((scanf("%d", &donneeVerifiee) == 1) && (donneeVerifiee >= min && donneeVerifiee <= max))
+		{
+			return donneeVerifiee ;
+		}
+		else
+		{
+			printf("Entr%se incorrecte. Merci de ne taper qu'un chiffre, sans lettre ou ponctuation, entre %d et %d.\n", é, min, max) ;
+			viderBuffer() ; //Permet d'éviter que la boucle ne se relance sans tenir compte du scanf.
+		}
+	}
+	printf("Erreur dans PCM_%svolution.c, int verificationEntreeNumerique.\n", É) ;
+	exit(EXIT_FAILURE) ;
+}
+
+int confirmationEntree()
+{
+	int confirmation ;
+	printf("0. Annuler \n") ;
+	printf("1. Confirmer \n") ;
+	confirmation = verificationEntreeNumerique(0, 1) ;
+	return confirmation ;
 }
