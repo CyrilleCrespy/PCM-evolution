@@ -42,13 +42,14 @@ int creation(char *caracteristiques[])
 	}
 	jour = choixJourDeNaissance(jourMax) ;
 	
-	strcpy(nationalite,choixNationalite()) ;
+	strcpy(nationalite, choixNationalite()) ;
 	
 	strcpy(course1, choixCourseFavorite(1)) ;
 	strcpy(course2, choixCourseFavorite(2)) ;
 	strcpy(course3, choixCourseFavorite(3)) ;
 	
-	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
+	pointsDepenses = 0 ;
+	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase) ;
 	modification(1, caracteristiques, taille) ;
 	return 0 ;
 }
@@ -71,7 +72,7 @@ int verificationExistanceDuFichier()
 int choixNomDeFichier()
 {
 	unsigned char choix = 0 ;
-	printf("Entre le num%sro d'inscription qui t'a %st%s donn%s.\n", é, é, é, é) ;
+	printf("Entre ton pr%snom suivi de ton nom, s%spar%ss par un espace.\n", é, é, é) ;
 	getchar() ;
 	fgets(nomDeFichier, 255, stdin) ;
 	corrigerNomDeFichier() ;
@@ -107,19 +108,6 @@ int choixNomDeFichier()
 	}
 }
 
-void corrigerNomDeFichier()
-{
-	int compteur ;
-	for (compteur = 0 ; compteur < 255 ; compteur ++)
-	{
-		if (nomDeFichier[compteur] == 36 || nomDeFichier[compteur] == 39 || nomDeFichier[compteur] == 10)
-		{
-			nomDeFichier[compteur] = '\0' ;
-		}
-	compteur ++ ;
-	}
-}
-
 int choixTaille()
 {
 	int taille = 0 ;
@@ -130,11 +118,11 @@ int choixTaille()
 		scanf("%d", &taille) ;
 		if (taille < 150)
 		{
-			printf("C'est trop petit pour le jeu (désolé).\n") ;
+			printf("C'est trop petit pour le jeu (d%ssol%s).\n", é, é) ;
 		}
 		else if (taille > 200)
 		{
-			printf("C'est trop grand pour le jeu (désolé).\n") ;
+			printf("C'est trop grand pour le jeu (d%ssol%s).\n", é, é) ;
 		}
 		else
 		{
@@ -165,7 +153,7 @@ int choixPoids()
 		}
 		else
 		{
-			printf("Taille entr%se : %d kilos.\n", é, poids) ;
+			printf("Poids entr%s : %d kilos.\n", é, poids) ;
 			printf("0. Annuler \n") ;
 			printf("1. Confirmer \n") ;
 			scanf("%d", &confirmation) ;
@@ -247,8 +235,7 @@ char *choixNationalite()
 	char premiereLettre ;
 	while (nationalite[0] == 0)
 	{
-		printf("Choisis ta nationalit%s.\n", é) ;
-		printf("Premi%sre lettre (en majuscule) ?\n", è) ;
+		printf("Pour choisir ta nationalit%s, entre la premi%sre lettre (en majuscule).\n", é, è) ;
 		getchar() ;
 		scanf("%c", &premiereLettre) ;
 		strcpy(nationalite, propositionDonnees(1, premiereLettre)) ;
@@ -262,12 +249,11 @@ char *choixCourseFavorite(int iteration)
 	char premiereLettre ;
 	
 	memset(courseFavorite, 0, 50) ;
+	viderBuffer() ;
 	
 	while (courseFavorite[0] == 0)
 	{
-		printf("Choisis ta course favorite n%s%d.\n", symboleNumero, iteration) ;
-		printf("Premi%sre lettre (en majuscule) ?\n", è) ;
-		getchar() ;
+		printf("Pour choisir ta course favorite n%s%d, entre la premi%sre lettre.\n", symboleNumero, iteration, è) ;
 		scanf("%c", &premiereLettre) ;
 		strcpy(courseFavorite, propositionDonnees(2, premiereLettre)) ;
 	}
@@ -276,6 +262,23 @@ char *choixCourseFavorite(int iteration)
 
 char *propositionDonnees(int typeFichiers, char premiereLettre)
 {
+	char lettreFichier = '0' ;
+	char dump[500] ;
+	char *affichage[100] = {0} ;
+	int compteur ;
+	static char donnee[100] ;
+	int choix ;
+
+	if (premiereLettre < 65 || premiereLettre > 122 || (premiereLettre > 90 && premiereLettre < 97)) //Si ce n'est pas une lettre.
+	{
+		printf("Ce n'est pas une lettre.\n") ;
+		memset(donnee, 0, 100) ;
+		return donnee ;
+	}
+	else if (premiereLettre > 90) //Transforme toute minuscule en majuscule.
+	{
+		premiereLettre = premiereLettre - 32 ;
+	}
 	FILE* fichier = NULL ;
 	if (typeFichiers == 1)
 	{
@@ -285,12 +288,6 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 	{
 		fichier = fopen("courses", "r") ;
 	}
-	char lettreFichier = '0' ;
-	char dump[500] ;
-	char *affichage[100] ;
-	int compteur ;
-	static char donnee[100] ;
-	int choix ;
 	
 	compteur = 0 ;
 	while(premiereLettre != lettreFichier) //On écarte les données qui précèdent la lettre désirée.
@@ -299,6 +296,12 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 		if(premiereLettre != lettreFichier)
 		{
 			fgets(dump, 500, fichier) ;
+			if (affichage[0] == 0 && feof(fichier)) //Si aucun résultat n'est trouvé.
+			{
+				printf("Aucun r%ssultat n'a %st%s trouv%s.\n", é, é, é, é) ;
+				memset(donnee, 0, 100) ;
+				return donnee ;
+			}
 		}
 	}
 	while (1)
@@ -322,6 +325,7 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 		else if (choix > 0 && choix <= compteur + 1)
 		{
 			strcpy(donnee, affichage[choix - 1]) ;
+			donnee[strlen(donnee) - 1] = '\0' ;
 			return donnee ;
 		}
 		else
@@ -329,6 +333,7 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 			printf("Entr%se invalide.\n", é) ;
 		}
 	}
+	fclose(fichier) ;
 	return donnee ;
 }
 

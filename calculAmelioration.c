@@ -117,6 +117,9 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
 		*points = *points - coutEvolution[augmentationVoulue - 1] ;
+		pointsDepenses = pointsDepenses + coutEvolution[augmentationVoulue - 1] ;
+		printf("%d", pointsDepenses) ;
+		getchar() ;
 	}
 	return noteActuelle ;
 }
@@ -170,6 +173,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	{
 		noteActuelle = noteActuelle - diminutionVoulue ;
 		*points = *points + pointsRedonnes[diminutionVoulue] ;
+		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
 	}
 	return noteActuelle ;
 }

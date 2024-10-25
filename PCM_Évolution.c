@@ -51,6 +51,7 @@ int main(void)
 		printf("2. Modification de fiche coureur.\n") ;
 		printf("Quitter avec 0.\n") ;
 		scanf("%hhu", &choix) ;
+		supressionEspace() ;
 		if (choix == 1)
 		{
 			creation(caracteristiques) ;
@@ -75,4 +76,46 @@ int determinerNotesMax(int principal, int secondaire, int compteur)
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;
 	return maximumDetermine ;
+}
+
+void viderBuffer()
+{
+	int vider = 0 ;
+	while (vider != '\n' && vider != EOF)
+	{
+		vider = getchar() ;
+	}
+}
+
+void supressionEspace()
+{
+	while (nomDeFichier[strlen(nomDeFichier)] == 32 || nomDeFichier[strlen(nomDeFichier)] == 92)
+	{
+		if (nomDeFichier[strlen(nomDeFichier)] == 32 || nomDeFichier[strlen(nomDeFichier)] == 92)
+		{
+			nomDeFichier[strlen(nomDeFichier) - 1] = '\0' ;
+			printf("%s\n", nomDeFichier) ;
+			getchar() ;
+		}
+	}
+}
+
+void corrigerNomDeFichier()
+{
+	int compteur ;
+	int espaces = 0 ;
+	for (compteur = 0 ; compteur < 255 ; compteur ++)
+	{
+		if (nomDeFichier[compteur] == 36 || nomDeFichier[compteur] == 39 || nomDeFichier[compteur] == 10)
+		{
+			nomDeFichier[compteur + espaces] = '\0' ;
+		}
+		if (nomDeFichier[compteur] == 32)
+		{
+			nomDeFichier[compteur + espaces] = '\\' ;
+			nomDeFichier[compteur + espaces + 1] = ' ' ;
+			espaces ++ ;
+		}
+	compteur ++ ;
+	}
 }

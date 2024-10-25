@@ -1,10 +1,14 @@
 char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibilité.
 int points ;
+int pointsDepenses ;
 
 int demandeNomDeFichier(char *caracteristiques[])
 {
 	printf("Veuillez choisir un nom de fichier.\n") ;
-	scanf("%s", &nomDeFichier[0]) ;
+	viderBuffer() ;
+	fgets(nomDeFichier, 255, stdin) ;
+	corrigerNomDeFichier() ;
+	pointsDepenses = 0 ;
 	modification(0, caracteristiques, 150) ;
 	return 0 ;
 }
@@ -44,11 +48,12 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fichierOuvert = verificationExistanceDuFichier() ;
 	if (fichierOuvert == 0)
 	{
-		perror("Impossible de créer le fichier.\n") ;
+		perror("Impossible d'ouvrir le fichier. Erreur dans modification.c, void modification.\n") ;
+		printf("Nom de fichier attendu : %s.\n", nomDeFichier) ;
 	}
 	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
-	fscanf(fichier, "%d%*s", &taille) ;
-	fscanf(fichier, "%d%*s", &poids) ;
+	fscanf(fichier, "%d %*s", &taille) ;
+	fscanf(fichier, "%d %*s", &poids) ;
 	fscanf(fichier, "%d", &jour) ;
 	fgetc(fichier) ; //Pour ignorer le / de la date
 	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
@@ -60,7 +65,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		fscanf(fichier, "%d%*s", &coureur[compteur]) ;
+		fscanf(fichier, "%d %*s %*s %*s", &coureur[compteur]) ;
 	}
 	
 	principal = style / 14 ;
@@ -98,15 +103,14 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
 	}
 
-	enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
-
-	compteur = 0 ;
 	while (choix != 0)
 	{
+		compteur = 0 ;
+		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales) ;
 		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
 		
-		printf("Tu mesures %d centim%stres.\n", taille, è) ;
+		printf("\nTu mesures %d centim%stres.\n", taille, è) ;
 		printf("Tu p%sses %d kilos.\n", è, poids) ;
 		printf("Tu es n%s le %d/%d.\n", é, jour, mois) ;
 		printf("Pays : %s\n", nationalite) ;
@@ -243,16 +247,10 @@ int determinerLimitePotentiel(int potentiel)
 	return limiteMax ;
 }
 
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3)
-{
-	int fichierOuvert = 0 ;
-	
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[])
+{	
 	FILE* fichier = NULL ;
-	correctionString(nomDeFichier) ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
-	correctionString(nationalite) ;
-	correctionString(course1) ;
-	correctionString(course2) ;
-	correctionString(course3) ;
+	supressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
 	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
 	fichier = fopen(nomDeFichier, "w+") ;
 	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
@@ -260,14 +258,19 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 
 	if (remove(nomDeFichier) == 0) //Suppression du fichier avec les données
 	{
-		printf("Fichier supprim%s.\n", é) ;
+		printf("Fichier pr%sc%sdent supprim%s.\n", é, é, é) ;
 	}
 
-	fichierOuvert = verificationExistanceDuFichier() ;
-	if (fichierOuvert == 0)
+	fichier = fopen(nomDeFichier, "w+") ;
+	if (fichier != NULL)
 	{
-		printf("Erreur lors de la cr%sation de %s\n", é, nomDeFichier) ;
-		perror("Impossible.\n") ;
+		printf("Fichier %s ouvert.\n", nomDeFichier) ;
+	}
+	else
+	{
+		printf("Ouverture du fichier %s impossible.\n", nomDeFichier) ;
+		perror("Erreur dans modification.c, void enregistrer.\n") ;
+		exit(EXIT_FAILURE) ;
 	}
 	
 	if (principal == secondaire)
@@ -290,27 +293,21 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
 	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
-	fprintf(fichier, u8"%d plaine\n", coureur[0]) ;
-	fprintf(fichier, u8"%d montagne\n", coureur[1]) ;
-	fprintf(fichier, u8"%d moyenne_montagne\n", coureur[2]) ;
-	fprintf(fichier, u8"%d vallon\n", coureur[3]) ;
-	fprintf(fichier, u8"%d contre-la-montre\n", coureur[4]) ;
-	fprintf(fichier, u8"%d prologue\n", coureur[5]) ;
-	fprintf(fichier, u8"%d pavés\n", coureur[6]) ;
-	fprintf(fichier, u8"%d sprint\n", coureur[7]) ;
-	fprintf(fichier, u8"%d accélération\n", coureur[8]) ;
-	fprintf(fichier, u8"%d descente\n", coureur[9]) ;
-	fprintf(fichier, u8"%d baroud\n", coureur[10]) ;
-	fprintf(fichier, u8"%d endurance\n", coureur[11]) ;
-	fprintf(fichier, u8"%d résistance\n", coureur[12]) ;
-	fprintf(fichier, u8"%d récupération\n", coureur[13]) ;
+	fprintf(fichier, u8"%d plaine (+ %d)\n", coureur[0], coureur[0] - notesInitiales[0]) ;
+	fprintf(fichier, u8"%d montagne (+ %d)\n", coureur[1], coureur[1] - notesInitiales[1]) ;
+	fprintf(fichier, u8"%d moyenne_montagne (+ %d)\n", coureur[2], coureur[2] - notesInitiales[2]) ;
+	fprintf(fichier, u8"%d vallon (+ %d)\n", coureur[3], coureur[3] - notesInitiales[3]) ;
+	fprintf(fichier, u8"%d contre-la-montre (+ %d)\n", coureur[4], coureur[4] - notesInitiales[4]) ;
+	fprintf(fichier, u8"%d prologue (+ %d)\n", coureur[5], coureur[5] - notesInitiales[5]) ;
+	fprintf(fichier, u8"%d pavés (+ %d)\n", coureur[6], coureur[6] - notesInitiales[6]) ;
+	fprintf(fichier, u8"%d sprint (+ %d)\n", coureur[7], coureur[7] - notesInitiales[7]) ;
+	fprintf(fichier, u8"%d accélération (+ %d)\n", coureur[8], coureur[8] - notesInitiales[8]) ;
+	fprintf(fichier, u8"%d descente (+ %d)\n", coureur[9], coureur[9] - notesInitiales[9]) ;
+	fprintf(fichier, u8"%d baroud (+ %d)\n", coureur[10], coureur[10] - notesInitiales[10]) ;
+	fprintf(fichier, u8"%d endurance (+ %d)\n", coureur[11], coureur[11] - notesInitiales[11]) ;
+	fprintf(fichier, u8"%d résistance (+ %d)\n", coureur[12], coureur[12] - notesInitiales[12]) ;
+	fprintf(fichier, u8"%d récupération (+ %d)\n", coureur[13], coureur[13] - notesInitiales[13]) ;
+	
+	fprintf(fichier, u8"%d points d%spens%ss.\n", pointsDepenses, é, é) ;
 	fclose(fichier) ;
-}
-
-void correctionString(char *string)
-{
-	if (string[strlen(string) == '\r'])
-	{
-		string[strlen(string)] = '\0' ;
-	}
 }
