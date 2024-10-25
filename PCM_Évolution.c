@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "creation.c"
 #include "calculAmelioration.c"
 
-char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibilité.
+char nomDeFichier[250] ;
 char paves[10] ;
 int points ;
 
@@ -78,6 +78,26 @@ int determinerNotesMax(int principal, int secondaire, int compteur)
 	return maximumDetermine ;
 }
 
+int retrouverNotesMax(int compteur)
+{
+	char fichierMax[255] ;
+	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	int maximumDetermine ;
+	int positionInitiale ;
+	
+	fichier = fopen(fichierMax, "r") ;
+	
+	if(fichier == NULL)
+	{
+		printf("Erreur, impossible de lire %s. Dans PCM_%svolution.c, int retrouverNotesMax.\n", fichierMax, É) ;
+	}
+	positionInitiale = 0 + (compteur * 3) ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &maximumDetermine) ;
+	fclose(fichier) ;
+	return maximumDetermine ;
+}
+
 void viderBuffer()
 {
 	int vider = 0 ;
@@ -104,18 +124,23 @@ void corrigerNomDeFichier()
 {
 	int compteur ;
 	int espaces = 0 ;
-	for (compteur = 0 ; compteur < 255 ; compteur ++)
+	char nomProvisoire[250] = {0} ;
+	for (compteur = 0 ; compteur < strlen(nomDeFichier + espaces) ; compteur ++)
 	{
 		if (nomDeFichier[compteur] == 36 || nomDeFichier[compteur] == 39 || nomDeFichier[compteur] == 10)
 		{
-			nomDeFichier[compteur + espaces] = '\0' ;
+			nomProvisoire[compteur + espaces] = '\0' ;
 		}
-		if (nomDeFichier[compteur] == 32)
+		/*else if (nomDeFichier[compteur] == 32)
 		{
-			nomDeFichier[compteur + espaces] = '\\' ;
-			nomDeFichier[compteur + espaces + 1] = ' ' ;
+			nomProvisoire[compteur + espaces] = '\\' ;
+			nomProvisoire[compteur + espaces + 1] = ' ' ;
 			espaces ++ ;
+		}*/
+		else
+		{
+			nomProvisoire[compteur + espaces] = nomDeFichier[compteur] ;
 		}
-	compteur ++ ;
 	}
+	memcpy(nomDeFichier, nomProvisoire, 250) ;
 }

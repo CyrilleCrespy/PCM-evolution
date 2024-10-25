@@ -1,4 +1,4 @@
-char nomDeFichier[255] ; //Limite imposée par le NTFS, pour plus de compatibilité.
+char nomDeFichier[250] ;
 int points ;
 int pointsDepenses ;
 
@@ -6,7 +6,7 @@ int demandeNomDeFichier(char *caracteristiques[])
 {
 	printf("Veuillez choisir un nom de fichier.\n") ;
 	viderBuffer() ;
-	fgets(nomDeFichier, 255, stdin) ;
+	fgets(nomDeFichier, 250, stdin) ;
 	corrigerNomDeFichier() ;
 	pointsDepenses = 0 ;
 	modification(0, caracteristiques, 150) ;
@@ -23,11 +23,10 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int principal = 0 ;
 	int secondaire = 0 ;
 	int compteur ;
-	int limiteMax ;
 	int choix = 999 ;
 	int maximum[14] = {0} ;
 	int potentiel ;
-	int coutPotentiel = 0 ;
+	int potentielInitial ;
 	int poids ;
 	int mois ;
 	int jour ;
@@ -58,6 +57,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	fgetc(fichier) ; //Pour ignorer le / de la date
 	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
 	fscanf(fichier, "%d %*s", &potentiel) ;
+	potentielInitial = potentiel ; //Utilisé pour vérifier qu'une seule augmentation de potentiel a été faite.
 	fscanf(fichier, "%s %*s", &nationalite[0]) ;
 	fscanf(fichier, "%s %*s %*s %*s", &course1[0]) ;
 	fscanf(fichier, "%s %*s %*s %*s", &course2[0]) ;
@@ -76,7 +76,8 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		points = 200 ;
 		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
-		printf("Tu d%smarres au potentiel 3 et tu ne pourras pas augmenter (tout de suite) de note au-dessus de 70.\n", é) ;
+		potentiel = 3 ;
+		potentielInitial = 3 ;
 		nouveau = 0 ;
 	}
 
@@ -84,6 +85,11 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
 		scanf("%d", &points) ;
+	}
+	
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		maximum[compteur] = retrouverNotesMax(compteur) ;		
 	}
 	
 	getchar() ;
@@ -98,16 +104,12 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	printf("Appuie sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
 	
-	for (compteur = 0 ; compteur < 14 ; compteur ++)
-	{
-		maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
-	}
+
 
 	while (choix != 0)
 	{
 		compteur = 0 ;
 		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales) ;
-		limiteMax = determinerLimitePotentiel(potentiel) ;
 		system(clear) ;
 		
 		printf("\nTu mesures %d centim%stres.\n", taille, è) ;
@@ -124,14 +126,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
 		}
 		
-		coutPotentiel = calculCoutPotentiel(potentiel) ;
-		if (coutPotentiel != 0)
-		{
-			printf("15. Augmenter le potentiel (%d) pour %d points de cha%sne (assures-toi des les avoir).\n", potentiel, coutPotentiel, î) ;
-		}
-		
 		printf("Tu as %d points d'am%slioration restants.\n", points, é) ;
-		printf("Limite de chaque note avec le potentiel actuel (qui est de %d sur 8) : %d.\n", potentiel, limiteMax) ;
 
 		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
 		scanf("%d", &choix) ;
@@ -143,108 +138,17 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		}
 		else if (coureur[choix-1] >= 85)
 		{
-			printf("Cette caract%sristique est d%sj%s au maximumimum.\n", é, é, à) ;
+			printf("Cette caract%sristique est d%sj%s au maximum.\n", é, é, à) ;
 		}
 		if (choix > 0 && choix <=14)
 		{
-			coureur[choix-1] = calculAmelioration(coureur[choix-1], limiteMax, &points, maximum, choix, notesInitiales[choix-1]) ; //La liste commençant à l'indice 0, on compense.
-		}
-		else if (choix == 15)
-		{
-			potentiel = augmenterPotentiel(potentiel) ;
+			coureur[choix-1] = calculAmelioration(coureur[choix-1], &points, &maximum[choix - 1], choix, notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
 		}
 		else
 		{
 			printf("Entrée invalide, merci de ne taper qu'un nombre entre 0 et 15.\n") ;
 		}
 	}
-}
-
-int calculCoutPotentiel(int potentiel)
-{
-	int coutPotentiel ;
-	if(potentiel == 3)
-		{
-			coutPotentiel = 1000 ;
-		}
-	else if(potentiel == 4)
-		{
-			coutPotentiel = 2000 ;
-		}
-	else if(potentiel == 5)
-		{
-			coutPotentiel = 3000 ;
-		}
-	else if(potentiel == 6)
-		{
-			coutPotentiel = 4000 ;
-		}
-	else if(potentiel == 7)
-		{
-			coutPotentiel = 5000 ;
-		}
-	return coutPotentiel ;
-}
-
-int augmenterPotentiel (int potentiel)
-{
-	int choix = 0 ;
-	system(clear) ;
-	printf("ATTENTION. Il te faut avoir assez de points de cha%sne.\n", î) ;
-	printf("Toute modification sera v%srifi%se, n'essaie pas de tricher.\n", é, é) ;
-	printf("Tu risques une sanction en cas de tentative de fraude.\n") ;
-	printf("Tape Entr%se si tu as compris.\n", é) ;
-	getchar() ;
-	getchar() ;
-	printf("Confirmer le choix ?\n") ;
-	printf("1. Oui\n") ;
-	printf("2. Non\n") ;
-	while (choix != 1 && choix != 2)
-	{
-		scanf("%d", &choix) ;
-		if (choix == 1)
-		{
-			potentiel ++ ;
-			printf("%d", potentiel) ;
-			return potentiel ;
-		}
-		else if (choix == 2)
-		{
-			return potentiel ;
-		}
-		else
-		{
-			printf("Entr%se invalide", é) ;
-		}
-	}
-	return potentiel ;
-}
-
-int determinerLimitePotentiel(int potentiel)
-{
-	int limiteMax ;
-	if (potentiel == 3)
-	{
-		limiteMax = 70 ;
-	}
-	else if (potentiel == 4 || potentiel == 5)
-	{
-		limiteMax = 75 ;
-	}
-	else if (potentiel == 6 || potentiel == 7)
-	{
-		limiteMax = 80 ;
-	}
-	else if (potentiel == 8)
-	{
-		limiteMax = 85 ;
-	}
-	else
-	{
-		printf("Potentiel invalide (%d).\n", potentiel) ;
-		exit(EXIT_FAILURE) ;
-	}
-	return limiteMax ;
 }
 
 void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[])
@@ -308,6 +212,6 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%d résistance (+ %d)\n", coureur[12], coureur[12] - notesInitiales[12]) ;
 	fprintf(fichier, u8"%d récupération (+ %d)\n", coureur[13], coureur[13] - notesInitiales[13]) ;
 	
-	fprintf(fichier, u8"%d points d%spens%ss.\n", pointsDepenses, é, é) ;
+	fprintf(fichier, u8"%d point(s) dépensé(s).\n", pointsDepenses) ;
 	fclose(fichier) ;
 }

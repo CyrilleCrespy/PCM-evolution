@@ -1,4 +1,4 @@
-int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int noteInitiale)
+int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, int noteInitiale, int *potentiel, int potentielInitial)
 {
 	int entreeMenu = 3 ;
 	system(clear) ;
@@ -10,29 +10,37 @@ int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum
 		printf("0. Annuler.\n") ;
 		printf("1. Augmenter.\n") ;
 		printf("2. Diminuer.\n") ;
+		if(potentielInitial == *potentiel) //Uniquement si le potentiel ne vient pas d'être augmenté.
+		{	
+			printf("3. Augmenter le potentiel.\n") ;
+		}
 		scanf("%d", &entreeMenu) ;
 
-		if (entreeMenu == 0)
+		switch (entreeMenu)
 		{
-			return 0 ;
-		}
-		else if (entreeMenu == 1)
-		{
-			noteActuelle = calculAugmentation(noteActuelle, limiteMax, points, maximum, choix) ;
-		}
-		else if (entreeMenu == 2)
-		{
-			noteActuelle = calculDiminution(noteActuelle, points, noteInitiale) ;
-		}
-		else
-		{
-			printf("Entrée incorrecte.\n") ;
+			case 0 :
+				return 0 ;
+				break ;
+			case 1 :
+				noteActuelle = calculAugmentation(noteActuelle, points, maximum, choix) ;
+				break ;
+			case 2 :
+				noteActuelle = calculDiminution(noteActuelle, points, noteInitiale) ;
+				break ;
+			case 3 :
+				if(potentielInitial == *potentiel)
+				{
+					calculPotentiel(noteActuelle, points, potentiel, maximum) ;
+				}
+				return noteActuelle ;
+			default :
+				printf("Entrée incorrecte.\n") ;
 		}
 	}
 	return noteActuelle ;
 }
 
-int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum[], int choix)
+int calculAugmentation(int noteActuelle, int *points, int *maximum, int choix)
 {
 	int coutEvolution[50] = {0} ;
 	int augmentationMax = 0 ;
@@ -48,25 +56,19 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 		augmentationMax ++ ;
 		
 		coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
-		if(noteFictive > limiteMax)
+		if(noteFictive > *maximum)
 		{
 			augmentationMax -- ;
 			raisons[0] = 1 ;
 			continuerBoucle = 0 ;
 		}
-		if(noteFictive > maximum[choix - 1])
+		if (coutEvolution[compteur] > *points)
 		{
 			augmentationMax -- ;
 			raisons[1] = 1 ;
 			continuerBoucle = 0 ;
 		}
-		if (coutEvolution[compteur] > *points)
-		{
-			augmentationMax -- ;
-			raisons[2] = 1 ;
-			continuerBoucle = 0 ;
-		}
-		if (raisons[0] == 0 && raisons[1] == 0 && raisons[2] == 0)
+		if (raisons[0] == 0 && raisons[1] == 0)
 		{
 			compteur ++ ;
 			coutEvolution[compteur] = coutEvolution[compteur - 1] ; //Le prochain achat coûtera le coût du précédent, plus le complément calculé dans la prochaine itération de la boucle.
@@ -75,7 +77,7 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	
 
 	
-	compteur = 0 ;
+	compteur = 1 ;
 	system(clear) ;
 
 	if (augmentationMax > 0)
@@ -90,13 +92,9 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 	printf ("Voici la ou les raison(s) qui ne permettent pas d'augmenter au-del%s de ces possibilit%ss :\n", à, é) ;
 	if (raisons[0] == 1)
 	{
-		printf("Potentiel trop faible pour augmenter davantage (note maximale du potentiel : %d).\n", limiteMax) ;
+		printf("Potentiel trop faible pour augmenter davantage (potentiel : %d).\n", *maximum) ;
 	}
 	if (raisons[1] == 1)
-	{
-		printf("La note atteint d%sj%s le plafond (%d) permis par ce type de coureur.\n", é, à, maximum[choix - 1]) ;
-	}
-	if (raisons[2] == 1)
 	{
 		printf("Tu n'as plus assez de points d'%svolution pour augmenter davantage.\n", é) ;
 	}
@@ -113,12 +111,11 @@ int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum
 		return noteActuelle ;
 	}
 	
-	if (augmentationVoulue != 0)
+	if (augmentationVoulue != 0 && augmentationVoulue < augmentationMax)
 	{
 		noteActuelle = noteActuelle + augmentationVoulue ;
 		*points = *points - coutEvolution[augmentationVoulue - 1] ;
 		pointsDepenses = pointsDepenses + coutEvolution[augmentationVoulue - 1] ;
-		printf("%d", pointsDepenses) ;
 		getchar() ;
 	}
 	return noteActuelle ;
@@ -138,7 +135,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	if (diminutionMax == 0) //Si aucune amélioration n'a été faite depuis le lancement.
 	{
 		printf("Vous n'avez pas augment%s cette note durant cette session. Diminution impossible.\n", é) ;
-		printf("Appuyez sur Entr%se pour continuer.\n", é) ;
+		printf("Appuie sur Entr%se pour continuer.\n", é) ;
 		getchar() ;
 		getchar() ;
 		return noteActuelle ;
@@ -176,4 +173,60 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
 	}
 	return noteActuelle ;
+}
+
+void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximum)
+{
+	int choix = -1 ;
+	int augmentation = 0 ;
+	int cout = 2000 ;
+	
+	viderBuffer() ;
+	system(clear) ;
+	
+	printf("Tu ne peux augmenter ton potentiel que trois fois durant toute la carri%sre. Une fois par session.\n", è) ;
+	printf("Une %svolution co%sute %d points de chaîne.\n", é, û, *points) ;
+	printf("Assure-toi des les avoir, toute triche sera sanctionn%se.\n", é) ;
+	printf("Appuie sur Entr%se pour continuer.\n", é) ;
+	
+	getchar() ;
+	
+	if (noteActuelle < 75)
+	{
+		augmentation = 3 ;
+	}
+	else if (noteActuelle < 81)
+	{
+		augmentation = 2 ;
+	}
+	else if (noteActuelle < 85)
+	{
+		augmentation = 1 ;
+	}
+	else
+	{
+		printf("Note au maximum permis par le jeu.\n") ;
+	}
+	
+	printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points de cha%sne ?\n", augmentation, cout, î) ;
+	printf("0. Non\n") ;
+	printf("1. Oui\n") ;
+
+	while (choix != 0 && choix != 1)
+	{
+		scanf("%d", &choix) ;
+		if (choix == 0)
+		{
+			continue ;
+		}
+		else if (choix == 1)
+		{
+			*potentiel = *potentiel + 1 ;
+			*maximum = *maximum + augmentation ;
+		}
+		else
+		{
+			printf("Entr%se invalide", é) ;
+		}
+	}
 }

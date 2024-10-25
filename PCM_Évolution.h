@@ -15,15 +15,14 @@ char *choixCourseFavorite() ;
 int demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
-int calculAmelioration(int noteActuelle, int limiteMax, int *points, int maximum[], int choix, int notesInitiales) ;
 void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[]) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
-int determinerLimitePotentiel(int potentiel) ;
+int retrouverNotesMax(int compteur) ;
 void corrigerNomDeFichier() ;
-int calculAugmentation(int noteActuelle, int limiteMax, int *points, int maximum[], int choix) ;
+int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, int notesInitiales, int *potentiel, int potentielInitial) ;
+int calculAugmentation(int noteActuelle, int *points, int *maximum, int choix) ;
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
-int calculCoutPotentiel(int potentiel) ;
-int augmenterPotentiel(int potentiel) ;
+void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum) ;
 void supressionEspace() ;
 
 #define Windows

@@ -74,7 +74,7 @@ int choixNomDeFichier()
 	unsigned char choix = 0 ;
 	printf("Entre ton pr%snom suivi de ton nom, s%spar%ss par un espace.\n", é, é, é) ;
 	getchar() ;
-	fgets(nomDeFichier, 255, stdin) ;
+	fgets(nomDeFichier, 250, stdin) ;
 	corrigerNomDeFichier() ;
 	int fichierOuvert = verificationExistanceDuFichier(nomDeFichier) ;
 	if (fichierOuvert == 1)
@@ -376,12 +376,45 @@ int choixSecondaire(int principal)
 int calculStyle(int principal, int secondaire)
 {
 	int style ;
+	int maximum[14] = {0} ;
+	int compteur ;
+	char fichierMax[255] = {0} ;
+	
+	FILE* fichier = NULL ;
+	
+	supressionEspace() ;
+	
 	principal = ((principal) * 14) ;
 	style = principal + secondaire + 1 ;
 	printf("Le stye a %st%s correctement entr%s. Code : %d\n", é, é, é, style) ;
 	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
 	getchar() ;
 	system(clear) ;
-	
+	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	fichier = fopen(fichierMax, "w+") ;
+	if (fichier == NULL)
+	{
+		printf("Impossible d'ouvrir le fichier %s en %scriture. Dans creation.c, int calculStyle.\n", fichierMax, é) ;
+		perror("Erreur.\n") ;
+		exit(EXIT_FAILURE) ;
+	}
+	fclose(fichier) ;
+
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
+	{
+		fichier = fopen(fichierMax, "a") ;
+		if (fichier != NULL)
+		{
+			maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
+			fprintf(fichier, "%d\n", maximum[compteur]) ;
+			fclose(fichier) ;
+		}
+		else
+		{
+			printf("Erreur lors de l'%scriture du maximum %d.\n", é, compteur + 1) ;
+			perror("Erreur.\n") ;
+			exit(EXIT_FAILURE) ;
+		}
+	}
 	return style ;
 }
