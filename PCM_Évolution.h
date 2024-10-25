@@ -15,7 +15,8 @@ char *choixCourseFavorite() ;
 int demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[]) ;
+void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[]) ;
+void enregistrerMax(int maximum[]) ;
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int retrouverNotesMax(int compteur) ;
 void corrigerNomDeFichier() ;
@@ -26,7 +27,7 @@ void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum
 void supressionEspace() ;
 
 #define Windows
-#ifdef Linux
+#ifdef Windows
 #define é "\x82"
 #define É "\x90"
 #define è "\x8A"
