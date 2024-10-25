@@ -19,14 +19,14 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 int determinerNotesMax(int principal, int secondaire, int compteur) ;
 int retrouverNotesMax(int compteur) ;
 void corrigerNomDeFichier() ;
-int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, int notesInitiales, int *potentiel, int potentielInitial) ;
-int calculAugmentation(int noteActuelle, int *points, int *maximum, int choix) ;
+int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesInitiales, int *potentiel, int potentielInitial) ;
+int calculAugmentation(int noteActuelle, int *points, int *maximum) ;
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum) ;
 void supressionEspace() ;
 
 #define Windows
-#ifdef Windows
+#ifdef Linux
 #define é "\x82"
 #define É "\x90"
 #define è "\x8A"

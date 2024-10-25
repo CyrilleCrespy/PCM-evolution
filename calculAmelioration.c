@@ -1,4 +1,4 @@
-int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, int noteInitiale, int *potentiel, int potentielInitial)
+int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInitiale, int *potentiel, int potentielInitial)
 {
 	int entreeMenu = 3 ;
 	system(clear) ;
@@ -22,7 +22,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, i
 				return 0 ;
 				break ;
 			case 1 :
-				noteActuelle = calculAugmentation(noteActuelle, points, maximum, choix) ;
+				noteActuelle = calculAugmentation(noteActuelle, points, maximum) ;
 				break ;
 			case 2 :
 				noteActuelle = calculDiminution(noteActuelle, points, noteInitiale) ;
@@ -40,7 +40,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int choix, i
 	return noteActuelle ;
 }
 
-int calculAugmentation(int noteActuelle, int *points, int *maximum, int choix)
+int calculAugmentation(int noteActuelle, int *points, int *maximum)
 {
 	int coutEvolution[50] = {0} ;
 	int augmentationMax = 0 ;

@@ -142,7 +142,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		}
 		if (choix > 0 && choix <=14)
 		{
-			coureur[choix-1] = calculAmelioration(coureur[choix-1], &points, &maximum[choix - 1], choix, notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
+			coureur[choix-1] = calculAmelioration(coureur[choix-1], &points, &maximum[choix - 1], notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
 		}
 		else
 		{
