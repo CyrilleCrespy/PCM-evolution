@@ -13,9 +13,12 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 		if(potentielInitial == *potentiel) //Uniquement si le potentiel ne vient pas d'être augmenté.
 		{	
 			printf("3. Augmenter le potentiel.\n") ;
+			entreeMenu = verificationEntreeNumerique(0, 3) ;
 		}
-		
-		entreeMenu = verificationEntreeNumerique(0, 3) ;
+		else
+		{
+		entreeMenu = verificationEntreeNumerique(0, 2) ;
+		}
 
 		switch (entreeMenu)
 		{
