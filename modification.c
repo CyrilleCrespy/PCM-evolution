@@ -10,6 +10,7 @@ int demandeNomDeFichier(char *caracteristiques[])
 	corrigerNomDeFichier() ;
 	pointsDepenses = 0 ;
 	modification(0, caracteristiques, 150) ;
+	viderBuffer() ;
 	return 0 ;
 }
 
@@ -84,7 +85,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	else
 	{
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
-		scanf("%d", &points) ;
+		points = verificationEntreeNumerique(0, 5000) ;
 	}
 	
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
@@ -129,7 +130,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		printf("Tu as %d points d'am%slioration restants.\n", points, é) ;
 
 		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
-		scanf("%d", &choix) ;
+		choix = verificationEntreeNumerique(1, 14) ;
 
 		if (choix == 0)
 		{
@@ -143,10 +144,6 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		if (choix > 0 && choix <=14)
 		{
 			coureur[choix-1] = calculAmelioration(coureur[choix-1], &points, &maximum[choix - 1], notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
-		}
-		else
-		{
-			printf("Entrée invalide, merci de ne taper qu'un nombre entre 0 et 15.\n") ;
 		}
 	}
 }

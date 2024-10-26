@@ -146,7 +146,7 @@ void corrigerNomDeFichier()
 
 int verificationEntreeNumerique(int min, int max)
 {
-	int donneeVerifiee = 255 ;
+	int donneeVerifiee = 65536 ;
 	while (donneeVerifiee < min || donneeVerifiee > max)
 	{
 		if ((scanf("%d", &donneeVerifiee) == 1) && (donneeVerifiee >= min && donneeVerifiee <= max))
@@ -160,6 +160,7 @@ int verificationEntreeNumerique(int min, int max)
 		}
 	}
 	printf("Erreur dans PCM_%svolution.c, int verificationEntreeNumerique.\n", É) ;
+	printf("Valeur connue : %d, valeur min : %d, valeur max : %d.\n", donneeVerifiee, min, max) ;
 	exit(EXIT_FAILURE) ;
 }
 

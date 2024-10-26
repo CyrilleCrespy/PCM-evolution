@@ -14,7 +14,8 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 		{	
 			printf("3. Augmenter le potentiel.\n") ;
 		}
-		scanf("%d", &entreeMenu) ;
+		
+		entreeMenu = verificationEntreeNumerique(0, 3) ;
 
 		switch (entreeMenu)
 		{
@@ -34,7 +35,8 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 				}
 				return noteActuelle ;
 			default :
-				printf("Entrée incorrecte.\n") ;
+				printf("Exception inattendue dans calculAmelioration.c, int calculAmelioration.\n") ;
+				exit(EXIT_FAILURE) ;
 		}
 	}
 	return noteActuelle ;
@@ -102,7 +104,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 	if (augmentationMax > 0)
 	{
 		printf("Tape 0 pour annuler cette demande.\n") ;
-		scanf("%d", &augmentationVoulue) ;
+		augmentationVoulue = verificationEntreeNumerique(1, augmentationMax) ;
 	}
 	else
 	{
@@ -165,7 +167,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 		
 	}
 	printf("Tape 0 pour annuler cette demande.\n") ;
-	scanf("%d", &diminutionVoulue) ;
+	diminutionVoulue = verificationEntreeNumerique (1, diminutionMax) ;
 	if (pointsRedonnes[diminutionVoulue] != 0)
 	{
 		noteActuelle = noteActuelle - diminutionVoulue ;
@@ -212,21 +214,14 @@ void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximu
 	printf("0. Non\n") ;
 	printf("1. Oui\n") ;
 
-	while (choix != 0 && choix != 1)
+	choix = verificationEntreeNumerique (0, 1) ;
+	if (choix == 0)
 	{
-		scanf("%d", &choix) ;
-		if (choix == 0)
-		{
-			continue ;
-		}
-		else if (choix == 1)
-		{
-			*potentiel = *potentiel + 1 ;
-			*maximum = *maximum + augmentation ;
-		}
-		else
-		{
-			printf("Entr%se invalide", é) ;
-		}
+		return ;
+	}
+	else if (choix == 1)
+	{
+		*potentiel = *potentiel + 1 ;
+		*maximum = *maximum + augmentation ;
 	}
 }
