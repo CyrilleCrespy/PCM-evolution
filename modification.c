@@ -130,7 +130,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		printf("Tu as %d points d'am%slioration restants.\n", points, é) ;
 
 		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
-		choix = verificationEntreeNumerique(1, 14) ;
+		choix = verificationEntreeNumerique(0, 14) ;
 
 		if (choix == 0)
 		{
