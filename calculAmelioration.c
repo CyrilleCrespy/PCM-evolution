@@ -107,7 +107,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 	if (augmentationMax > 0)
 	{
 		printf("Tape 0 pour annuler cette demande.\n") ;
-		augmentationVoulue = verificationEntreeNumerique(1, augmentationMax) ;
+		augmentationVoulue = verificationEntreeNumerique(0, augmentationMax) ;
 	}
 	else
 	{
@@ -122,8 +122,12 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 		*points = *points - coutEvolution[augmentationVoulue - 1] ;
 		pointsDepenses = pointsDepenses + coutEvolution[augmentationVoulue - 1] ;
 		getchar() ;
+		return noteActuelle ;
 	}
-	return noteActuelle ;
+	else
+	{
+		return noteActuelle ;
+	}
 }
 
 int calculDiminution(int noteActuelle, int *points, int noteInitiale)

@@ -71,12 +71,12 @@ int main(void)
 	return -1 ;
 }
 
-int determinerNotesMax(int principal, int secondaire, int compteur)
+int determinerNotesMax(int style, int compteur)
 {
 	int maximumDetermine ;
 	int positionInitiale ;
 	fichier = fopen("combinaisons", "r") ;
-	positionInitiale = ((principal * 7) + (secondaire * 42) + (compteur * 3)) ;
+	positionInitiale = ((style - 1) * 42) + (compteur * 3) ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;
@@ -127,7 +127,7 @@ void supressionEspace()
 
 void corrigerNomDeFichier()
 {
-	int compteur ;
+	long unsigned int compteur ; //Long unsigned int pour la comparaison avec strlen.
 	int espaces = 0 ;
 	char nomProvisoire[250] = {0} ;
 	for (compteur = 0 ; compteur < strlen(nomDeFichier + espaces) ; compteur ++)

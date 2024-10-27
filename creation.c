@@ -269,7 +269,8 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 	static char donnee[100] ;
 	int choix ;
 
-	if (premiereLettre < 65 || premiereLettre > 122 || (premiereLettre > 90 && premiereLettre < 97)) //Si ce n'est pas une lettre.
+	if (premiereLettre < 48 || premiereLettre > 122 || (premiereLettre < 65 && premiereLettre > 57) || (premiereLettre > 90 && premiereLettre < 97))
+	//Si ce n'est pas une lettre ou un chiffre.
 	{
 		printf("Ce n'est pas une lettre.\n") ;
 		memset(donnee, 0, 100) ;
@@ -316,7 +317,7 @@ char *propositionDonnees(int typeFichiers, char premiereLettre)
 			lettreFichier = fgetc(fichier) ;
 		}
 		printf("Entre le num%sro de ton choix (0 pour annuler).\n", é) ;
-		choix = verificationEntreeNumerique(1, compteur) ;
+		choix = verificationEntreeNumerique(0, compteur) ;
 		if (choix == 0)
 		{
 			memset(donnee, 0, 100) ;
@@ -341,7 +342,7 @@ int calculStyle(int principal, int secondaire)
 	
 	supressionEspace() ;
 	
-	principal = ((principal) * 14) ;
+	principal = ((principal) * 7) ;
 	style = principal + secondaire + 1 ;
 	printf("Le stye a %st%s correctement entr%s. Code : %d\n", é, é, é, style) ;
 	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
@@ -362,7 +363,7 @@ int calculStyle(int principal, int secondaire)
 		fichier = fopen(fichierMax, "a") ;
 		if (fichier != NULL)
 		{
-			maximum[compteur] = determinerNotesMax(principal, secondaire, compteur) ;
+			maximum[compteur] = determinerNotesMax(style, compteur) ;
 			fprintf(fichier, "%d\n", maximum[compteur]) ;
 			fclose(fichier) ;
 		}
