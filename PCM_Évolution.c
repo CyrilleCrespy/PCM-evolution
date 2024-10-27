@@ -76,7 +76,7 @@ int determinerNotesMax(int style, int compteur)
 	int maximumDetermine ;
 	int positionInitiale ;
 	fichier = fopen("combinaisons", "r") ;
-	positionInitiale = ((style - 1) * 42) + (compteur * 3) ;
+	positionInitiale = (style * 42) + (compteur * 3) ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;
@@ -96,7 +96,7 @@ int retrouverNotesMax(int compteur)
 	{
 		printf("Erreur, impossible de lire %s. Dans PCM_%svolution.c, int retrouverNotesMax.\n", fichierMax, É) ;
 	}
-	positionInitiale = 0 + (compteur * 3) ;
+	positionInitiale = 0 + (compteur * DECALAGE) ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;

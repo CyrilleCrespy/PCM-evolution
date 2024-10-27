@@ -69,8 +69,8 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		fscanf(fichier, "%d %*s %*s %*s", &coureur[compteur]) ;
 	}
 	
-	principal = style / 14 ;
-	secondaire = (style % 14) - 1 ;
+	principal = style / 7 ;
+	secondaire = (style % 7) ;
 	fclose(fichier) ;
 
 	if(nouveau == 1)

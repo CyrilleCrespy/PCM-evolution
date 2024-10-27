@@ -14,7 +14,8 @@ sur Pro cycling manager. Il permet de créer des fiches de coureur, et de savoir
 sont possibles en fonction du nombre de points de chaînes disponibles pour l'utilisateur.
 Copyright (C) 2024  Cyrille Crespy
 
-Le programme nécessite la présence du fichier combinaisons, qui doit être fourni dans l'archive où se trouve ce fichier texte.
+Le programme nécessite la présence des fichiers combinaisons, courses et pays, qui doivent être fournis dans l'archive où se trouve ce fichier texte.
+La compilation nécessite de passer #define Windows pour obtenir un exécutable pour ce système d'exploitation, par exemple en passant l'argument -D Windows à gcc.
 
 Code source disponible en ligne : https://github.com/CyrilleCrespy/PCM-evolution
 

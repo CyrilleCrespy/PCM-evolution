@@ -342,8 +342,8 @@ int calculStyle(int principal, int secondaire)
 	
 	supressionEspace() ;
 	
-	principal = ((principal) * 7) ;
-	style = principal + secondaire + 1 ;
+	principal = (principal) * 7 ;
+	style = principal + secondaire ;
 	printf("Le stye a %st%s correctement entr%s. Code : %d\n", é, é, é, style) ;
 	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
 	getchar() ;

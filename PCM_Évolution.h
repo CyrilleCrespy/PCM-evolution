@@ -2,6 +2,8 @@ int creation(char *caracteristiques[]) ; //Choix 1 du menu
 int choixNomDeFichier() ; 
 int verificationExistanceDuFichier() ;
 void viderBuffer() ;
+int verificationEntreeNumerique(int min, int max) ;
+int confirmationEntree() ;
 int choixPrincipal() ;
 int choixSecondaire() ;
 int calculStyle(int principal, int secondaire) ;
@@ -17,7 +19,7 @@ void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
 void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[]) ;
 void enregistrerMax(int maximum[]) ;
-int determinerNotesMax(int principal, int secondaire, int compteur) ;
+int determinerNotesMax(int style, int compteur) ;
 int retrouverNotesMax(int compteur) ;
 void corrigerNomDeFichier() ;
 int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesInitiales, int *potentiel, int potentielInitial) ;
@@ -26,7 +28,6 @@ int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum) ;
 void supressionEspace() ;
 
-#define Windows
 #ifdef Windows
 #define é "\x82"
 #define É "\x90"
@@ -39,6 +40,7 @@ void supressionEspace() ;
 #define tiret "\xC4"
 #define clear "cls"
 #define symboleNumero "\xA7"
+#define DECALAGE 4
 
 #else //Pour les systèmes d'exploitation normalement constitués
 #define é "é"
@@ -52,4 +54,5 @@ void supressionEspace() ;
 #define tiret "─"
 #define clear "clear"
 #define symboleNumero "°"
+#define DECALAGE 3
 #endif
