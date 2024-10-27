@@ -82,7 +82,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 	
 
 	
-	compteur = 1 ;
+	compteur = 0 ;
 	system(clear) ;
 
 	if (augmentationMax > 0)
