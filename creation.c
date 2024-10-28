@@ -1,5 +1,3 @@
-FILE* fichier = NULL ;
-
 int creation(char *caracteristiques[])
 {
 	int fichierOK = 0 ;
@@ -340,7 +338,7 @@ int calculStyle(int principal, int secondaire)
 	
 	FILE* fichier = NULL ;
 	
-	supressionEspace() ;
+	suppressionEspace() ;
 	
 	principal = (principal) * 7 ;
 	style = principal + secondaire ;

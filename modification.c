@@ -1,22 +1,43 @@
 char nomDeFichier[250] ;
 int points ;
 int pointsDepenses ;
+FILE* fichier = NULL ;
 
-int demandeNomDeFichier(char *caracteristiques[])
+void demandeNomDeFichier(char *caracteristiques[])
 {
-	printf("Veuillez choisir un nom de fichier.\n") ;
-	viderBuffer() ;
-	fgets(nomDeFichier, 250, stdin) ;
-	corrigerNomDeFichier() ;
-	pointsDepenses = 0 ;
-	modification(0, caracteristiques, 150) ;
-	viderBuffer() ;
-	return 0 ;
+	while (1)
+	{
+		system(clear) ;
+		int fichierOuvert ;
+		
+		fopen(nomDeFichier, "r") ;
+		printf("Merci de choisir un nom de fichier.\n") ;
+		viderBuffer() ;
+		fgets(nomDeFichier, 250, stdin) ;
+		corrigerNomDeFichier() ;
+		suppressionEspace() ;
+		fichierOuvert = verificationExistanceDuFichier() ;
+		pointsDepenses = 0 ;
+		if (fichierOuvert == 0)
+		{
+			perror("Impossible d'ouvrir le fichier. Le fichier existe-t-il ? As-tu les droits de lecture dessus ?\n") ;
+			printf("Nom de fichier attendu : %s.\n", nomDeFichier) ;
+			printf("Appuie sur Entr%se pour continuer.\n", é) ;
+			getchar() ;
+			fclose(fichier) ;
+			continue ;
+		}
+		else
+		{
+			modification(0, caracteristiques, 150) ;
+		}
+		viderBuffer() ;
+	}
+	
 }
 
 void modification(int nouveau, char *caracteristiques[], int taille)
 {
-	FILE* fichier = NULL ;
 	system(clear) ;
 	points = 0 ;
 	int coureur[21] = {0} ;
@@ -151,7 +172,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[])
 {	
 	FILE* fichier = NULL ;
-	supressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
+	suppressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
 	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
 	fichier = fopen(nomDeFichier, "w+") ;
 	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\

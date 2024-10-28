@@ -14,7 +14,7 @@ int choixJourDeNaissance(int jourMax) ;
 char *choixNationalite() ;
 char *propositionDonnees(int typeFichier, char premiereLettre) ;
 char *choixCourseFavorite() ;
-int demandeNomDeFichier(char *caracteristiques[]) ;
+void demandeNomDeFichier(char *caracteristiques[]) ;
 void modification(int points, char *caracteristiques[], int taille) ;
 int lireStats() ;
 void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[]) ;
@@ -26,7 +26,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesIni
 int calculAugmentation(int noteActuelle, int *points, int *maximum) ;
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
 void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum) ;
-void supressionEspace() ;
+void suppressionEspace() ;
 
 #ifdef Windows
 #define é "\x82"

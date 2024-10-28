@@ -51,7 +51,7 @@ int main(void)
 		printf("2. Modification de fiche coureur.\n") ;
 		printf("Quitter avec 0.\n") ;
 		choix = verificationEntreeNumerique(0, 2) ;
-		supressionEspace() ;
+		suppressionEspace() ;
 		if (choix == 1)
 		{
 			creation(caracteristiques) ;
@@ -112,7 +112,7 @@ void viderBuffer()
 	}
 }
 
-void supressionEspace()
+void suppressionEspace()
 {
 	while (nomDeFichier[strlen(nomDeFichier)] == 32 || nomDeFichier[strlen(nomDeFichier)] == 92)
 	{
