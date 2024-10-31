@@ -52,6 +52,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	int poids ;
 	int mois ;
 	int jour ;
+	int fichierOK ;
 	int fichierOuvert = 0 ;
 	char nationalite[100] ;
 	char course1[100] ;
@@ -89,6 +90,19 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	{
 		fscanf(fichier, "%d %*s %*s %*s", &coureur[compteur]) ;
 	}
+	
+	fichierOK = verifierDonnees(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
+	if (fichierOK == 1)
+	{
+		printf("Fichier de sauvegarde OK.\n") ;
+	}
+	else
+	{
+		printf("Fichier de sauvegarde mal enregistr%s. Restauration.\n", é) ;
+		restaurerSauvegarde() ;
+	}
+	
+	getchar() ;
 	
 	principal = style / 7 ;
 	secondaire = (style % 7) ;
@@ -212,7 +226,6 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	fprintf(fichier, u8"%s course favorite 1\n", course1) ;
 	fprintf(fichier, u8"%s course favorite 2\n", course2) ;
 	fprintf(fichier, u8"%s course favorite 3\n", course3) ;
-	
 	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
 	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
 	fprintf(fichier, u8"%d plaine (+ %d)\n", coureur[0], coureur[0] - notesInitiales[0]) ;
@@ -236,27 +249,5 @@ void enregistrer(int style, int coureur[], int potentiel, int principal, int sec
 	{
 		enregistrerMax(maximum) ;
 	}
-}
-
-void enregistrerMax(int maximum[])
-{
-	FILE* fichier = NULL ;
-	char fichierMax[255] ;
-	int compteur = 0 ;
-	
-	sprintf(fichierMax, "%s_max", nomDeFichier) ;
-	fichier = fopen(fichierMax, "w+") ;
-	if(fichier == NULL)
-	{
-		printf("Erreur, impossible d'ouvrir %s. Dans modification.c, void enregistrerMax.\n", fichierMax) ;
-	}
-	else
-	{
-		while (compteur < 14)
-		{
-			fprintf(fichier, "%d\n", maximum[compteur]) ;
-			compteur ++ ;
-		}
-	}
-	fclose(fichier) ;
+	creerCopie() ;
 }
