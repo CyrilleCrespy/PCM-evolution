@@ -135,14 +135,12 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 
 int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 {
-	int pointsRedonnes[50] ;
+	int pointsRedonnes[50] = {0} ;
 	int diminutionMax = noteActuelle - noteInitiale ;
 	int noteFictive = noteActuelle ;
 	int continuerBoucle = 1 ;
 	int compteur = 0 ;
 	int diminutionVoulue ;
-	
-	pointsRedonnes[0] = -1 ;
 	
 	if (diminutionMax == 0) //Si aucune amélioration n'a été faite depuis le lancement.
 	{
@@ -175,17 +173,20 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	{
 		printf("%d. Diminuer la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur + 1, compteur + 1, pointsRedonnes[compteur], é, à, noteActuelle - (compteur + 1)) ;
 		compteur ++ ;
-		
 	}
 	printf("Tape 0 pour annuler cette demande.\n") ;
-	diminutionVoulue = verificationEntreeNumerique (1, diminutionMax) ;
-	if (pointsRedonnes[diminutionVoulue] != 0)
+	diminutionVoulue = verificationEntreeNumerique (0, diminutionMax) ;
+	if (diminutionVoulue != 0)
 	{
 		noteActuelle = noteActuelle - diminutionVoulue ;
 		*points = *points + pointsRedonnes[diminutionVoulue] ;
 		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
+		remplirJournal("Diminution validée.") ;
 	}
-	remplirJournal("Augmentation validée.") ;
+	else
+	{
+		remplirJournal("Diminution annulée.") ;
+	}
 	return noteActuelle ;
 }
 
