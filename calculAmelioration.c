@@ -179,7 +179,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	if (diminutionVoulue != 0)
 	{
 		noteActuelle = noteActuelle - diminutionVoulue ;
-		*points = *points + pointsRedonnes[diminutionVoulue] ;
+		*points = *points + pointsRedonnes[diminutionVoulue] - 1 ;
 		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
 		remplirJournal("Diminution validée.") ;
 	}
