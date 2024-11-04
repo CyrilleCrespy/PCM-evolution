@@ -80,8 +80,6 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 		}
 	}
 	
-
-	
 	compteur = 0 ;
 	system(clear) ;
 
@@ -112,6 +110,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 	else
 	{
 		printf("Appuie sur Entr%se pour continuer.\n", é) ;
+		remplirJournal("Augmentation annul%se car impossible.") ;
 		getchar() ;
 		return noteActuelle ;
 	}
@@ -122,10 +121,14 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 		*points = *points - coutEvolution[augmentationVoulue - 1] ;
 		pointsDepenses = pointsDepenses + coutEvolution[augmentationVoulue - 1] ;
 		getchar() ;
+		remplirJournal("Augmentation validée.") ;
+		
 		return noteActuelle ;
 	}
 	else
 	{
+		printf("Augmentation impossible.\n") ;
+		remplirJournal("Augmentation requise impossible.") ;
 		return noteActuelle ;
 	}
 }
@@ -145,6 +148,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	{
 		printf("Vous n'avez pas augment%s cette note durant cette session. Diminution impossible.\n", é) ;
 		printf("Appuie sur Entr%se pour continuer.\n", é) ;
+		remplirJournal("Diminution impossible.") ;
 		getchar() ;
 		getchar() ;
 		return noteActuelle ;
@@ -181,6 +185,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 		*points = *points + pointsRedonnes[diminutionVoulue] ;
 		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
 	}
+	remplirJournal("Augmentation validée.") ;
 	return noteActuelle ;
 }
 
@@ -230,5 +235,6 @@ void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximu
 	{
 		*potentiel = *potentiel + 1 ;
 		*maximum = *maximum + augmentation ;
+		remplirJournal("Augmentation de potentiel validée.") ;
 	}
 }

@@ -9,8 +9,9 @@ void demandeNomDeFichier(char *caracteristiques[])
 	{
 		system(clear) ;
 		int fichierOuvert ;
+		int session ;
+		char messageJournal[100] ;
 		
-		fopen(nomDeFichier, "r") ;
 		printf("Merci de choisir un nom de fichier.\n") ;
 		viderBuffer() ;
 		fgets(nomDeFichier, 250, stdin) ;
@@ -18,6 +19,9 @@ void demandeNomDeFichier(char *caracteristiques[])
 		suppressionEspace() ;
 		fichierOuvert = verificationExistanceDuFichier() ;
 		pointsDepenses = 0 ;
+		
+		fichier = fopen(nomDeFichier, "r") ;
+		
 		if (fichierOuvert == 0)
 		{
 			perror("Impossible d'ouvrir le fichier. Le fichier existe-t-il ? As-tu les droits de lecture dessus ?\n") ;
@@ -29,16 +33,20 @@ void demandeNomDeFichier(char *caracteristiques[])
 		}
 		else
 		{
-			modification(0, caracteristiques, 150) ;
+			fscanf(fichier, "%d %*s", &session) ;
+			session ++ ;
+			sprintf(messageJournal, "| SESSION %d | Fichier modifié", session) ;
+			remplirJournal(messageJournal) ;
+			modification(session, 0, caracteristiques, 150) ;
 		}
 		viderBuffer() ;
 	}
-	
 }
 
-void modification(int nouveau, char *caracteristiques[], int taille)
+void modification(int session, int points, char *caracteristiques[], int taille)
 {
 	system(clear) ;
+	
 	points = 0 ;
 	int coureur[21] = {0} ;
 	int style = 0 ;
@@ -58,6 +66,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	char course1[100] ;
 	char course2[100] ;
 	char course3[100] ;
+	char messageJournal[100] ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -73,6 +82,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		perror("Impossible d'ouvrir le fichier. Erreur dans modification.c, void modification.\n") ;
 		printf("Nom de fichier attendu : %s.\n", nomDeFichier) ;
 	}
+	fscanf(fichier, "%*s %*s") ; //La ligne d'indicateur de session est ignorée, car inchangée au cours de la session.
 	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
 	fscanf(fichier, "%d %*s", &taille) ;
 	fscanf(fichier, "%d %*s", &poids) ;
@@ -91,7 +101,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		fscanf(fichier, "%d %*s %*s %*s", &coureur[compteur]) ;
 	}
 	
-	fichierOK = verifierDonnees(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
+	fichierOK = verifierDonnees(session, style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
 	if (fichierOK == 1)
 	{
 		printf("Fichier de sauvegarde OK.\n") ;
@@ -108,19 +118,22 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	secondaire = (style % 7) ;
 	fclose(fichier) ;
 
-	if(nouveau == 1)
+	if(session == 0)
 	{
 		points = 200 ;
 		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
 		potentiel = 3 ;
 		potentielInitial = 3 ;
-		nouveau = 0 ;
+		session = 1 ;
 	}
 
 	else
 	{
 		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
 		points = verificationEntreeNumerique(0, 5000) ;
+		sprintf(messageJournal, "%d points disponibles selon l'utilisateur.", points) ;
+		remplirJournal(messageJournal) ;
+		memset(messageJournal, 0, 100) ;
 	}
 	
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
@@ -145,7 +158,7 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 	while (choix != 0)
 	{
 		compteur = 0 ;
-		enregistrer(style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales, maximum) ;
+		enregistrer(session, style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales, maximum) ;
 		system(clear) ;
 		
 		printf("\nTu mesures %d centim%stres.\n", taille, è) ;
@@ -178,76 +191,13 @@ void modification(int nouveau, char *caracteristiques[], int taille)
 		}
 		if (choix > 0 && choix <=14)
 		{
-			coureur[choix-1] = calculAmelioration(coureur[choix-1], &points, &maximum[choix - 1], notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
+			coureur[choix - 1] = calculAmelioration(coureur[choix - 1], &points, &maximum[choix - 1], notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
+			sprintf(messageJournal, "Note %s : %d. Nouveaux points : %d.", caracteristiques[choix - 1], coureur[choix - 1], points) ;
+			remplirJournal(messageJournal) ;
+			memset(messageJournal, 0, 100) ;
+			sprintf(messageJournal, "Potentiel %s : %d.", caracteristiques[choix - 1], maximum[choix - 1]) ;
+			remplirJournal(messageJournal) ;
+			memset(messageJournal, 0, 100) ;
 		}
 	}
-}
-
-void enregistrer(int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[])
-{	
-	FILE* fichier = NULL ;
-	suppressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
-	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
-	fichier = fopen(nomDeFichier, "w+") ;
-	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
-"baroud", "classiques_du_nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
-
-	if (remove(nomDeFichier) == 0) //Suppression du fichier avec les données
-	{
-		printf("Fichier pr%sc%sdent supprim%s.\n", é, é, é) ;
-	}
-
-	fichier = fopen(nomDeFichier, "w+") ;
-	if (fichier != NULL)
-	{
-		printf("Fichier %s ouvert.\n", nomDeFichier) ;
-	}
-	else
-	{
-		printf("Ouverture du fichier %s impossible.\n", nomDeFichier) ;
-		perror("Erreur dans modification.c, void enregistrer.\n") ;
-		exit(EXIT_FAILURE) ;
-	}
-	
-	if (principal == secondaire)
-	{
-		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : aucune\n", style, types[principal]) ;
-	}
-	else
-	{
-		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : %s\n", style, types[principal], types[secondaire]) ;
-	}
-	
-	fprintf(fichier, u8"%d taille\n", taille) ;
-	fprintf(fichier, u8"%d poids\n", poids) ;
-	fprintf(fichier, u8"%d/%d date de naissance\n", jour, mois) ;
-	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
-	fprintf(fichier, u8"%s nationalité\n", nationalite) ;
-	fprintf(fichier, u8"%s course favorite 1\n", course1) ;
-	fprintf(fichier, u8"%s course favorite 2\n", course2) ;
-	fprintf(fichier, u8"%s course favorite 3\n", course3) ;
-	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
-	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
-	fprintf(fichier, u8"%d plaine (+ %d)\n", coureur[0], coureur[0] - notesInitiales[0]) ;
-	fprintf(fichier, u8"%d montagne (+ %d)\n", coureur[1], coureur[1] - notesInitiales[1]) ;
-	fprintf(fichier, u8"%d moyenne_montagne (+ %d)\n", coureur[2], coureur[2] - notesInitiales[2]) ;
-	fprintf(fichier, u8"%d vallon (+ %d)\n", coureur[3], coureur[3] - notesInitiales[3]) ;
-	fprintf(fichier, u8"%d contre-la-montre (+ %d)\n", coureur[4], coureur[4] - notesInitiales[4]) ;
-	fprintf(fichier, u8"%d prologue (+ %d)\n", coureur[5], coureur[5] - notesInitiales[5]) ;
-	fprintf(fichier, u8"%d pavés (+ %d)\n", coureur[6], coureur[6] - notesInitiales[6]) ;
-	fprintf(fichier, u8"%d sprint (+ %d)\n", coureur[7], coureur[7] - notesInitiales[7]) ;
-	fprintf(fichier, u8"%d accélération (+ %d)\n", coureur[8], coureur[8] - notesInitiales[8]) ;
-	fprintf(fichier, u8"%d descente (+ %d)\n", coureur[9], coureur[9] - notesInitiales[9]) ;
-	fprintf(fichier, u8"%d baroud (+ %d)\n", coureur[10], coureur[10] - notesInitiales[10]) ;
-	fprintf(fichier, u8"%d endurance (+ %d)\n", coureur[11], coureur[11] - notesInitiales[11]) ;
-	fprintf(fichier, u8"%d résistance (+ %d)\n", coureur[12], coureur[12] - notesInitiales[12]) ;
-	fprintf(fichier, u8"%d récupération (+ %d)\n", coureur[13], coureur[13] - notesInitiales[13]) ;
-	
-	fprintf(fichier, u8"%d point(s) dépensé(s).\n", pointsDepenses) ;
-	fclose(fichier) ;
-	if(maximum != NULL)
-	{
-		enregistrerMax(maximum) ;
-	}
-	creerCopie() ;
 }

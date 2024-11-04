@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "PCM_Évolution.h"
 #include "modification.c"
 #include "creation.c"
@@ -172,4 +173,13 @@ int confirmationEntree()
 	printf("1. Confirmer \n") ;
 	confirmation = verificationEntreeNumerique(0, 1) ;
 	return confirmation ;
+}
+
+void remplirJournal(char *message)
+{
+	time_t horodatage = time(NULL) ; 
+	FILE* fichier = NULL ;
+	fichier = fopen("fichier_journal", "a") ;
+	fprintf(fichier, "%ld : %s\n", horodatage, message) ;
+	fclose(fichier) ;
 }

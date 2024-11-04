@@ -47,22 +47,30 @@ int creation(char *caracteristiques[])
 	strcpy(course3, choixCourseFavorite(3)) ;
 	
 	pointsDepenses = 0 ;
-	enregistrer(style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase, NULL) ;
-	modification(1, caracteristiques, taille) ;
+	remplirJournal("| SESSION 1 | Nouveau fichier.") ;
+	enregistrer(1, style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase, NULL) ;
+	modification(0, 1, caracteristiques, taille) ;
 	return 0 ;
 }
 
 int verificationExistanceDuFichier()
 {
+	char message[500] ;
+	sprintf(message, "Tentative de (re)création du fichier %s.", nomDeFichier) ;
+	remplirJournal(message) ;
+
 	FILE* fichier = NULL ;
 	fichier = fopen(nomDeFichier, "r") ;
+
 	if (fichier != NULL)
 	{
+		remplirJournal("Fiche du même nom existante.") ;
 		fclose(fichier) ;
 		return 1 ; //Fiche du même nom déjà existante
 	}
 	else
 	{
+		remplirJournal("Fiche inexistante. Création.") ;
 		return 0 ; 
 	}
 }
@@ -87,10 +95,12 @@ int choixNomDeFichier()
 		{
 			if (remove(nomDeFichier) == 0)
 			{
+				remplirJournal("Fiche supprimée à la demande de l'utilisateur.") ;
 				printf("Fichier coureur supprim%s.\n", é) ;
 			}
 			else
 			{
+				remplirJournal("Suppression du fichier coureur impossible.") ;
 				perror("Suppression du fichier coureur impossible.\n") ;
 				return 0 ;
 			}
@@ -98,11 +108,13 @@ int choixNomDeFichier()
 			if (remove(fichierMax) == 0)
 			{
 				printf("Fichier max supprim%s.\n", é) ;
+				remplirJournal("Fichier max supprimé.") ;
 				return 1 ;
 			}
 			else
 			{
 				perror("Suppression du fichier max impossible.\n") ;
+				remplirJournal("Suppression du fichier max impossible.") ;
 				return 0 ;
 			}
 		}
