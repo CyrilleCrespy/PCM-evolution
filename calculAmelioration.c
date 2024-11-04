@@ -10,7 +10,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 		printf("0. Annuler.\n") ;
 		printf("1. Augmenter.\n") ;
 		printf("2. Diminuer.\n") ;
-		if(potentielInitial == *potentiel) //Uniquement si le potentiel ne vient pas d'être augmenté.
+		if(potentielInitial == *potentiel && potentiel < 6) //Uniquement si le potentiel ne vient pas d'être augmenté.
 		{	
 			printf("3. Augmenter le potentiel.\n") ;
 			entreeMenu = verificationEntreeNumerique(0, 3) ;
@@ -200,7 +200,7 @@ void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximu
 	system(clear) ;
 	
 	printf("Tu ne peux augmenter ton potentiel que trois fois durant toute la carri%sre. Une fois par session.\n", è) ;
-	printf("Une %svolution co%sute %d points de chaîne.\n", é, û, *points) ;
+	printf("Une %svolution co%sute %d points de cha%sne.\n", é, û, cout, î) ;
 	printf("Assure-toi des les avoir, toute triche sera sanctionn%se.\n", é) ;
 	printf("Appuie sur Entr%se pour continuer.\n", é) ;
 	
