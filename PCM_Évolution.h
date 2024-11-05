@@ -29,7 +29,7 @@ void corrigerNomDeFichier() ;
 int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesInitiales, int *potentiel, int potentielInitial) ;
 int calculAugmentation(int noteActuelle, int *points, int *maximum) ;
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
-void calculPotentiel(int noteActuelle, int *points, int *potentiel, int *maximum) ;
+void calculPotentiel(int noteActuelle, int *potentiel, int *maximum) ;
 void suppressionEspace() ;
 
 #ifdef Windows
@@ -45,6 +45,7 @@ void suppressionEspace() ;
 #define clear "cls"
 #define symboleNumero "\xA7"
 #define DECALAGE 4
+#define ECRIRE_TEMPS (fprintf(fichier, "%lld : %s\n", horodatage, message))
 
 #else //Pour les systèmes d'exploitation normalement constitués
 #define é "é"
@@ -59,4 +60,5 @@ void suppressionEspace() ;
 #define clear "clear"
 #define symboleNumero "°"
 #define DECALAGE 3
+#define ECRIRE_TEMPS (fprintf(fichier, "%ld : %s\n", horodatage, message))
 #endif

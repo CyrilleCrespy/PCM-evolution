@@ -10,7 +10,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 		printf("0. Annuler.\n") ;
 		printf("1. Augmenter.\n") ;
 		printf("2. Diminuer.\n") ;
-		if(potentielInitial == *potentiel && potentiel < 6) //Uniquement si le potentiel ne vient pas d'être augmenté.
+		if(potentielInitial == *potentiel && *potentiel < 6) //Uniquement si le potentiel ne vient pas d'être augmenté.
 		{	
 			printf("3. Augmenter le potentiel.\n") ;
 			entreeMenu = verificationEntreeNumerique(0, 3) ;
@@ -34,7 +34,7 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 			case 3 :
 				if(potentielInitial == *potentiel)
 				{
-					calculPotentiel(noteActuelle, points, potentiel, maximum) ;
+					calculPotentiel(noteActuelle, potentiel, maximum) ;
 				}
 				return noteActuelle ;
 			default :
@@ -190,11 +190,12 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	return noteActuelle ;
 }
 
-void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximum)
+void calculPotentiel (int noteActuelle, int *potentiel, int *maximum)
 {
 	int choix = -1 ;
 	int augmentation = 0 ;
 	int cout = 2000 ;
+	char messageJournal[100] = {0} ;
 	
 	viderBuffer() ;
 	system(clear) ;
@@ -236,6 +237,7 @@ void calculPotentiel (int noteActuelle, int *points, int *potentiel, int *maximu
 	{
 		*potentiel = *potentiel + 1 ;
 		*maximum = *maximum + augmentation ;
-		remplirJournal("Augmentation de potentiel validée.") ;
+		sprintf(messageJournal, "Augmentation de potentiel validée. Potentiel : %d.", *potentiel) ;
+		remplirJournal(messageJournal) ;
 	}
 }

@@ -180,6 +180,6 @@ void remplirJournal(char *message)
 	time_t horodatage = time(NULL) ; 
 	FILE* fichier = NULL ;
 	fichier = fopen("fichier_journal", "a") ;
-	fprintf(fichier, "%ld : %s\n", horodatage, message) ;
+	ECRIRE_TEMPS ;
 	fclose(fichier) ;
 }
