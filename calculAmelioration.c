@@ -4,13 +4,19 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 	system(clear) ;
 	while (entreeMenu != 1 && entreeMenu != 2)
 	{
+		int typeAugmentation ;
+		
 		system(clear) ;
 		printf("Voulez-vous augmenter ou diminuer la note ?\n") ;
 		printf("Rappel : vous ne pourrez pas descendre la note en-dessous du niveau qu'elle avait au d%sbut de la session.\n", é) ;
 		printf("0. Annuler.\n") ;
 		printf("1. Augmenter.\n") ;
 		printf("2. Diminuer.\n") ;
-		if(potentielInitial == *potentiel && *potentiel < 6) //Uniquement si le potentiel ne vient pas d'être augmenté.
+			
+		typeAugmentation = verifierAugmentationPotentiel(potentiel) ;
+		
+		if(potentielInitial == *potentiel && (typeAugmentation == 1 || typeAugmentation == 2)) //Uniquement si le potentiel ne vient pas d'être augmenté.
+		//Et si une évolution est possible par points d'évolution (1) ou points de chaîne (2).
 		{	
 			printf("3. Augmenter le potentiel.\n") ;
 			entreeMenu = verificationEntreeNumerique(0, 3) ;
@@ -32,9 +38,9 @@ int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInit
 				noteActuelle = calculDiminution(noteActuelle, points, noteInitiale) ;
 				break ;
 			case 3 :
-				if(potentielInitial == *potentiel)
+				if(potentielInitial == *potentiel && (typeAugmentation == 1 || typeAugmentation == 2))
 				{
-					calculPotentiel(noteActuelle, potentiel, maximum) ;
+					calculPotentiel(noteActuelle, potentiel, maximum, typeAugmentation, points) ;
 				}
 				return noteActuelle ;
 			default :
@@ -190,41 +196,48 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	return noteActuelle ;
 }
 
-void calculPotentiel (int noteActuelle, int *potentiel, int *maximum)
+void calculPotentiel (int noteActuelle, int *potentiel, int *maximum, int typeAugmentation, int *points)
 {
 	int choix = -1 ;
-	int augmentation = 0 ;
-	int cout = 2000 ;
+	int augmentationPossible = 0 ;
+	
+	int coutAugmentationPotentiel = determinerCoutPotentiel(potentiel) ;
 	char messageJournal[100] = {0} ;
 	
 	viderBuffer() ;
 	system(clear) ;
 	
 	printf("Tu ne peux augmenter ton potentiel que trois fois durant toute la carri%sre. Une fois par session.\n", è) ;
-	printf("Une %svolution co%sute %d points de cha%sne.\n", é, û, cout, î) ;
-	printf("Assure-toi des les avoir, toute triche sera sanctionn%se.\n", é) ;
 	printf("Appuie sur Entr%se pour continuer.\n", é) ;
 	
 	getchar() ;
 	
-	if (noteActuelle < 75)
-	{
-		augmentation = 3 ;
-	}
-	else if (noteActuelle < 81)
-	{
-		augmentation = 2 ;
-	}
-	else if (noteActuelle < 85)
-	{
-		augmentation = 1 ;
-	}
-	else
+	if (noteActuelle == 85)
 	{
 		printf("Note au maximum permis par le jeu.\n") ;
+		printf("Appuie sur Entr%se pour continuer.\n", é) ;
+		getchar() ;
+		return ;
+	}
+	else if (typeAugmentation == 1 && coutAugmentationPotentiel > *points)
+	{
+		printf("Pas assez de points d'%svolution pour cet achat.\n", é) ;
+		printf("Appuie sur Entr%se pour continuer.\n", é) ;
+		getchar() ;
+		return ;
 	}
 	
-	printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points de cha%sne ?\n", augmentation, cout, î) ;
+	augmentationPossible = determinationAugmentationPotentielPossible(maximum) ;
+	
+	if (typeAugmentation == 1)
+	{
+		printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points d'%svolution ?\n", augmentationPossible, coutAugmentationPotentiel, é) ;
+	}
+	else if (typeAugmentation == 2)
+	{
+		printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points de cha%sne ?\n", augmentationPossible, coutAugmentationPotentiel, î) ;
+		printf("Assure-toi des les avoir, toute triche sera sanctionn%se.\n", é) ;
+	}
 	printf("0. Non\n") ;
 	printf("1. Oui\n") ;
 
@@ -233,11 +246,67 @@ void calculPotentiel (int noteActuelle, int *potentiel, int *maximum)
 	{
 		return ;
 	}
-	else if (choix == 1)
+	else if (typeAugmentation == 1)
 	{
 		*potentiel = *potentiel + 1 ;
-		*maximum = *maximum + augmentation ;
+		*maximum = *maximum + augmentationPossible ;
+		*points = *points - coutAugmentationPotentiel ;
+	}
+	else
+	{
+		*potentiel = *potentiel + 1 ;
+		*maximum = *maximum + augmentationPossible ;
 		sprintf(messageJournal, "Augmentation de potentiel validée. Potentiel : %d.", *potentiel) ;
 		remplirJournal(messageJournal) ;
 	}
+}
+
+int verifierAugmentationPotentiel(int *potentiel)
+{
+	int positionInitiale ;
+	int	typeAugmentation ;
+	FILE* fichier = NULL ;
+	int ligne = *potentiel - 1 ;
+	positionInitiale = (ligne * 19) + 11 ;
+	//On se place sur le bout de ligne qui correspond à la valeur décrivant le système d'évolution de potentiel,
+	//sur la ligne correspondant au potentiel initial trouvé dans la fiche coureur,
+	//Trois valeurs sont possibles. 0 : augmentation rendue volontairement impossible. 1 : points d'évolution. 2 : points de chaîne.
+	fichier = fopen("configuration", "r") ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &typeAugmentation) ;
+	fclose(fichier) ;
+	return typeAugmentation ;
+}
+
+int determinerCoutPotentiel(int *potentiel)
+{
+	int positionInitiale ;
+	int cout ;
+	FILE* fichier = NULL ;
+	int ligne = *potentiel - 1 ;
+	positionInitiale = (ligne * 19) + 13 ;
+	//On se place sur le bout de ligne qui correspond au coût pour augmenter le potentiel d'un point,
+	//sur la ligne correspondant au potentiel initial trouvé dans la fiche coureur.
+	//Coût noté sur cinq chiffres, comme 02000 pour 2 000 points de chaîne ou 0005 pour points de chaîne.
+	fichier = fopen("configuration", "r") ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &cout) ;
+	fclose(fichier) ;
+	return cout ;
+}
+
+int determinationAugmentationPotentielPossible(int *maximum)
+{
+	int augmentationPossible ;
+	int positionInitiale ;
+	FILE* fichier = NULL ;
+	positionInitiale = 133 + ((*maximum - 50) * 6) + 4 ;
+	//133 représente le premier caractère de la première ligne qui décrit la configuration concernant le nombre de points d'augmentation possibles pour chaque note initiale.
+	//6 est le décalage nécessaire pour passer à la note suivante.
+	//4 place au bout de la ligne qui correspond à l'augmentation possible.
+	fichier = fopen("configuration", "r") ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &augmentationPossible) ;
+	fclose(fichier) ;
+	return augmentationPossible ;
 }

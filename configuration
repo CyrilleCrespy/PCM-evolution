@@ -1,0 +1,50 @@
+Pot1=>Pot2:0:00000
+Pot2=>Pot3:0:00000
+Pot3=>Pot4:2:02000
+Pot4=>Pot5:2:02000
+Pot5=>Pot6:2:02000
+Pot6=>Pot7:0:00000
+Pot7=>Pot8:0:00000
+50=>3
+51=>3
+52=>3
+53=>3
+54=>3
+55=>3
+56=>3
+57=>3
+58=>3
+59=>3
+60=>3
+61=>3
+62=>3
+63=>3
+64=>3
+65=>3
+66=>3
+67=>3
+68=>3
+69=>3
+70=>3
+71=>3
+72=>3
+73=>3
+74=>3
+75=>2
+76=>2
+77=>2
+78=>2
+79=>2
+80=>2
+81=>1
+82=>1
+83=>1
+84=>1
+
+//Fichier de configuration.
+L'évolution du potentiel est réglé palier par palier, avec plusieurs indications.
+La première est le système d'évolution :
+0 = cette augmentation n'est pas définie.
+1 = points d'évolution (achetés sur la chaîne).
+2 = points de chaîne.
+Les augmentations de potentiel sont énumérées notes par notes de 50 à 84, le programme se rapporte automatiquement à ligne qui correspond à la note dont le joueur veut augmenter le potentiel. Il détermine de combien peut augmenter ladite note en fonction du chiffre indiqué à droite.

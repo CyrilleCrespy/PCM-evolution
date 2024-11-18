@@ -29,7 +29,10 @@ void corrigerNomDeFichier() ;
 int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesInitiales, int *potentiel, int potentielInitial) ;
 int calculAugmentation(int noteActuelle, int *points, int *maximum) ;
 int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
-void calculPotentiel(int noteActuelle, int *potentiel, int *maximum) ;
+void calculPotentiel(int noteActuelle, int *potentiel, int *maximum, int typeAugmentation, int *points) ;
+int verifierAugmentationPotentiel(int *potentiel) ;
+int determinerCoutPotentiel(int *potentiel) ;
+int determinationAugmentationPotentielPossible(int *maximum) ;
 void suppressionEspace() ;
 
 #ifdef Windows
