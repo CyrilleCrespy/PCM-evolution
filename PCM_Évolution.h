@@ -33,6 +33,7 @@ void calculPotentiel(int noteActuelle, int *potentiel, int *maximum, int typeAug
 int verifierAugmentationPotentiel(int *potentiel) ;
 int determinerCoutPotentiel(int *potentiel) ;
 int determinationAugmentationPotentielPossible(int *maximum) ;
+int determinerCoutEvolution(int noteActuelle) ;
 void suppressionEspace() ;
 
 #ifdef Windows

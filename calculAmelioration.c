@@ -65,8 +65,7 @@ int calculAugmentation(int noteActuelle, int *points, int *maximum)
 	{
 		noteFictive ++ ;
 		augmentationMax ++ ;
-		
-		coutEvolution[compteur] = 1 + coutEvolution[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
+		coutEvolution[compteur] = coutEvolution[compteur] + determinerCoutEvolution(noteFictive) ;
 		if(noteFictive > *maximum)
 		{
 			augmentationMax -- ;
@@ -150,7 +149,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	
 	if (diminutionMax == 0) //Si aucune amélioration n'a été faite depuis le lancement.
 	{
-		printf("Vous n'avez pas augment%s cette note durant cette session. Diminution impossible.\n", é) ;
+		printf("Tu n'as pas augment%s cette note durant cette session. Diminution impossible.\n", é) ;
 		printf("Appuie sur Entr%se pour continuer.\n", é) ;
 		remplirJournal("Diminution impossible.") ;
 		getchar() ;
@@ -160,7 +159,7 @@ int calculDiminution(int noteActuelle, int *points, int noteInitiale)
 	
 	while (continuerBoucle == 1)
 	{
-		pointsRedonnes[compteur] = 1 + pointsRedonnes[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
+		pointsRedonnes[compteur] = pointsRedonnes[compteur] + determinerCoutEvolution(noteFictive) ;
 		noteFictive -- ;
 		compteur ++ ;
 		pointsRedonnes[compteur] = pointsRedonnes[compteur-1] ;
@@ -300,7 +299,7 @@ int determinationAugmentationPotentielPossible(int *maximum)
 	int augmentationPossible ;
 	int positionInitiale ;
 	FILE* fichier = NULL ;
-	positionInitiale = 133 + ((*maximum - 50) * 6) + 4 ;
+	positionInitiale = 133 + ((*maximum - 50) * 7) + 4 ;
 	//133 représente le premier caractère de la première ligne qui décrit la configuration concernant le nombre de points d'augmentation possibles pour chaque note initiale.
 	//6 est le décalage nécessaire pour passer à la note suivante.
 	//4 place au bout de la ligne qui correspond à l'augmentation possible.
@@ -309,4 +308,17 @@ int determinationAugmentationPotentielPossible(int *maximum)
 	fscanf(fichier, "%d", &augmentationPossible) ;
 	fclose(fichier) ;
 	return augmentationPossible ;
+}
+
+int determinerCoutEvolution(int noteFictive)
+{
+	int coutEvolution ;
+	int positionInitiale ;
+	FILE* fichier = NULL ;
+	positionInitiale = 378 + ((noteFictive - 50) * 7) + 4 ;
+	fichier = fopen("configuration", "r") ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &coutEvolution) ;
+	fclose(fichier) ;
+	return coutEvolution ;
 }
