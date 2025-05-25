@@ -1,324 +1,207 @@
-int calculAmelioration(int noteActuelle, int *points, int *maximum, int noteInitiale, int *potentiel, int potentielInitial)
+int calculAugmentation(GtkWidget *boutonPlus, gpointer user_data)
 {
-	int entreeMenu = 3 ;
-	system(clear) ;
-	while (entreeMenu != 1 && entreeMenu != 2)
-	{
-		int typeAugmentation ;
-		
-		system(clear) ;
-		printf("Voulez-vous augmenter ou diminuer la note ?\n") ;
-		printf("Rappel : vous ne pourrez pas descendre la note en-dessous du niveau qu'elle avait au d%sbut de la session.\n", é) ;
-		printf("0. Annuler.\n") ;
-		printf("1. Augmenter.\n") ;
-		printf("2. Diminuer.\n") ;
-			
-		typeAugmentation = verifierAugmentationPotentiel(potentiel) ;
-		
-		if(potentielInitial == *potentiel && (typeAugmentation == 1 || typeAugmentation == 2)) //Uniquement si le potentiel ne vient pas d'être augmenté.
-		//Et si une évolution est possible par points d'évolution (1) ou points de chaîne (2).
-		{	
-			printf("3. Augmenter le potentiel.\n") ;
-			entreeMenu = verificationEntreeNumerique(0, 3) ;
-		}
-		else
-		{
-		entreeMenu = verificationEntreeNumerique(0, 2) ;
-		}
+	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
+	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 
-		switch (entreeMenu)
-		{
-			case 0 :
-				return 0 ;
-				break ;
-			case 1 :
-				noteActuelle = calculAugmentation(noteActuelle, points, maximum) ;
-				break ;
-			case 2 :
-				noteActuelle = calculDiminution(noteActuelle, points, noteInitiale) ;
-				break ;
-			case 3 :
-				if(potentielInitial == *potentiel && (typeAugmentation == 1 || typeAugmentation == 2))
-				{
-					calculPotentiel(noteActuelle, potentiel, maximum, typeAugmentation, points) ;
-				}
-				return noteActuelle ;
-			default :
-				printf("Exception inattendue dans calculAmelioration.c, int calculAmelioration.\n") ;
-				exit(EXIT_FAILURE) ;
-		}
-	}
-	return noteActuelle ;
-}
-
-int calculAugmentation(int noteActuelle, int *points, int *maximum)
-{
-	int coutEvolution[50] = {0} ;
-	int augmentationMax = 0 ;
-	int noteFictive = noteActuelle ;
-	int continuerBoucle = 1 ;
-	int compteur = 0 ;
-	int augmentationVoulue ;
-	int raisons[3] = {0} ;
-	
-	while (continuerBoucle == 1)
-	{
-		noteFictive ++ ;
-		augmentationMax ++ ;
-		coutEvolution[compteur] = coutEvolution[compteur] + determinerCoutEvolution(noteFictive) ;
-		if(noteFictive > *maximum)
-		{
-			augmentationMax -- ;
-			raisons[0] = 1 ;
-			continuerBoucle = 0 ;
-		}
-		if (coutEvolution[compteur] > *points)
-		{
-			augmentationMax -- ;
-			raisons[1] = 1 ;
-			continuerBoucle = 0 ;
-		}
-		if (raisons[0] == 0 && raisons[1] == 0)
-		{
-			compteur ++ ;
-			coutEvolution[compteur] = coutEvolution[compteur - 1] ; //Le prochain achat coûtera le coût du précédent, plus le complément calculé dans la prochaine itération de la boucle.
-		}
-	}
-	
-	compteur = 0 ;
-	system(clear) ;
-
-	if (augmentationMax > 0)
-	{
-		printf("Augmentation(s) possible(s).\n") ;
-	}
-	while (compteur < augmentationMax)
-	{
-		printf("%d. Augmenter la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur + 1, compteur + 1, coutEvolution[compteur], é, à, noteActuelle + compteur + 1) ;
-		compteur ++ ;
-	}
-	printf ("Voici la ou les raison(s) qui ne permettent pas d'augmenter au-del%s de ces possibilit%ss :\n", à, é) ;
-	if (raisons[0] == 1)
-	{
-		printf("Potentiel trop faible pour augmenter davantage (potentiel : %d).\n", *maximum) ;
-	}
-	if (raisons[1] == 1)
-	{
-		printf("Tu n'as plus assez de points d'%svolution pour augmenter davantage.\n", é) ;
-	}
-	
-	if (augmentationMax > 0)
-	{
-		printf("Tape 0 pour annuler cette demande.\n") ;
-		augmentationVoulue = verificationEntreeNumerique(0, augmentationMax) ;
-	}
-	else
-	{
-		printf("Appuie sur Entr%se pour continuer.\n", é) ;
-		remplirJournal("Augmentation annul%se car impossible.") ;
-		getchar() ;
-		return noteActuelle ;
-	}
-	
-	if (augmentationVoulue != 0 && augmentationVoulue <= augmentationMax)
-	{
-		noteActuelle = noteActuelle + augmentationVoulue ;
-		*points = *points - coutEvolution[augmentationVoulue - 1] ;
-		pointsDepenses = pointsDepenses + coutEvolution[augmentationVoulue - 1] ;
-		getchar() ;
-		remplirJournal("Augmentation validée.") ;
-		
-		return noteActuelle ;
-	}
-	else
+	if(noteChoisie >= noteMax || ficheCoureur->points <= 0)
 	{
 		printf("Augmentation impossible.\n") ;
-		remplirJournal("Augmentation requise impossible.") ;
-		return noteActuelle ;
+		return 0 ;
 	}
-}
-
-int calculDiminution(int noteActuelle, int *points, int noteInitiale)
-{
-	int pointsRedonnes[50] = {0} ;
-	int diminutionMax = noteActuelle - noteInitiale ;
-	int noteFictive = noteActuelle ;
-	int continuerBoucle = 1 ;
-	int compteur = 0 ;
-	int diminutionVoulue ;
-	
-	if (diminutionMax == 0) //Si aucune amélioration n'a été faite depuis le lancement.
-	{
-		printf("Tu n'as pas augment%s cette note durant cette session. Diminution impossible.\n", é) ;
-		printf("Appuie sur Entr%se pour continuer.\n", é) ;
-		remplirJournal("Diminution impossible.") ;
-		getchar() ;
-		getchar() ;
-		return noteActuelle ;
-	}
-	
-	while (continuerBoucle == 1)
-	{
-		pointsRedonnes[compteur] = pointsRedonnes[compteur] + determinerCoutEvolution(noteFictive) ;
-		noteFictive -- ;
-		compteur ++ ;
-		pointsRedonnes[compteur] = pointsRedonnes[compteur-1] ;
-		if (compteur + 1 > diminutionMax)
+	else
+	{	
+		int coutEvolution ;
+		int positionInitiale ;
+		FILE* fichier = NULL ;
+		positionInitiale = 382 + ((noteChoisie - 50) * 7) ;
+		fichier = fopen("configuration", "r") ;
+		fseek(fichier, positionInitiale, SEEK_SET) ;
+		fscanf(fichier, "%d", &coutEvolution) ;
+		fclose(fichier) ;
+		if (ficheCoureur->points >= coutEvolution)
 		{
-			pointsRedonnes[compteur] = 1 + pointsRedonnes[compteur] + (noteFictive / 61) + (noteFictive / 66) + (noteFictive / 71) + (noteFictive / 76) + (noteFictive / 81) ;
-			break ;
+			ficheCoureur->notes[ficheCalcul->selection] += 1 ;
+			ficheCoureur->points = (ficheCoureur->points) - coutEvolution ;
+			enregistrer(ficheCoureur) ;
 		}
 	}
 	
-	compteur = 0 ;
-	system(clear) ;
+	GtkWidget *afficherPoints ;
+	GtkWidget *afficherMAJ ;
 
-	printf("Diminution(s) possible(s).\n") ;
-	while (compteur < diminutionMax)
+	char *points ;
+	points = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(points, "%d", ficheCoureur->points) ;
+	afficherPoints = gtk_label_new(points) ;
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 10, 1, 1) ;
+	
+	char *noteMAJ ;
+	noteMAJ = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(noteMAJ, "%d", ficheCoureur->notes[ficheCalcul->selection]) ;
+	afficherMAJ = gtk_label_new(noteMAJ) ;
+	
+	determinerCouleurNote(afficherMAJ) ;
+	
+	printf("%d noteChoisie\n", noteChoisie) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherMAJ, 4, ficheCalcul->selection, 1, 1) ;
+	
+	g_main_context_iteration(NULL, FALSE) ;
+}
+
+int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
+{
+	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
+	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
+
+	if(noteChoisie <= 50)
 	{
-		printf("%d. Diminuer la note %d fois pour %d point(s) d'%svolution (passer %s %d).\n", compteur + 1, compteur + 1, pointsRedonnes[compteur], é, à, noteActuelle - (compteur + 1)) ;
-		compteur ++ ;
-	}
-	printf("Tape 0 pour annuler cette demande.\n") ;
-	diminutionVoulue = verificationEntreeNumerique (0, diminutionMax) ;
-	if (diminutionVoulue != 0)
-	{
-		noteActuelle = noteActuelle - diminutionVoulue ;
-		*points = *points + pointsRedonnes[diminutionVoulue] - 1 ;
-		pointsDepenses = pointsDepenses - pointsRedonnes[diminutionVoulue] ;
-		remplirJournal("Diminution validée.") ;
+		printf("Diminution impossible.\n") ;
+		return 0 ;
 	}
 	else
-	{
-		remplirJournal("Diminution annulée.") ;
+	{	
+		int coutEvolution ;
+		int positionInitiale ;
+		FILE* fichier = NULL ;
+		positionInitiale = 382 + (((noteChoisie - 50) * 7) - 7) ;
+		fichier = fopen("configuration", "r") ;
+		fseek(fichier, positionInitiale, SEEK_SET) ;
+		fscanf(fichier, "%d", &coutEvolution) ;
+		fclose(fichier) ;
+		ficheCoureur->notes[ficheCalcul->selection] -= 1 ;
+		ficheCoureur->points = (ficheCoureur->points) + coutEvolution ;
+		enregistrer(ficheCoureur) ;
 	}
-	return noteActuelle ;
+	
+	GtkWidget *afficherPoints ;
+	GtkWidget *afficherMAJ ;
+
+	char *points ;
+	points = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(points, "%d", ficheCoureur->points) ;
+	afficherPoints = gtk_label_new(points) ;
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 10, 1, 1) ;
+	
+	char *noteMAJ ;
+	noteMAJ = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(noteMAJ, "%d", ficheCoureur->notes[ficheCalcul->selection]) ;
+	afficherMAJ = gtk_label_new(noteMAJ) ;
+	
+	determinerCouleurNote(afficherMAJ) ;
+	
+	printf("%d noteChoisie\n", noteChoisie) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherMAJ, 4, ficheCalcul->selection, 1, 1) ;
+	
+	g_main_context_iteration(NULL, FALSE) ;
 }
 
-void calculPotentiel (int noteActuelle, int *potentiel, int *maximum, int typeAugmentation, int *points)
+void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 {
-	int choix = -1 ;
-	int augmentationPossible = 0 ;
-	
-	int coutAugmentationPotentiel = determinerCoutPotentiel(potentiel) ;
-	char messageJournal[100] = {0} ;
-	
-	viderBuffer() ;
-	system(clear) ;
-	
-	printf("Tu ne peux augmenter ton potentiel que trois fois durant toute la carri%sre. Une fois par session.\n", è) ;
-	printf("Appuie sur Entr%se pour continuer.\n", é) ;
-	
-	getchar() ;
-	
-	if (noteActuelle == 85)
-	{
-		printf("Note au maximum permis par le jeu.\n") ;
-		printf("Appuie sur Entr%se pour continuer.\n", é) ;
-		getchar() ;
-		return ;
-	}
-	else if (typeAugmentation == 1 && coutAugmentationPotentiel > *points)
-	{
-		printf("Pas assez de points d'%svolution pour cet achat.\n", é) ;
-		printf("Appuie sur Entr%se pour continuer.\n", é) ;
-		getchar() ;
-		return ;
-	}
-	
-	augmentationPossible = determinationAugmentationPotentielPossible(maximum) ;
-	
-	if (typeAugmentation == 1)
-	{
-		printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points d'%svolution ?\n", augmentationPossible, coutAugmentationPotentiel, é) ;
-	}
-	else if (typeAugmentation == 2)
-	{
-		printf("Veux-tu augmenter ton potentiel dans cette note de %d points pour %d points de cha%sne ?\n", augmentationPossible, coutAugmentationPotentiel, î) ;
-		printf("Assure-toi des les avoir, toute triche sera sanctionn%se.\n", é) ;
-	}
-	printf("0. Non\n") ;
-	printf("1. Oui\n") ;
-
-	choix = verificationEntreeNumerique (0, 1) ;
-	if (choix == 0)
-	{
-		return ;
-	}
-	else if (typeAugmentation == 1)
-	{
-		*potentiel = *potentiel + 1 ;
-		*maximum = *maximum + augmentationPossible ;
-		*points = *points - coutAugmentationPotentiel ;
-	}
-	else
-	{
-		*potentiel = *potentiel + 1 ;
-		*maximum = *maximum + augmentationPossible ;
-		sprintf(messageJournal, "Augmentation de potentiel validée. Potentiel : %d.", *potentiel) ;
-		remplirJournal(messageJournal) ;
-	}
-}
-
-int verifierAugmentationPotentiel(int *potentiel)
-{
-	int positionInitiale ;
-	int	typeAugmentation ;
-	FILE* fichier = NULL ;
-	int ligne = *potentiel - 1 ;
-	positionInitiale = (ligne * 19) + 11 ;
-	//On se place sur le bout de ligne qui correspond à la valeur décrivant le système d'évolution de potentiel,
-	//sur la ligne correspondant au potentiel initial trouvé dans la fiche coureur,
-	//Trois valeurs sont possibles. 0 : augmentation rendue volontairement impossible. 1 : points d'évolution. 2 : points de chaîne.
-	fichier = fopen("configuration", "r") ;
-	fseek(fichier, positionInitiale, SEEK_SET) ;
-	fscanf(fichier, "%d", &typeAugmentation) ;
-	fclose(fichier) ;
-	return typeAugmentation ;
-}
-
-int determinerCoutPotentiel(int *potentiel)
-{
+	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
+	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 	int positionInitiale ;
 	int cout ;
+	int bonus ;
 	FILE* fichier = NULL ;
-	int ligne = *potentiel - 1 ;
+	int ligne = (ficheCoureur->potentiel) - 1 ;
+	g_print("%d LIGNE\n", ligne) ;
 	positionInitiale = (ligne * 19) + 13 ;
 	//On se place sur le bout de ligne qui correspond au coût pour augmenter le potentiel d'un point,
 	//sur la ligne correspondant au potentiel initial trouvé dans la fiche coureur.
-	//Coût noté sur cinq chiffres, comme 02000 pour 2 000 points de chaîne ou 0005 pour points de chaîne.
+	//Coût noté sur cinq chiffres, comme 20000 pour 20 points 00005 pour points.
 	fichier = fopen("configuration", "r") ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &cout) ;
+
+	
+	if (cout > 0 && ficheCoureur->points >= cout && ficheCoureur->potentiel < 8)
+	{
+		positionInitiale = 133 + ((noteChoisie - 50) * 7) + 4 ;
+		fseek(fichier, positionInitiale, SEEK_SET) ;
+		fscanf(fichier, "%d", &bonus) ;
+		
+		ficheCoureur->notesMax[ficheCalcul->selection] = ficheCoureur->notesMax[ficheCalcul->selection] + bonus ;
+		ficheCoureur->points = ficheCoureur->points - cout ;
+		ficheCoureur->potentiel ++ ;
+		
+		GtkWidget *afficherPotentiel ;
+		GtkWidget *afficherPoints ;
+		GtkWidget *afficherMax ;
+		
+		char *potentiel ;
+		potentiel = (char *)malloc(2 * sizeof(char)) ;
+		sprintf(potentiel, "%d", ficheCoureur->potentiel) ;
+		afficherPotentiel = gtk_label_new(potentiel) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 1, 10, 1, 1) ;
+		
+		char *nombrePoints ;
+		nombrePoints = (char *)malloc(6 * sizeof(char)) ;
+		sprintf(nombrePoints, "%d", ficheCoureur->points) ;
+		afficherPoints = gtk_label_new(nombrePoints) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 9, 1, 1) ;
+		
+		char *notePotentiel ;
+		notePotentiel = g_malloc(8) ;
+		sprintf(notePotentiel, "%d", ficheCoureur->notesMax[ficheCalcul->selection]) ;
+		afficherPotentiel = gtk_label_new(notePotentiel) ;
+		determinerCouleurNote(afficherPotentiel) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 6, (ficheCalcul->selection), 1, 1) ;
+		
+		enregistrer(ficheCoureur) ;
+	}
+	else
+	{
+		g_print("Augmentation de potentiel impossible.\n") ;
+		if (cout <= 0)
+		{
+			g_print("Coût <= 0 : la configuration interdit cette évolution.\n") ;
+		}
+		if (ficheCoureur->points < cout)
+		{
+			g_print("Pas assez de points.\n") ;
+		}
+		if (ficheCoureur->potentiel >=8)
+		{
+			g_print("Potentiel au maximum (ou invalide).\n") ;
+		}
+	}
+	
 	fclose(fichier) ;
-	return cout ;
 }
 
-int determinationAugmentationPotentielPossible(int *maximum)
+void ajoutPoints(GtkWidget *objet, gpointer user_data)
 {
-	int augmentationPossible ;
-	int positionInitiale ;
-	FILE* fichier = NULL ;
-	positionInitiale = 133 + ((*maximum - 50) * 7) + 4 ;
-	//133 représente le premier caractère de la première ligne qui décrit la configuration concernant le nombre de points d'augmentation possibles pour chaque note initiale.
-	//6 est le décalage nécessaire pour passer à la note suivante.
-	//4 place au bout de la ligne qui correspond à l'augmentation possible.
-	fichier = fopen("configuration", "r") ;
-	fseek(fichier, positionInitiale, SEEK_SET) ;
-	fscanf(fichier, "%d", &augmentationPossible) ;
-	fclose(fichier) ;
-	return augmentationPossible ;
-}
-
-int determinerCoutEvolution(int noteFictive)
-{
-	int coutEvolution ;
-	int positionInitiale ;
-	FILE* fichier = NULL ;
-	positionInitiale = 378 + ((noteFictive - 50) * 7) + 4 ;
-	fichier = fopen("configuration", "r") ;
-	fseek(fichier, positionInitiale, SEEK_SET) ;
-	fscanf(fichier, "%d", &coutEvolution) ;
-	fclose(fichier) ;
-	return coutEvolution ;
+	SignalPoints *signalPoints = (SignalPoints*)user_data ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)signalPoints->coureur ;
+	GtkWidget *ajoutPoints = (GtkWidget*)signalPoints->points ;
+	
+	GtkWidget *afficherPoints ;
+	
+	const gchar *pointsAjoutes = gtk_editable_get_text(GTK_EDITABLE(ajoutPoints)) ;
+	char *charFin ;
+	if (!pointsAjoutes)
+	{
+		pointsAjoutes = "0" ;
+	}
+	long ajouterPoints = strtol(pointsAjoutes, &charFin, 10) ;
+	printf("%ld POINTS\n", ajouterPoints) ;
+	printf("%d ACTUEL\n", ficheCoureur->points) ;
+	ficheCoureur->points = ficheCoureur->points + ajouterPoints ;
+	printf("%d ACTUEL\n", ficheCoureur->points) ;
+	
+	char *nombrePoints ;
+	nombrePoints = (char *)malloc(10 * sizeof(char)) ;
+	sprintf(nombrePoints, "%d", ficheCoureur->points) ;
+	afficherPoints = gtk_label_new(nombrePoints) ;	
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 10, 1, 1) ;
+	enregistrer(ficheCoureur) ;
+	g_main_context_iteration(NULL, FALSE) ;
 }

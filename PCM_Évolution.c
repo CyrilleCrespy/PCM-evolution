@@ -15,66 +15,49 @@ GNU General Public License for more details.
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+char *abbreviations[14] = {"PLA", "MON", "MMO", "VAL",\
+"CLM", "PRO", "PAV", "SPR", "ACC", "DES", "BAR",\
+"END", "RES", "REC"} ;
+int notesInitiales[14] = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50} ;
+char nomDeFichier[250] ;
+char paves[10] ;
+int points ;
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <locale.h>
+
+#include <gtk/gtk.h>
+#include <glib.h>
+
+#include <pthread.h>
+
 #include "PCM_Évolution.h"
+#include "GUI.c"
 #include "modification.c"
 #include "creation.c"
 #include "calculAmelioration.c"
 #include "sauvegardes.c"
 
-char nomDeFichier[250] ;
-char paves[10] ;
-int points ;
-
-int main(void)
+int main(int argc, char *argv[])
 {
-	system(clear) ;
-	char paves[10] ;
-	sprintf(paves, "Pav%ss", é) ;
-	char acceleration[20] ;
-	sprintf(acceleration, "Acc%sl%sration", é, é) ;
-	char resistance[15] ;
-	sprintf(resistance, "R%ssistance", é) ;
-	char recuperation[20] ;
-	sprintf(recuperation, "R%scup%sration", é, é) ;
-	int choix = 5 ;
-	char *caracteristiques[14] = {"Plaine", "Montagne", "Moyenne montagne", "Vallon",\
-"Contre-la-montre", "Prologue", paves, "Sprint", acceleration, "Descente", "Baroud",\
-"Endurance", resistance, recuperation} ;
-
-	while (choix != 0) //Répétion du menu tant que l'utilisateur n'a pas demandé à quitter.
-	{
-		printf("Bienvenue dans PCM %svolution.\n", É) ; //Variable définie selon l'OS pour les accents.
-		printf("Menu.\n") ;
-		printf("1. Cr%sation de fiche coureur.\n", é) ;
-		printf("2. Modification de fiche coureur.\n") ;
-		printf("Quitter avec 0.\n") ;
-		choix = verificationEntreeNumerique(0, 2) ;
-		suppressionEspace() ;
-		if (choix == 1)
-		{
-			creation(caracteristiques) ;
-			return 0 ;
-		}
-		else if (choix == 2)
-		{
-			demandeNomDeFichier(caracteristiques) ;
-			return 0 ;
-		}
-		else
-		{
-			printf("Merci d'avoir utilis%s PCM %svolution !\n", é, É) ;
-			exit(EXIT_SUCCESS) ;
-		}
-	}
-	return -1 ;
+	peuplerListe("pays") ;
+	peuplerListe("courses") ;
+	int status ;
+	gtk_init() ;
+	PCM_Evolution = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS) ;
+	g_signal_connect (PCM_Evolution, "activate", G_CALLBACK (initialisationFenetre), NULL) ;
+	status = g_application_run (G_APPLICATION (PCM_Evolution), argc, argv) ;
+	g_object_unref (PCM_Evolution) ;	
+	
+	return status ;
 }
 
 int determinerNotesMax(int style, int compteur)
 {
+	FILE* fichier = NULL ;
 	int maximumDetermine ;
 	int positionInitiale ;
 	fichier = fopen("combinaisons", "r") ;
@@ -87,6 +70,7 @@ int determinerNotesMax(int style, int compteur)
 
 int retrouverNotesMax(int compteur)
 {
+	FILE* fichier = NULL ;
 	char fichierMax[255] ;
 	sprintf(fichierMax, "%s_max", nomDeFichier) ;
 	int maximumDetermine ;
@@ -144,35 +128,6 @@ void corrigerNomDeFichier()
 		}
 	}
 	memcpy(nomDeFichier, nomProvisoire, 250) ;
-}
-
-int verificationEntreeNumerique(int min, int max)
-{
-	int donneeVerifiee = 65536 ;
-	while (donneeVerifiee < min || donneeVerifiee > max)
-	{
-		if ((scanf("%d", &donneeVerifiee) == 1) && (donneeVerifiee >= min && donneeVerifiee <= max))
-		{
-			return donneeVerifiee ;
-		}
-		else
-		{
-			printf("Entr%se incorrecte. Merci de ne taper qu'un chiffre, sans lettre ou ponctuation, entre %d et %d.\n", é, min, max) ;
-			viderBuffer() ; //Permet d'éviter que la boucle ne se relance sans tenir compte du scanf.
-		}
-	}
-	printf("Erreur dans PCM_%svolution.c, int verificationEntreeNumerique.\n", É) ;
-	printf("Valeur connue : %d, valeur min : %d, valeur max : %d.\n", donneeVerifiee, min, max) ;
-	exit(EXIT_FAILURE) ;
-}
-
-int confirmationEntree()
-{
-	int confirmation ;
-	printf("0. Annuler \n") ;
-	printf("1. Confirmer \n") ;
-	confirmation = verificationEntreeNumerique(0, 1) ;
-	return confirmation ;
 }
 
 void remplirJournal(char *message)

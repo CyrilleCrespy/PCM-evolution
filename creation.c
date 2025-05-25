@@ -1,344 +1,397 @@
-int creation(char *caracteristiques[])
+void peuplerListe(char *liste)
 {
-	int fichierOK = 0 ;
-	int taille = 0 ;
-	int notesBase[14] = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50} ;
-	int principal ;
-	int secondaire ;
-	int style ;
-	int poids ;
-	int jourMax = 0 ;
-	int mois ;
-	int jour ;
-	char nationalite[100] ;
-	char course1[100] ;
-	char course2[100] ;
-	char course3[100] ;
-	
-	while (fichierOK != 1)
+	int compteur = 0 ;
+	FILE* fichier = NULL ;
+	fichier = fopen(liste, "r") ;
+	if (liste == "pays")
 	{
-		fichierOK = choixNomDeFichier(caracteristiques) ;
+		pays = g_list_store_new(G_TYPE_OBJECT) ;
+	}
+	if (liste == "courses")
+	{
+		courses = g_list_store_new(G_TYPE_OBJECT) ;
 	}
 	
-	principal = choixPrincipal() ;
-	secondaire = choixSecondaire(principal) ;
-	style = calculStyle(principal, secondaire) ;
-	taille = choixTaille() ;
-	poids = choixPoids() ;
-	mois = choixMoisDeNaissance() ;
-	if (mois == 2)
+	while (1)
 	{
-		jourMax = 28 ;
+		if (feof(fichier))
+		{
+			fclose(fichier) ;
+			break ;
+		}
+		else
+		{
+			if (liste == "pays")
+			{	
+				char tampon[500] ;
+				fgets(tampon, 500, fichier) ;
+				int compteur ;
+				for (compteur = 0 ; tampon[compteur] != '\0' ; compteur ++)
+				{
+					if (tampon[compteur] == '\n' || tampon[compteur] == '\r')
+					{
+						tampon[compteur] = '\0' ;
+						break ;
+					}
+				}
+				tampon[compteur] = '\0' ;
+				g_list_store_append(G_LIST_STORE(pays), gtk_string_object_new(tampon)) ;
+			}
+			else if (liste == "courses")
+			{
+				char tampon[500] ;
+				fgets(tampon, 500, fichier) ;
+				int compteur ;
+				for (compteur = 0 ; tampon[compteur] != '\0' ; compteur ++)
+				{
+					if (tampon[compteur] == '\n' || tampon[compteur] == '\r')
+					{
+						tampon[compteur] = '\0' ;
+						break ;
+					}
+				}
+				tampon[compteur] = '\0' ;
+				g_list_store_append(G_LIST_STORE(courses), gtk_string_object_new(tampon)) ;
+			}
+			compteur ++ ;
+		}
 	}
-	else if (mois % 2 == 0)
-	{
-		jourMax = 30 ;
-	}
-	else
-	{
-		jourMax = 31 ;
-	}
-	jour = choixJourDeNaissance(jourMax) ;
-	
-	strcpy(nationalite, choixNationalite()) ;
-	
-	strcpy(course1, choixCourseFavorite(1)) ;
-	strcpy(course2, choixCourseFavorite(2)) ;
-	strcpy(course3, choixCourseFavorite(3)) ;
-	
-	pointsDepenses = 0 ;
-	remplirJournal("| SESSION 1 | Nouveau fichier.") ;
-	enregistrer(1, style, notesBase, 3, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesBase, NULL) ;
-	modification(0, 1, caracteristiques, taille) ;
-	return 0 ;
 }
 
-int verificationExistanceDuFichier()
+int verificationExistanceDuFichier(GtkWidget *boutonValider, int *pointeur)
 {
+	GtkWidget *champNom = (GtkWidget*)pointeur ;
+	GtkWidget *messageErreur ;
+	GtkWidget *boutonSuppression ;
+	
+	const gchar *nomFichier = gtk_editable_get_text(GTK_EDITABLE(champNom)) ;
+	memcpy(nomDeFichier, nomFichier, strlen(nomFichier)) ;
+	
 	char message[500] ;
-	sprintf(message, "Tentative de (re)création du fichier %s.", nomDeFichier) ;
-	remplirJournal(message) ;
 
 	FILE* fichier = NULL ;
-	fichier = fopen(nomDeFichier, "r") ;
+	fichier = fopen(nomFichier, "r") ;
 
 	if (fichier != NULL)
 	{
-		remplirJournal("Fiche du même nom existante.") ;
 		fclose(fichier) ;
-		return 1 ; //Fiche du même nom déjà existante
+		GtkWidget *boiteDialogue ;
+		GtkWidget *grilleDialogue ;
+		
+		GtkWidget *question ;
+		GtkWidget *oui ;
+		GtkWidget *non ;
+		
+		grilleDialogue = gtk_grid_new() ;
+		
+		boiteDialogue = gtk_application_window_new (PCM_Evolution) ;
+		gtk_window_set_title (GTK_WINDOW (boiteDialogue), "Supprimer le fichier ?") ;
+		
+		question = gtk_label_new("Voulez-vous supprimer le fichier portant déjà ce nom ?") ;
+		oui = gtk_button_new_with_label("Oui") ;
+		non = gtk_button_new_with_label("Non") ;
+		
+		gtk_grid_attach(GTK_GRID(grilleDialogue), question, 0, 0, 5, 1) ;
+		gtk_grid_attach(GTK_GRID(grilleDialogue), oui, 0, 1, 1, 1) ;
+		gtk_grid_attach(GTK_GRID(grilleDialogue), non, 2, 1, 1, 1) ;
+		
+		gtk_window_set_child(GTK_WINDOW (boiteDialogue), grilleDialogue) ;
+		
+		gtk_window_present(GTK_WINDOW (boiteDialogue));
+		
+		g_signal_connect(oui, "clicked", G_CALLBACK(suppressionCreation), GTK_WINDOW(boiteDialogue)) ;
+		g_signal_connect_swapped(non, "clicked", G_CALLBACK(gtk_window_destroy), GTK_WINDOW(boiteDialogue)) ;
+		
+		g_print("Type de boiteDialogue : %s.\n", G_OBJECT_TYPE_NAME(boiteDialogue)) ;
+		
+		remplirJournal("Fiche du même nom existante.") ;
 	}
 	else
 	{
 		remplirJournal("Fiche inexistante. Création.") ;
-		return 0 ; 
-	}
+		initialisationCoureur(NULL, NULL) ;
+	}	
 }
 
-int choixNomDeFichier()
+void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur)
 {
-	int choix = 0 ;
-	char fichierMax[255] = {0} ;
-	
-	printf("Entre ton pr%snom suivi de ton nom, s%spar%ss par un espace.\n", é, é, é) ;
-	getchar() ;
-	fgets(nomDeFichier, 250, stdin) ;
-	corrigerNomDeFichier() ;
-	int fichierOuvert = verificationExistanceDuFichier(nomDeFichier) ;
-	if (fichierOuvert == 1)
+	GtkWindow *boiteDialogue = (GtkWindow*) pointeur ;
+	char fichierMax[254] ;
+	if (remove(nomDeFichier) == 0)
 	{
-		printf("Fiche d%sj%s existante. Voulez-vous supprimer l'ancien  %s ?\n", é, à, nomDeFichier) ;
-		printf("1. Oui\n") ;	
-		printf("2. Non\n") ;
-		choix = verificationEntreeNumerique(0, 2) ;
-		if (choix == 1)
+		remplirJournal("Fiche supprimée à la demande de l'utilisateur.") ;
+		printf("Fichier coureur supprim%s.\n", é) ;
+	}
+	else
+	{
+		remplirJournal("Suppression du fichier coureur impossible.") ;
+		perror("Suppression du fichier coureur impossible.\n") ;
+	}
+	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	if (remove(fichierMax) == 0)
+	{
+		printf("Fichier max supprim%s.\n", é) ;
+		remplirJournal("Fichier max supprimé.") ;
+	}
+	else
+	{
+		perror("Suppression du fichier max impossible.\n") ;
+		remplirJournal("Suppression du fichier max impossible.") ;
+	}
+	gtk_window_close(GTK_WINDOW(boiteDialogue)) ;
+	initialisationCoureur(NULL, NULL) ;
+}
+
+void verificationEditable(GtkWidget *objet, int *pointeur)
+{
+	editableOK = 1 ;	
+	
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)pointeur ;
+	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
+	
+	//On transformme le gchar en un int.
+	
+	const gchar *taille_str = gtk_editable_get_text(GTK_EDITABLE(ficheJoueur->taille)) ;
+	char *charFin ;
+	if (!taille_str)
+	{
+		taille_str = "" ;
+	}
+	long taille_long = strtol(taille_str, &charFin, 10) ;
+	
+	//Taille.
+	if (*charFin != '\0')
+	{
+		g_print("Erreur de conversion.\n") ;
+		GtkWidget *erreur ;
+		erreur = gtk_label_new("Entre uniquement une taille composée de trois chiffres.") ;
+		gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
+		editableOK = 0 ;
+	}
+	else
+	{
+		ficheCoureur->taille = (int)taille_long ;
+		if(ficheCoureur->taille < 150)
 		{
-			if (remove(nomDeFichier) == 0)
-			{
-				remplirJournal("Fiche supprimée à la demande de l'utilisateur.") ;
-				printf("Fichier coureur supprim%s.\n", é) ;
-			}
-			else
-			{
-				remplirJournal("Suppression du fichier coureur impossible.") ;
-				perror("Suppression du fichier coureur impossible.\n") ;
-				return 0 ;
-			}
-			sprintf(fichierMax, "%s_max", nomDeFichier) ;
-			if (remove(fichierMax) == 0)
-			{
-				printf("Fichier max supprim%s.\n", é) ;
-				remplirJournal("Fichier max supprimé.") ;
-				return 1 ;
-			}
-			else
-			{
-				perror("Suppression du fichier max impossible.\n") ;
-				remplirJournal("Suppression du fichier max impossible.") ;
-				return 0 ;
-			}
+			GtkWidget *erreur ;
+			printf("Trop petit.\n") ;
+			erreur = gtk_label_new("La taille entrée est trop petite. Minimum : 150.") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
+			editableOK = 0 ;
+		}
+		else if(ficheCoureur->taille > 200)
+		{
+			GtkWidget *erreur ;
+			printf("Trop grand.\n") ;
+			erreur = gtk_label_new("La taille entrée est trop grande. Maximum : 200.") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
+			editableOK = 0 ;
 		}
 		else
 		{
-			printf("Fichier coureur pr%sserv%s.\n", é, é) ;
-			return 0 ;
+			GtkWidget *validation ;
+			printf("Taille valide.\n") ;
+			validation = gtk_label_new("La taille entrée est valide.") ;
+			printf("1\n") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), validation, 10, 0, 2, 1) ;
 		}
 	}
-	else 
-	{
-		return 1 ;
-	}
-}
 
-int choixTaille()
-{
-	int taille = 0 ;
-	int confirmation = 0 ;
-	while (confirmation == 0)
-	{
-		printf("Entre ta taille en centim%stres (entre 150 et 200).\n", è) ;
-		taille = verificationEntreeNumerique (150, 200) ;
-		printf("Taille entr%se : %d centim%stres.\n", é, taille, è) ;
-		confirmation = confirmationEntree() ;
-	}
-	return taille ;
-}
-
-int choixPoids()
-{
-	int poids = 0 ;
-	int confirmation = 0 ;
+	//Poids.
 	
-	while (confirmation == 0)
-	{
-		printf("Entre ton poids en kilos (entre 50 et 100).\n") ;
-		poids = verificationEntreeNumerique(50, 100) ;
-		printf("Poids entr%s : %d kilos.\n", é, poids) ;
-		confirmation = confirmationEntree() ;
-	}
-	return poids ;
-}
-
-int choixMoisDeNaissance()
-{
-	int mois = 0 ;
-	int confirmation = 0 ;
+	const gchar *poids_str = gtk_editable_get_text(GTK_EDITABLE(ficheJoueur->poids)) ;
+	long poids_long = strtol(poids_str, &charFin, 10) ;
 	
-	while (confirmation == 0)
+	if (!poids_str)
 	{
-		printf("Nous allons choisir ta date de naissance pour ton coureur n%s en 2006.\n", é) ;
-		printf("Choisis un mois.\n") ;
-		printf("1.  Janvier\n2.  F%svrier\n3.  Mars\n4.  Avril\n5.  Mai\n6.  Juin\n7.  Juillet\n8.  Ao%st\n\
-9.  Septembre\n10. Octobre\n11. Novembre\n12. D%scembre\n", é, û, é) ;
-		mois = verificationEntreeNumerique(1, 12) ;
-		confirmation = confirmationEntree() ;
+		poids_str = "" ;
 	}
-	return mois ;
-}
-
-int choixJourDeNaissance(int jourMax)
-{
-	int jour = 0 ;
-	int confirmation = 0 ;
 	
-	while(confirmation == 0)
+	if (*charFin != '\0')
 	{
-		printf("Choisis un jour du mois, entre 1 et %d.\n", jourMax) ;
-		jour = verificationEntreeNumerique(1, jourMax) ;
-		confirmation = confirmationEntree() ;
-		return jour ;
+		g_print("Erreur de conversion.\n") ;
+		GtkWidget *erreur ;
+		erreur = gtk_label_new("Entre uniquement un poids composé de deux à trois chiffres.") ;
+		gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
+		editableOK = 0 ;
 	}
-	exit(EXIT_FAILURE) ;
-}
-
-int choixPrincipal()
-{
-	int principal = -1;
-	char cpe[30] ;
-	sprintf(cpe, "Courses par %stapes", é) ;
-	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-"Baroud", "Classiques du Nord"} ;
-	int compteurDeNotes = 0 ;
-	system(clear) ; //Appel système différent selon le SE.
-	printf("Veuillez choisir un style principal.\n") ;
-	while (compteurDeNotes < 7)
+	else
 	{
-		printf("%d. %s\n", compteurDeNotes+1, types[compteurDeNotes]) ;
-		compteurDeNotes ++ ;
-	}
-	principal = verificationEntreeNumerique(1, 7) ;
-	return (principal - 1) ;
-}
-
-int choixSecondaire(int principal)
-{
-	int secondaire = -1 ;
-	char cpe[30] ;
-	sprintf(cpe, "Courses par %stapes", é) ;
-	int compteurDeNotes = 0 ;
-	sprintf(cpe, "Courses par %stapes", é) ;
-	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-"Baroud", "Classiques du Nord"} ;
-	
-	system(clear) ;
-	printf("Veuillez choisir un style secondaire.\n") ;
-	while (compteurDeNotes < 7)
-	{	
-		if (compteurDeNotes == principal)
+		ficheCoureur->poids = (int)poids_long ;
+		if(ficheCoureur->poids < 50)
 		{
-			printf("%d. Pas de sp%scialit%s secondaire\n", compteurDeNotes + 1, é, é) ;
-			compteurDeNotes ++ ;
+			GtkWidget *erreur ;
+			printf("Trop petit.\n") ;
+			erreur = gtk_label_new("Le poids entré est trop petit. Minimum : 50.") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
+			editableOK = 0 ;
+		}
+		else if(ficheCoureur->poids > 100)
+		{
+			GtkWidget *erreur ;
+			printf("Trop grand.\n") ;
+			erreur = gtk_label_new("Le poids entré est trop grand. Maximum : 100.") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
+			editableOK = 0 ;
 		}
 		else
 		{
-			printf("%d. %s\n", compteurDeNotes + 1, types[compteurDeNotes]) ;
-			compteurDeNotes ++ ;
+			GtkWidget *validation ;
+			printf("Taille valide.\n") ;
+			validation = gtk_label_new("Le poids entré est valide.") ;
+			gtk_grid_attach(GTK_GRID(grilleCreation), validation, 10, 1, 2, 1) ;
 		}
 	}
-	secondaire = principal = verificationEntreeNumerique(1, 7) ;
-	return (secondaire - 1) ;
-}
-
-char *choixNationalite()
-{
-	static char nationalite[100] = {0} ;
-	char premiereLettre ;
-	while (nationalite[0] == 0)
-	{
-		printf("Pour choisir ta nationalit%s, entre la premi%sre lettre (en majuscule).\n", é, è) ;
-		getchar() ;
-		scanf("%c", &premiereLettre) ;
-		strcpy(nationalite, propositionDonnees(1, premiereLettre)) ;
-	}
-	return nationalite ;
-}
-
-char *choixCourseFavorite(int iteration)
-{
-	static char courseFavorite[100] ;
-	char premiereLettre ;
 	
-	memset(courseFavorite, 0, 50) ;
-	viderBuffer() ;
-	
-	while (courseFavorite[0] == 0)
+	if (editableOK == 1 && dropDownOK == 1 && dateOK == 1)
 	{
-		printf("Pour choisir ta course favorite n%s%d, entre la premi%sre lettre.\n", symboleNumero, iteration, è) ;
-		scanf("%c", &premiereLettre) ;
-		strcpy(courseFavorite, propositionDonnees(2, premiereLettre)) ;
+		ficheCoureur->points = 200 ;
+		ficheCoureur->potentiel = 4 ;
+		GtkWidget *boutonValider ;
+		boutonValider = gtk_button_new_with_label("Valider") ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
+		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheCoureur) ;
 	}
-	return courseFavorite ;
 }
 
-char *propositionDonnees(int typeFichiers, char premiereLettre)
+void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur)
 {
-	char lettreFichier = '0' ;
-	char dump[500] ;
-	char *affichage[100] = {0} ;
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)pointeur ;
+	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
+	
+	//On vérifie que les courses ne soient pas en doublon.
+	
+	GObject *courseSelec1 = gtk_drop_down_get_selected_item(ficheJoueur->course1) ;
+	GObject *courseSelec2 = gtk_drop_down_get_selected_item(ficheJoueur->course2) ;
+	GObject *courseSelec3 = gtk_drop_down_get_selected_item(ficheJoueur->course3) ;
+	
+	//Pour cela, on transforme les GObject en char[].
+	
+	if(courseSelec1)
+	{
+		const char *stringCourse1 = gtk_string_object_get_string(GTK_STRING_OBJECT(courseSelec1)) ;
+		size_t long1 = strlen(stringCourse1) ;
+		memset(ficheCoureur->course1, 0, 200) ;
+		strncpy(ficheCoureur->course1, stringCourse1, long1 + 1) ;
+	}
+	if(courseSelec2)
+	{
+		const char *stringCourse2 = gtk_string_object_get_string(GTK_STRING_OBJECT(courseSelec2)) ;
+		size_t long2 = strlen(stringCourse2) ;
+		memset(ficheCoureur->course2, 0, 200) ;
+		strncpy(ficheCoureur->course2, stringCourse2, long2 + 1) ;
+	}
+	if(courseSelec3)
+	{
+		const char *stringCourse3 = gtk_string_object_get_string(GTK_STRING_OBJECT(courseSelec3)) ;
+		size_t long3 = strlen(stringCourse3) ;
+		memset(ficheCoureur->course3, 0, 200) ;
+		strncpy(ficheCoureur->course3, stringCourse3, long3 + 1) ;
+	}
+	
+	//Si une comparaison renvoie 0 (même tableau de char deux fois), on affiche une erreur, car on souhaite que l'utilisateur choisisse trois courses.
+	if (strcmp(ficheCoureur->course1, ficheCoureur->course2) == 0 || strcmp(ficheCoureur->course2, ficheCoureur->course3) == 0 || strcmp(ficheCoureur->course1, ficheCoureur->course3) == 0)
+	{
+		GtkWidget *erreurCourses ;
+		printf("Courses invalides : choisis-en trois différentes.\n") ;
+		erreurCourses = gtk_label_new("Courses invalides : choisis-en trois différentes.") ;
+		gtk_grid_attach(GTK_GRID(grilleCreation), erreurCourses, 10, 2, 2, 1) ;
+		dropDownOK = 0 ;
+	}
+	else
+	{
+		g_print("Validation.\n%s\n%s\n%s\n", ficheCoureur->course1, ficheCoureur->course2, ficheCoureur->course3) ;
+		GtkWidget *validationCourses ;
+		printf("Courses valides : trois courses différentes ont été choisies.\n") ;
+		validationCourses = gtk_label_new("Courses valides : trois courses différentes ont été choisies.") ;
+		gtk_grid_attach(GTK_GRID(grilleCreation), validationCourses, 10, 2, 2, 1) ;
+	}
+	
+	GObject *pays = gtk_drop_down_get_selected_item(ficheJoueur->pays) ;
+	
+	if(pays)
+	{
+		const char *stringPays = gtk_string_object_get_string(GTK_STRING_OBJECT(pays)) ;
+		size_t long4 = strlen(stringPays) ;
+		memset(ficheCoureur->pays, 0, 100) ;
+		strncpy(ficheCoureur->pays, stringPays, long4 + 1) ;
+	}
+	
+	//À ce stade, on a vérifié les données potentiellement problématiques (taille, âge, courses). On part du principe que le reste est valide.
+	
 	int compteur ;
-	static char donnee[100] ;
-	int choix ;
-
-	if (premiereLettre < 48 || premiereLettre > 122 || (premiereLettre < 65 && premiereLettre > 57) || (premiereLettre > 90 && premiereLettre < 97))
-	//Si ce n'est pas une lettre ou un chiffre.
-	{
-		printf("Ce n'est pas une lettre.\n") ;
-		memset(donnee, 0, 100) ;
-		return donnee ;
-	}
-	else if (premiereLettre > 90) //Transforme toute minuscule en majuscule.
-	{
-		premiereLettre = premiereLettre - 32 ;
-	}
-	FILE* fichier = NULL ;
-	if (typeFichiers == 1)
-	{
-		fichier = fopen("pays", "r") ;
-	}
-	else if (typeFichiers == 2)
-	{
-		fichier = fopen("courses", "r") ;
-	}
 	
-	compteur = 0 ;
-	while(premiereLettre != lettreFichier) //On écarte les données qui précèdent la lettre désirée.
+	ficheCoureur->principal = gtk_drop_down_get_selected(ficheJoueur->principal) ;
+	ficheCoureur->secondaire = gtk_drop_down_get_selected(ficheJoueur->secondaire) ;
+	
+	g_print("Principal : %d.", ficheCoureur->principal) ;
+	g_print("Secondaire : %d.", ficheCoureur->secondaire) ;
+	
+	ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire) ; //En fonction du style primaire et du style secondaire, détermine un code combinant ces deux paramètres. Il est utile pour chercher dans le fichier idoine les notes maximales attribuéer défaut à la combinaisons de styles désirée.
+
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		lettreFichier = fgetc(fichier) ;
-		if(premiereLettre != lettreFichier)
-		{
-			fgets(dump, 500, fichier) ;
-			if (affichage[0] == 0 && feof(fichier)) //Si aucun résultat n'est trouvé.
-			{
-				printf("Aucun r%ssultat n'a %st%s trouv%s.\n", é, é, é, é) ;
-				memset(donnee, 0, 100) ;
-				return donnee ;
-			}
-		}
+		char *noteAfficher ;
+		noteAfficher = g_malloc(8) ;
+		//ficheCoureur->notes[compteur] = g_malloc(sizeof(int)) ;
+		ficheCoureur->notes[compteur] = determinerNotesMax(ficheCoureur->style, compteur) ;
+		GtkWidget *texteCarac ;
+		GtkWidget *texteNote ;
+
+		texteCarac = gtk_label_new(abbreviations[compteur]) ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), texteCarac, 10, (4 + compteur), 1, 1) ;
+		
+		sprintf(noteAfficher, "%d", ficheCoureur->notes[compteur]) ;
+		texteNote = gtk_label_new(noteAfficher) ;
+		determinerCouleurNote(texteNote) ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), texteNote, 12, (4 + compteur), 1, 1) ;
+		g_free(noteAfficher) ;
+		
+		ficheCoureur->notes[compteur] = 50 ; //On initialise la valeur par défaut de chaque note.
+		printf("Note actuelle : %d.\n", ficheCoureur->notes[compteur]) ;
 	}
-	while (1)
+		
+	GtkWidget *texteNotesMax ;
+		
+	texteNotesMax = gtk_label_new("Notes maximales du profil choisi") ;
+	gtk_grid_attach(GTK_GRID (grilleCreation), texteNotesMax, 10, 3, 2, 1) ;
+
+	if (editableOK == 1 && dropDownOK == 1 && dateOK == 1)
 	{
-		while (premiereLettre == lettreFichier)
-		{
-			fseek(fichier, -1, SEEK_CUR) ; //On se repositionne en début de ligne pour compenser le fgetc.
-			affichage[compteur] = malloc(sizeof(char[100])) ;
-			fgets(affichage[compteur], 500, fichier) ;
-			printf("%d. %s", compteur + 1, affichage[compteur]) ;
-			compteur ++ ;
-			lettreFichier = fgetc(fichier) ;
-		}
-		printf("Entre le num%sro de ton choix (0 pour annuler).\n", é) ;
-		choix = verificationEntreeNumerique(0, compteur) ;
-		if (choix == 0)
-		{
-			memset(donnee, 0, 100) ;
-			return donnee ;
-		}
-		strcpy(donnee, affichage[choix - 1]) ;
-		donnee[strlen(donnee) - 1] = '\0' ;
-		return donnee ;
+		ficheCoureur->points = 200 ;
+		GtkWidget *boutonValider ;
+		boutonValider = gtk_button_new_with_label("Valider") ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
+		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheCoureur) ;
 	}
-	fclose(fichier) ;
-	return donnee ;
+}
+
+void ecrireDate(GtkWidget *calendrier, gpointer user_data)
+{
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
+	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
+
+	int anneeCourante ;
+	ficheCoureur->jour = gtk_calendar_get_day(GTK_CALENDAR (ficheJoueur->calendrier)) ;
+	ficheCoureur->mois = (gtk_calendar_get_month(GTK_CALENDAR (ficheJoueur->calendrier))) + 1 ;
+	ficheCoureur->annee = gtk_calendar_get_year(GTK_CALENDAR (ficheJoueur->calendrier)) ;
+	FILE* fichier = NULL ;
+	fichier = fopen("configuration", "r") ;
+	int positionInitiale = 623 ;
+	fseek(fichier, positionInitiale, SEEK_SET) ;
+	fscanf(fichier, "%d", &anneeCourante) ;
+	
+	if ((ficheCoureur->annee) + 18 < anneeCourante)
+	{
+		dateOK = 0 ;
+	}
+	else
+	{
+		dateOK = 1 ;
+	}
 }
 
 int calculStyle(int principal, int secondaire)
@@ -350,14 +403,8 @@ int calculStyle(int principal, int secondaire)
 	
 	FILE* fichier = NULL ;
 	
-	suppressionEspace() ;
-	
 	principal = (principal) * 7 ;
 	style = principal + secondaire ;
-	printf("Le stye a %st%s correctement entr%s. Code : %d\n", é, é, é, style) ;
-	printf("Appuyez sur Entr%se pour continuer.\n", é) ;
-	getchar() ;
-	system(clear) ;
 	sprintf(fichierMax, "%s_max", nomDeFichier) ;
 	fichier = fopen(fichierMax, "w+") ;
 	if (fichier == NULL)

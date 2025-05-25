@@ -1,40 +1,101 @@
+typedef struct //Strucuture de la fiche enregistrée.
+{
+	int jour ;
+	int mois ; 
+	int annee ;
+	int taille ;
+	int poids ;
+	int principal ;
+	int secondaire ;
+	int style ;
+	char course1[200] ;
+	char course2[200] ;
+	char course3[200] ;
+	char pays[100] ;
+	int notes[14] ;
+	int notesMax[14] ;
+	int points ;
+	int potentiel ;
+} StructFicheCoureur ;
+
+typedef struct //Structure passée aux fonctions de calcul
+{
+	StructFicheCoureur *originel ;
+	int selection ;
+} StructFicheCalcul ;
+
+typedef struct //Struture des champs de la fenêtre d'initialisation renvoyés vers le signal.
+{
+	GtkWidget *taille ;
+	GtkWidget *poids ;
+	GtkWidget *calendrier ;
+	GtkDropDown *principal ;
+	GtkDropDown *secondaire ;
+	GtkDropDown *course1 ;
+	GtkDropDown *course2 ;
+	GtkDropDown *course3 ;
+	GtkDropDown *pays ;
+} StructFicheJoueur ;
+
+typedef struct
+{
+	StructFicheJoueur *ficheJoueur ;
+	StructFicheCoureur *ficheCoureur ;
+} StructFicheSignal ;
+
+typedef struct
+{
+	StructFicheCoureur *coureur ;
+	GtkWidget *points ;
+} SignalPoints ;
+
 int creation(char *caracteristiques[]) ; //Choix 1 du menu
 int choixNomDeFichier() ; 
-int verificationExistanceDuFichier() ;
+int editableOK = 1 ;
+int dropDownOK = 1 ;
+int dateOK = 1 ;
+
+int verificationExistanceDuFichier(GtkWidget *boutonValider, int *pointeur) ;
+void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur) ;
+void verificationEditable(GtkWidget *objet, int *pointeur) ;
+void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur) ;
+void ecrireDate(GtkWidget *calendrier, gpointer user_data) ;
 void viderBuffer() ;
-int verificationEntreeNumerique(int min, int max) ;
 int confirmationEntree() ;
 void remplirJournal(char *message) ;
 int choixPrincipal() ;
 int choixSecondaire() ;
 int calculStyle(int principal, int secondaire) ;
-int choixTaille() ;
-int choixPoids() ;
-int choixMoisDeNaissance() ;
 int choixJourDeNaissance(int jourMax) ;
-char *choixNationalite() ;
+void annuler(GtkWidget *boutonAnnuler, gpointer user_data) ;
+void validerCoureur(GtkWidget *boutonValider, int *pointeur) ;
+void peuplerListe(char *liste) ;
 char *propositionDonnees(int typeFichier, char premiereLettre) ;
-char *choixCourseFavorite() ;
-void demandeNomDeFichier(char *caracteristiques[]) ;
+void demandeNomDeFichier() ;
+void trouverFichier (GtkWidget *boutonValider, int *pointeur) ;
+void afficherCoureur() ;
+void afficherNotes(GtkWidget *objet, StructFicheCoureur *ficheCoureur) ;
+void boutonsNotes(StructFicheCoureur *ficheCoureur, int compteur) ;
 void modification(int session, int points, char *caracteristiques[], int taille) ;
-int lireStats() ;
-void enregistrer(int session, int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[]) ;
-void enregistrerMax(int maximum[]) ;
+void enregistrer(StructFicheCoureur *ficheCoureur) ;
+void enregistrerMax(StructFicheCoureur *ficheCoureur) ;
 void creerCopie() ;
 void restaurerSauvegarde() ;
-int verifierDonnees(int session, int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3) ;
+int verifierDonnees(StructFicheCoureur *ficheCoureur) ;
 int determinerNotesMax(int style, int compteur) ;
 int retrouverNotesMax(int compteur) ;
 void corrigerNomDeFichier() ;
-int calculAmelioration(int noteActuelle, int *points, int *maximum, int notesInitiales, int *potentiel, int potentielInitial) ;
-int calculAugmentation(int noteActuelle, int *points, int *maximum) ;
-int calculDiminution(int noteActuelle, int *points, int notesInitiales) ;
-void calculPotentiel(int noteActuelle, int *potentiel, int *maximum, int typeAugmentation, int *points) ;
-int verifierAugmentationPotentiel(int *potentiel) ;
-int determinerCoutPotentiel(int *potentiel) ;
-int determinationAugmentationPotentielPossible(int *maximum) ;
+int calculAugmentation(GtkWidget *boutonPlus, gpointer user_data) ;
+int calculDiminution(GtkWidget *boutonMoins, gpointer user_data) ;
+void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data) ;
 int determinerCoutEvolution(int noteActuelle) ;
+void ajoutPoints(GtkWidget *objet, gpointer user_data) ;
 void suppressionEspace() ;
+void initialisationFenetre (GtkApplication* PCM_Evolution, gpointer user_data) ;
+void fenetreNouvelleFiche(GtkApplication* PCM_Evolution, gpointer user_data) ;
+void initialisationCoureur(GtkWidget *boutonNouvelleFiche, gpointer user_data) ;
+void viderGrillePrincipale() ;
+void determinerCouleurNote(GtkWidget *note) ;
 
 #ifdef Windows
 #define é "\x82"

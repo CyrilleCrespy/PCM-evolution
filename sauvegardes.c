@@ -1,15 +1,18 @@
-void enregistrer(int session, int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3, int notesInitiales[], int maximum[])
+void enregistrer(StructFicheCoureur* pointeur)
 {	
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)pointeur ;
 	FILE* fichier = NULL ;
 	suppressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
 	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
 	fichier = fopen(nomDeFichier, "w+") ;
-	char *types[7] = {"courses_par_étapes", "grimpeur", "sprint", "contre-la-montre", "puncheur",\
-"baroud", "classiques_du_nord"} ; //Version avec les accents d'une même variable concernée ailleurs par les instructions de préprocesseur.
 
 	if (remove(nomDeFichier) == 0) //Suppression du fichier avec les données
 	{
 		printf("Fichier pr%sc%sdent supprim%s.\n", é, é, é) ;
+	}
+	else
+	{
+		printf("Pas de fichier %s supprimer.\n", à) ;
 	}
 
 	fichier = fopen(nomDeFichier, "w+") ;
@@ -24,53 +27,40 @@ void enregistrer(int session, int style, int coureur[], int potentiel, int princ
 		exit(EXIT_FAILURE) ;
 	}
 	
-	fprintf(fichier, u8"%d session\n", session) ;
+	fprintf(fichier, "%d Specialite principale %d specialite secondaire %d\n", ficheCoureur->style, ficheCoureur->principal, ficheCoureur->secondaire) ;
 	
-	if (principal == secondaire)
+	fprintf(fichier, "%d taille\n", ficheCoureur->taille) ;
+	fprintf(fichier, "%d poids\n", ficheCoureur->poids) ;
+	fprintf(fichier, "%d/%d/%d date de naissance\n", ficheCoureur->jour, ficheCoureur->mois, ficheCoureur->annee) ;
+	fprintf(fichier, "%s course favorite 1\n", ficheCoureur->course1) ;
+	fprintf(fichier, "%s course favorite 2\n", ficheCoureur->course2) ;
+	fprintf(fichier, "%s course favorite 3\n", ficheCoureur->course3) ;
+	fprintf(fichier, "%s nationalite\n", ficheCoureur->pays) ;
+	fprintf(fichier, "%d points\n", ficheCoureur->points) ;
+	fprintf(fichier, "%d potentiel\n", ficheCoureur->potentiel) ;
+	
+	char *caracteristiques[14] = {"Plaine", "Montagne", "Moyenne_montagne", "Vallon", "Contre-la-montre", "Prologue", "Paves",\
+	"Sprints", "Acceleration", "Descente", "Baroud", "Endurance", "Resistance", "Recuperation"} ;
+	int compteur ;
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : aucune\n", style, types[principal]) ;
+		char *caracteristique = caracteristiques[compteur] ;
+		int noteCourante = ficheCoureur->notes[compteur] ;
+		int initialCourant = notesInitiales[compteur] ;
+		fprintf (fichier, "%d %s (+ %d)\n", noteCourante, caracteristique, (noteCourante - initialCourant)) ;
 	}
-	else
-	{
-		fprintf(fichier, u8"%d spécialité principale : %s ; spécialité secondaire : %s\n", style, types[principal], types[secondaire]) ;
-	}
-	
-	fprintf(fichier, u8"%d taille\n", taille) ;
-	fprintf(fichier, u8"%d poids\n", poids) ;
-	fprintf(fichier, u8"%d/%d date de naissance\n", jour, mois) ;
-	fprintf(fichier, u8"%d potentiel\n", potentiel) ;
-	fprintf(fichier, u8"%s nationalité\n", nationalite) ;
-	fprintf(fichier, u8"%s course favorite 1\n", course1) ;
-	fprintf(fichier, u8"%s course favorite 2\n", course2) ;
-	fprintf(fichier, u8"%s course favorite 3\n", course3) ;
-	//D'avance, désolé pour cette immondice, mais l'écriture d'un fichier n'ayant pas les mêmes limitations que l'horrible ligne de commande Windows, on peut utiliser de vrais accents,
-	//ce qui rend les //define complètement inopérants, et même gênants, on doit donc tout retaper à la main, sauf si quelqu'un a une meilleure idée.
-	fprintf(fichier, u8"%d plaine (+ %d)\n", coureur[0], coureur[0] - notesInitiales[0]) ;
-	fprintf(fichier, u8"%d montagne (+ %d)\n", coureur[1], coureur[1] - notesInitiales[1]) ;
-	fprintf(fichier, u8"%d moyenne_montagne (+ %d)\n", coureur[2], coureur[2] - notesInitiales[2]) ;
-	fprintf(fichier, u8"%d vallon (+ %d)\n", coureur[3], coureur[3] - notesInitiales[3]) ;
-	fprintf(fichier, u8"%d contre-la-montre (+ %d)\n", coureur[4], coureur[4] - notesInitiales[4]) ;
-	fprintf(fichier, u8"%d prologue (+ %d)\n", coureur[5], coureur[5] - notesInitiales[5]) ;
-	fprintf(fichier, u8"%d pavés (+ %d)\n", coureur[6], coureur[6] - notesInitiales[6]) ;
-	fprintf(fichier, u8"%d sprint (+ %d)\n", coureur[7], coureur[7] - notesInitiales[7]) ;
-	fprintf(fichier, u8"%d accélération (+ %d)\n", coureur[8], coureur[8] - notesInitiales[8]) ;
-	fprintf(fichier, u8"%d descente (+ %d)\n", coureur[9], coureur[9] - notesInitiales[9]) ;
-	fprintf(fichier, u8"%d baroud (+ %d)\n", coureur[10], coureur[10] - notesInitiales[10]) ;
-	fprintf(fichier, u8"%d endurance (+ %d)\n", coureur[11], coureur[11] - notesInitiales[11]) ;
-	fprintf(fichier, u8"%d résistance (+ %d)\n", coureur[12], coureur[12] - notesInitiales[12]) ;
-	fprintf(fichier, u8"%d récupération (+ %d)\n", coureur[13], coureur[13] - notesInitiales[13]) ;
-	
-	fprintf(fichier, u8"%d point(s) dépensé(s).\n", pointsDepenses) ;
+
 	fclose(fichier) ;
-	if(maximum != NULL)
-	{
-		enregistrerMax(maximum) ;
-	}
+	
+	FILE *maximum = NULL ;
+	
+	enregistrerMax(ficheCoureur) ;
 	creerCopie() ;
 }
 
-void enregistrerMax(int maximum[])
+void enregistrerMax(StructFicheCoureur *pointeur)
 {
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)pointeur ;
 	FILE* fichier = NULL ;
 	char fichierMax[255] ;
 	int compteur = 0 ;
@@ -85,7 +75,7 @@ void enregistrerMax(int maximum[])
 	{
 		while (compteur < 14)
 		{
-			fprintf(fichier, "%d\n", maximum[compteur]) ;
+			fprintf(fichier, u8"%d\n", ficheCoureur->notesMax[compteur]) ;
 			compteur ++ ;
 		}
 	}
@@ -110,11 +100,54 @@ void creerCopie()
 	fclose(fichier2) ;
 }
 
-int verifierDonnees(int session, int style, int coureur[], int potentiel, int principal, int secondaire, int taille, int poids, int mois, int jour, char *nationalite, char *course1, char *course2, char *course3)
+int verifierDonnees(StructFicheCoureur *pointeur)
 {
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur *)pointeur ;
+	FILE* fichier = NULL ;
 	int compteur = 0 ;
+	int erreur = 0 ;
 
-	if (session < 1 || style < 0 || style > 48 || potentiel < 3 || potentiel > 8 || principal < 0 || principal > 7 || secondaire < 0 || secondaire > 7 || taille < 150 || taille > 200 || poids < 50 || poids > 100 || mois < 1 || mois > 12 || jour < 1 || jour > 31 || strlen(nationalite) == 0 || strlen(course1) == 0 || strlen(course2) == 0 || strlen(course3) == 0)
+	if (ficheCoureur->style < 0 || ficheCoureur->style > 48)
+	{
+		g_print("Style impossible.\n") ;
+		erreur = 1 ;
+	}
+	if (ficheCoureur->potentiel < 0 || ficheCoureur->potentiel > 8)
+	{
+		g_print("Potentiel impossible.\n") ;
+		erreur = 1 ;
+	}
+	if (ficheCoureur->principal < 0 || ficheCoureur->principal > 7)
+	{
+		g_print("Style principal impossible.\n") ;
+		erreur = 1 ;
+	}
+	if (ficheCoureur->secondaire < 0 || ficheCoureur->secondaire > 7)
+	{
+		g_print("Style secondaire impossible.\n") ;
+		erreur = 1 ;
+	}
+	if (ficheCoureur->taille < 150 || ficheCoureur->taille > 200)
+	{
+		g_print("Taille impossible.\n") ;
+		erreur = 1 ;
+	}
+	if (ficheCoureur->poids < 50 || ficheCoureur->poids > 100)
+	{
+		g_print("Poids impossible.\n") ;
+		erreur = 1 ;
+	}
+	/*if (ficheCoureur->mois < 1 || ficheCoureur->mois > 12 || ficheCoureur->jour < 1 || ficheCoureur->jour > 31)
+	{
+		g_print("Date impossible.\n") ;
+		erreur = 1 ;
+	}*/
+	if (strlen(ficheCoureur->pays) == 0 || strlen(ficheCoureur->course1) == 0 || strlen(ficheCoureur->course2) == 0 || strlen(ficheCoureur->course3) == 0)
+	{
+		g_print("Il manque le pays et / ou une course préférée.\n") ;
+		erreur = 1 ;
+	}
+	if (erreur == 1)
 	{
 		printf("Erreur. Donn%ses enregistr%s impossibles.\n", é, é) ;
 		getchar() ;
@@ -122,8 +155,9 @@ int verifierDonnees(int session, int style, int coureur[], int potentiel, int pr
 	}
 	while (compteur < 14)
 	{
-		if (coureur[compteur] < 50 || coureur[compteur] > 85)
+		if (ficheCoureur->notes[compteur] < 50 || ficheCoureur->notes[compteur] > 85)
 		{
+			g_print("Notes impossibles (au-delà des limites du jeu).\n") ;
 			return 0 ;
 		}
 		compteur ++ ;

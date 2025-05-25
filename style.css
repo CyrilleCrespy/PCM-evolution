@@ -1,0 +1,95 @@
+calendar
+{
+background : #FFEB3B ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+button
+{
+background : #FFF176 ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+editablelabel
+{
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+background : #FFEB3B ;
+}
+
+entry
+{
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+background : #FFEB3B ;
+padding: 5px 5px;
+}
+
+.note_basse
+{
+background : #2E3439 ;
+color : #F7FBFC ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+.note_inter
+{
+background : #28FC8B ;
+color : #2E3439 ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+.note_haute
+{
+background : #FDE13B ;
+color : #2E3439 ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+.note_extreme
+{
+background : #FDB927 ;
+color : #2E3439 ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+.note_max
+{
+background : #FD2756 ;
+color : #2E3439 ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+}
+
+label
+{
+color : black ;
+margin-left : 20px ;
+margin-right : 20px ;
+margin-top : 5px ;
+padding : 5px 5px ;
+background : #FDD835;
+min-height : 30px;
+}
+
+window
+{
+background-image : url("fond.jpg") ;
+background-repeat : no-repeat;
+background-size : cover;
+}

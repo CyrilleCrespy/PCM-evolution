@@ -3,70 +3,79 @@ int points ;
 int pointsDepenses ;
 FILE* fichier = NULL ;
 
-void demandeNomDeFichier(char *caracteristiques[])
+void demandeNomDeFichier ()
 {
-	while (1)
+	GtkWidget *demandeNom ;
+	GtkWidget *champNom ;
+	GtkWidget *boutonValider ;
+	GtkWidget *boutonAnnuler ;
+	
+	grilleChercherFiche = gtk_grid_new() ;
+	gtk_stack_add_named(GTK_STACK (pile), grilleChercherFiche, "Chercher une fiche") ;	
+	
+	demandeNom = gtk_label_new("Entre le nom de ton fichier") ;
+	champNom = gtk_editable_label_new("ici") ;
+	boutonValider = gtk_button_new_with_label("Valider") ;
+	boutonAnnuler = gtk_button_new_with_label("Annuler") ;
+	
+	gtk_grid_attach(GTK_GRID (grilleChercherFiche), demandeNom, 0, 0, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleChercherFiche), champNom, 1, 0, 1, 1) ;
+	
+	gtk_grid_attach(GTK_GRID (grilleChercherFiche), boutonValider, 1, 1, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleChercherFiche), boutonAnnuler, 0, 1, 1, 1) ;
+	
+	g_signal_connect(boutonValider, "clicked", G_CALLBACK(trouverFichier), champNom) ;
+	g_signal_connect(boutonAnnuler, "clicked", G_CALLBACK(annuler), fenetrePrincipale) ;
+	
+	gtk_stack_set_visible_child_name (GTK_STACK (pile), "Chercher une fiche") ;
+	g_main_context_iteration(NULL, FALSE) ;
+}
+
+void trouverFichier (GtkWidget *boutonValider, int *pointeur)
+{
+	GtkWidget *champNom = (GtkWidget*) pointeur ;
+	const char *nomFichier = gtk_editable_get_text(GTK_EDITABLE(champNom)) ;	
+	char message[500] ;
+
+	FILE* fichier = NULL ;
+	fichier = fopen(nomFichier, "r") ;
+	g_print("Fichier : %s\n", nomFichier) ;
+
+	if (fichier == NULL)
 	{
-		system(clear) ;
-		int fichierOuvert ;
-		int session ;
-		char messageJournal[100] ;
+		GtkWidget *boiteDialogue ;
+		GtkWidget *grilleDialogue ;
 		
-		printf("Merci de choisir un nom de fichier.\n") ;
-		viderBuffer() ;
-		fgets(nomDeFichier, 250, stdin) ;
-		corrigerNomDeFichier() ;
-		suppressionEspace() ;
-		fichierOuvert = verificationExistanceDuFichier() ;
-		pointsDepenses = 0 ;
+		GtkWidget *messageErreur ;
 		
-		fichier = fopen(nomDeFichier, "r") ;
+		grilleDialogue = gtk_grid_new() ;
 		
-		if (fichierOuvert == 0)
-		{
-			perror("Impossible d'ouvrir le fichier. Le fichier existe-t-il ? As-tu les droits de lecture dessus ?\n") ;
-			printf("Nom de fichier attendu : %s.\n", nomDeFichier) ;
-			printf("Appuie sur Entr%se pour continuer.\n", é) ;
-			getchar() ;
-			fclose(fichier) ;
-			continue ;
-		}
-		else
-		{
-			fscanf(fichier, "%d %*s", &session) ;
-			session ++ ;
-			sprintf(messageJournal, "| SESSION %d | Fichier modifié", session) ;
-			remplirJournal(messageJournal) ;
-			modification(session, 0, caracteristiques, 150) ;
-		}
-		viderBuffer() ;
+		boiteDialogue = gtk_window_new(); 
+		gtk_window_set_title (GTK_WINDOW (boiteDialogue), "Erreur lors de la lecture") ;
+		
+		messageErreur = gtk_label_new("Erreur, fichier inexistant ou inacessible (ouverture impossible).") ;
+		gtk_grid_attach(GTK_GRID(grilleDialogue), messageErreur, 0, 0, 5, 1) ;
+		gtk_window_present(GTK_WINDOW (boiteDialogue)) ;
+	}
+	
+	else //L'ouverture du fichier est un succès, on peut passer à la suite.
+	{
+		fclose(fichier) ;
+		memcpy(nomDeFichier, nomFichier, strlen(nomFichier)) ;
+		g_print("Fichier lu avec succès.\n") ;
+		afficherCoureur() ;
 	}
 }
 
-void modification(int session, int points, char *caracteristiques[], int taille)
+void afficherCoureur()
 {
-	system(clear) ;
+	StructFicheCoureur *ficheCoureur = malloc(sizeof(StructFicheCoureur));
 	
-	points = 0 ;
-	int coureur[21] = {0} ;
-	int style = 0 ;
-	int principal = 0 ;
-	int secondaire = 0 ;
+	ficheCoureur->style = 0 ;
+	
 	int compteur ;
-	int choix = 999 ;
-	int maximum[14] = {0} ;
-	int potentiel ;
-	int potentielInitial ;
-	int poids ;
-	int mois ;
-	int jour ;
-	int fichierOK ;
-	int fichierOuvert = 0 ;
-	char nationalite[100] ;
-	char course1[100] ;
-	char course2[100] ;
-	char course3[100] ;
 	char messageJournal[100] ;
+	int fichierOK ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
@@ -76,32 +85,28 @@ void modification(int session, int points, char *caracteristiques[], int taille)
 	int notesInitiales[14] = {0} ;
 
 	fichier = fopen(nomDeFichier, "r") ;
-	fichierOuvert = verificationExistanceDuFichier() ;
-	if (fichierOuvert == 0)
-	{
-		perror("Impossible d'ouvrir le fichier. Erreur dans modification.c, void modification.\n") ;
-		printf("Nom de fichier attendu : %s.\n", nomDeFichier) ;
-	}
-	fscanf(fichier, "%*s %*s") ; //La ligne d'indicateur de session est ignorée, car inchangée au cours de la session.
-	fscanf(fichier, "%d %*s %*s %*s %*s %*s %*s %*s %*s %*s", &style) ;
-	fscanf(fichier, "%d %*s", &taille) ;
-	fscanf(fichier, "%d %*s", &poids) ;
-	fscanf(fichier, "%d", &jour) ;
+	printf("Ouverture de %s.\n", nomDeFichier) ;
+	fscanf(fichier, "%d %*s %*s %d %*s %*s %d", &ficheCoureur->style, &ficheCoureur->principal, &ficheCoureur->secondaire) ;
+	fscanf(fichier, "%d %*s", &ficheCoureur->taille) ;
+	fscanf(fichier, "%d %*s", &ficheCoureur->poids) ;
+	fscanf(fichier, "%d", &ficheCoureur->jour) ;
 	fgetc(fichier) ; //Pour ignorer le / de la date
-	fscanf(fichier, "%d %*s %*s %*s", &mois) ;
-	fscanf(fichier, "%d %*s", &potentiel) ;
-	potentielInitial = potentiel ; //Utilisé pour vérifier qu'une seule augmentation de potentiel a été faite.
-	fscanf(fichier, "%s %*s", &nationalite[0]) ;
-	fscanf(fichier, "%s %*s %*s %*s", &course1[0]) ;
-	fscanf(fichier, "%s %*s %*s %*s", &course2[0]) ;
-	fscanf(fichier, "%s %*s %*s %*s", &course3[0]) ;
+	fscanf(fichier, "%d", &ficheCoureur->mois) ;
+	fgetc(fichier) ;
+	fscanf(fichier, "%d %*s %*s %*s", &ficheCoureur->annee) ;
+	fscanf(fichier, "%s %*s %*s %*s", &ficheCoureur->course1[0]) ;
+	fscanf(fichier, "%s %*s %*s %*s", &ficheCoureur->course2[0]) ;
+	fscanf(fichier, "%s %*s %*s %*s", &ficheCoureur->course3[0]) ;
+	fscanf(fichier, "%s %*s", &ficheCoureur->pays[0]) ;
+	fscanf(fichier, "%d %*s", &ficheCoureur->points) ;
+	fscanf(fichier, "%d %*s", &ficheCoureur->potentiel) ;
 	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		fscanf(fichier, "%d %*s %*s %*s", &coureur[compteur]) ;
+		fscanf(fichier, "%d %*s %*s %*s", &ficheCoureur->notes[compteur]) ;
 	}
 	
-	fichierOK = verifierDonnees(session, style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3) ;
+	fichierOK = verifierDonnees(ficheCoureur) ;
 	if (fichierOK == 1)
 	{
 		printf("Fichier de sauvegarde OK.\n") ;
@@ -112,92 +117,226 @@ void modification(int session, int points, char *caracteristiques[], int taille)
 		restaurerSauvegarde() ;
 	}
 	
-	getchar() ;
+	if (fichier != NULL)
+	{
+		fclose(fichier) ;
+	}
 	
-	principal = style / 7 ;
-	secondaire = (style % 7) ;
-	fclose(fichier) ;
+	afficherNotes(NULL, ficheCoureur) ;
+}
 
-	if(session == 0)
-	{
-		points = 200 ;
-		printf("En tant que nouveau coureur, tu as droit %s 200 points.\n", à) ;
-		potentiel = 3 ;
-		potentielInitial = 3 ;
-		session = 1 ;
-	}
+void afficherNotes(GtkWidget *objet, StructFicheCoureur *ficheCoureur)
+{
+	grilleModif = gtk_grid_new() ;
+	gtk_stack_add_named(GTK_STACK (pile), grilleModif, "Modification de coureur") ;
 
-	else
-	{
-		printf("Combien de points d'am%slioration as-tu ?\n", é) ;
-		points = verificationEntreeNumerique(0, 5000) ;
-		sprintf(messageJournal, "%d points disponibles selon l'utilisateur.", points) ;
-		remplirJournal(messageJournal) ;
-		memset(messageJournal, 0, 100) ;
-	}
-	
-	for (compteur = 0 ; compteur < 14 ; compteur ++)
-	{
-		maximum[compteur] = retrouverNotesMax(compteur) ;		
-	}
-	
-	getchar() ;
-	
+	int compteur ;
+	FILE* fichierMax = NULL ;
+	char *nomFichierMax = malloc(strlen(nomDeFichier) + sizeof(char) * 5);
+	strcpy(nomFichierMax, nomDeFichier) ;
+	strcat(nomFichierMax, "_max") ;
+	fichierMax = fopen(nomFichierMax, "r") ;
+
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		notesInitiales[compteur] = coureur[compteur] ; //Doublon des valeurs initiales pour vérifier la validité des baisses de notes demandées par la suite.
+		fscanf(fichierMax, "%d", &ficheCoureur->notesMax[compteur]) ;
 	}
-	
-	printf("Une %svolution co%ste :\n%s 1 point jusqu'%s la note 60.\n%s 2 points jusqu'%s 65\n%s 3 points jusqu'%s 70\n%s 4 points jusqu'%s 75\n%s 5 points jusqu'%s 80\n%s 6 points jusqu'%s 85.\n",\
-é, û, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à, tiret, à) ;
-	printf("Appuie sur Entr%se pour continuer.\n", é) ;
-	getchar() ;
-	
 
-
-	while (choix != 0)
+	enregistrer(ficheCoureur) ;
+	
+	char *types[7] = {"Courses par étapes", "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
+"Baroud", "Classiques_du_nord"} ;
+	
+	GtkWidget *texteFiche ;
+	GtkWidget *texteTaille ;
+	GtkWidget *textePoids ;
+	GtkWidget *texteDateNaissance ;
+	GtkWidget *textePrincipal ;
+	GtkWidget *texteSecondaire ;
+	GtkWidget *texteCourse1 ;
+	GtkWidget *texteCourse2 ;
+	GtkWidget *texteCourse3 ;
+	GtkWidget *textePays ;
+	
+	GtkWidget *afficherNom ;
+	GtkWidget *afficherTaille ;
+	GtkWidget *afficherPoids ;
+	GtkWidget *afficherDateNaissance ;
+	GtkWidget *afficherPrincipal ;
+	GtkWidget *afficherSecondaire ;	
+	GtkWidget *afficherCourse1 ;
+	GtkWidget *afficherCourse2 ;
+	GtkWidget *afficherCourse3 ;
+	GtkWidget *afficherPays ;
+	GtkWidget *afficherPoints ;
+	GtkWidget *afficherPotentiel ;
+	GtkWidget *textePoints ;
+	GtkWidget *textePotentiel ;
+	GtkWidget *texteAjoutPoints ;
+	GtkWidget *champAjoutPoints ;
+	GtkWidget *boutonPoints ;
+	GtkWidget *quitter ;
+	GtkWidget *boutonAnnuler ;
+	
+	texteFiche = gtk_label_new("Fiche du coureur") ;
+	texteTaille = gtk_label_new("Taille") ;
+	textePoids = gtk_label_new("Poids") ;
+	texteDateNaissance = gtk_label_new("Date de naissance") ;
+	textePrincipal = gtk_label_new("Spécialité 1") ;
+	texteSecondaire = gtk_label_new("Spécialité 2") ;
+	texteCourse1 = gtk_label_new("Course favorite n°1") ;
+	texteCourse2 = gtk_label_new("Course favorite n°2") ;
+	texteCourse3 = gtk_label_new("Course favorite n°3") ;
+	textePays = gtk_label_new("Nationalité") ;
+	textePotentiel = gtk_label_new("Potentiel") ;
+	
+	textePoints = gtk_label_new("Points restants : ") ;
+	
+	afficherNom = gtk_label_new(nomDeFichier) ;
+	
+	//Les int ne pouvant pas être affichés directement par gtk_label_new, on les convertit en gchar.
+	
+	char *taille ;
+	taille = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(taille, "%d", ficheCoureur->taille) ;
+	afficherTaille = gtk_label_new(taille) ;
+	
+	char *poids ;
+	poids = (char *)malloc(3 * (sizeof(char))) ;
+	sprintf(poids, "%d", ficheCoureur->poids) ;
+	afficherPoids = gtk_label_new(poids) ;
+	
+	char *dateNaissance ;
+	dateNaissance = (char *)malloc(20 * (sizeof(char))) ;
+	sprintf(dateNaissance, "%d/%d/%d", ficheCoureur->jour, ficheCoureur->mois, ficheCoureur->annee) ;
+	afficherDateNaissance = gtk_label_new(dateNaissance) ;
+	
+	char *principal ;
+	principal = (char *)malloc(100 * sizeof(char)) ;
+	sprintf(principal, "%s", types[ficheCoureur->principal]) ;
+	afficherPrincipal = gtk_label_new(principal) ;
+	
+	char *secondaire ;
+	secondaire = (char *)malloc(100 * sizeof(char)) ;
+	sprintf(secondaire, "%s", types[ficheCoureur->secondaire]) ;
+	afficherSecondaire = gtk_label_new(secondaire) ;
+	
+	char *nombrePoints ;
+	nombrePoints = (char *)malloc(6 * sizeof(char)) ;
+	sprintf(nombrePoints, "%d", ficheCoureur->points) ;
+	afficherPoints = gtk_label_new(nombrePoints) ;
+	
+	char *potentiel ;
+	potentiel = (char *)malloc(2 * sizeof(char)) ;
+	sprintf(potentiel, "%d", ficheCoureur->potentiel) ;
+	afficherPotentiel = gtk_label_new(potentiel) ;
+	
+	afficherCourse1 = gtk_label_new(ficheCoureur->course1) ;
+	afficherCourse2 = gtk_label_new(ficheCoureur->course2) ;
+	afficherCourse3 = gtk_label_new(ficheCoureur->course3) ;
+	afficherPays = gtk_label_new(ficheCoureur->pays) ;
+	
+	quitter = gtk_button_new_with_label("Quitter") ;
+	boutonAnnuler = gtk_button_new_with_label("Menu principal") ;
+	texteAjoutPoints = gtk_label_new("Ajout de points") ;
+	champAjoutPoints = gtk_editable_label_new("0") ;
+	boutonPoints = gtk_button_new_with_label("Ajouter les points") ;
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), texteFiche, 0, 0, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteTaille, 0, 1, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), textePoids, 0, 2, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteDateNaissance, 0, 3, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), textePrincipal, 0, 4, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteSecondaire, 0, 5, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteCourse1, 0, 6, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteCourse2, 0, 7, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteCourse3, 0, 8, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), textePays, 0, 9, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), textePoints, 0, 10, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 10, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), texteAjoutPoints, 0, 11, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(champAjoutPoints), 1, 11, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(boutonPoints), 0, 12, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), textePotentiel, 0, 13, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 1, 13, 1, 1) ;
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherNom, 1, 0, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherTaille, 1, 1, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPoids, 1, 2, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherDateNaissance, 1, 3, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPrincipal, 1, 4, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherSecondaire, 1, 5, 1, 1) ;
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherCourse1, 1, 6, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherCourse2, 1, 7, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherCourse3, 1, 8, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), afficherPays, 1, 9, 1, 1) ;
+	
+	
+	gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(quitter), 0, 14, 1, 1) ;
+	gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(boutonAnnuler), 1, 14, 1, 1) ;
+	
+	GtkWidget *boutonsMoins[14] ;
+	GtkWidget *boutonsPlus[14] ;
+	GtkWidget *textesCarac[14] ;
+	GtkWidget *textesNotes[14] ;
+	StructFicheCalcul *ficheCopie[14] ;
+	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
-		compteur = 0 ;
-		enregistrer(session, style, coureur, potentiel, principal, secondaire, taille, poids, mois, jour, nationalite, course1, course2, course3, notesInitiales, maximum) ;
-		system(clear) ;
-		
-		printf("\nTu mesures %d centim%stres.\n", taille, è) ;
-		printf("Tu p%sses %d kilos.\n", è, poids) ;
-		printf("Tu es n%s le %d/%d.\n", é, jour, mois) ;
-		printf("Pays : %s\n", nationalite) ;
-		printf("Course favorite 1 : %s\n", course1) ;
-		printf("Course favorite 2 : %s\n", course2) ;
-		printf("Course favorite 3 : %s\n", course3) ;
-		printf("Ton style principal est %s et ton style secondaire %s.\n", types[principal], types[secondaire]) ;
-		
-		for (compteur = 0 ; compteur < 14 ; compteur ++)
-		{
-			printf("%d. %s : %d (max : %d).\n", (compteur + 1), caracteristiques[compteur], coureur[compteur], maximum[compteur]) ;
-		}
-		
-		printf("Tu as %d point(s) d'am%slioration restant(s).\n", points, é) ;
-
-		printf("Entre 0 pour quitter le programme, ou le chiffre correspondant %s la note que tu veux changer.\n", à) ;
-		choix = verificationEntreeNumerique(0, 14) ;
-
-		if (choix == 0)
-		{
-			printf("Merci d'avoir utilis%s PCM %svolution !\n", é, É) ;
-			exit(EXIT_SUCCESS) ;
-		}
-		else if (coureur[choix-1] >= 85)
-		{
-			printf("Cette caract%sristique est d%sj%s au maximum.\n", é, é, à) ;
-		}
-		if (choix > 0 && choix <=14)
-		{
-			coureur[choix - 1] = calculAmelioration(coureur[choix - 1], &points, &maximum[choix - 1], notesInitiales[choix - 1], &potentiel, potentielInitial) ; //La liste commençant à l'indice 0, on compense.
-			sprintf(messageJournal, "Note %s : %d. Nouveaux points : %d.", caracteristiques[choix - 1], coureur[choix - 1], points) ;
-			remplirJournal(messageJournal) ;
-			memset(messageJournal, 0, 100) ;
-			sprintf(messageJournal, "Potentiel %s : %d.", caracteristiques[choix - 1], maximum[choix - 1]) ;
-			remplirJournal(messageJournal) ;
-			memset(messageJournal, 0, 100) ;
-		}
+		ficheCopie[compteur] = malloc(sizeof(StructFicheCalcul)) ;
 	}
+	
+	for (compteur = 0 ; compteur < 14 ; compteur ++) //Chaque ligne associée à une note est reconstruite dynamiquement à chaque change de l'utilisateur.
+	{
+		ficheCopie[compteur]->originel = ficheCoureur ;
+		ficheCopie[compteur]->selection = compteur ;
+		
+		char *noteAfficher ;
+		noteAfficher = g_malloc(8) ;
+		sprintf(noteAfficher, "%d", ficheCoureur->notes[compteur]) ;
+		textesCarac[compteur] = gtk_label_new(abbreviations[compteur]) ;
+		textesNotes[compteur] = gtk_label_new(noteAfficher) ;
+		boutonsMoins[compteur] = gtk_button_new_with_label("-") ;
+		boutonsPlus[compteur] = gtk_button_new_with_label("+") ;
+		
+		determinerCouleurNote(textesNotes[compteur]) ;
+		
+		gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(textesCarac[compteur]), 2, compteur, 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(boutonsMoins[compteur]), 3, compteur, 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(textesNotes[compteur]), 4, compteur, 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), GTK_WIDGET(boutonsPlus[compteur]), 5, compteur, 1, 1) ;
+		
+		g_signal_connect(boutonsMoins[compteur], "clicked", G_CALLBACK(calculDiminution), ficheCopie[compteur]) ;
+		g_signal_connect(boutonsPlus[compteur], "clicked", G_CALLBACK(calculAugmentation), ficheCopie[compteur]) ;
+		
+		char *notePotentiel ;
+		notePotentiel = g_malloc(8) ;
+		sprintf(notePotentiel, "%d", ficheCoureur->notesMax[compteur]) ;
+		GtkWidget *afficherPotentiel ;
+		GtkWidget *boutonAjoutPotentiel ;
+		
+		afficherPotentiel = gtk_label_new(notePotentiel) ;
+		boutonAjoutPotentiel = gtk_button_new_with_label("Augmenter le potentiel") ;
+		
+		determinerCouleurNote(afficherPotentiel) ;
+		
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 6, (compteur), 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), boutonAjoutPotentiel, 7, (compteur), 1, 1) ;
+		
+		g_signal_connect(boutonAjoutPotentiel, "clicked", G_CALLBACK(determinerCoutPotentiel), ficheCopie[compteur]) ;
+		
+		g_free(noteAfficher) ;
+	}
+	
+	SignalPoints *signalPoints ;
+	signalPoints = malloc(sizeof(SignalPoints)) ;
+	signalPoints->coureur = ficheCoureur ;
+	signalPoints->points = champAjoutPoints ;
+	
+	g_signal_connect(quitter, "clicked", G_CALLBACK(exit), NULL) ;
+	g_signal_connect(boutonAnnuler, "clicked", G_CALLBACK(annuler), NULL) ;
+	g_signal_connect(boutonPoints, "clicked", G_CALLBACK(ajoutPoints), signalPoints) ;
+	
+	gtk_stack_set_visible_child_name (GTK_STACK (pile), "Modification de coureur") ;
+	g_main_context_iteration(NULL, FALSE) ;
 }
