@@ -143,13 +143,13 @@ void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 		potentiel = (char *)malloc(2 * sizeof(char)) ;
 		sprintf(potentiel, "%d", ficheCoureur->potentiel) ;
 		afficherPotentiel = gtk_label_new(potentiel) ;
-		gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 1, 10, 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPotentiel, 1, 13, 1, 1) ;
 		
 		char *nombrePoints ;
 		nombrePoints = (char *)malloc(6 * sizeof(char)) ;
 		sprintf(nombrePoints, "%d", ficheCoureur->points) ;
 		afficherPoints = gtk_label_new(nombrePoints) ;
-		gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 9, 1, 1) ;
+		gtk_grid_attach(GTK_GRID (grilleModif), afficherPoints, 1, 10, 1, 1) ;
 		
 		char *notePotentiel ;
 		notePotentiel = g_malloc(8) ;
