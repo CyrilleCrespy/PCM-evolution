@@ -194,7 +194,7 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 	
 	printf("%d %d %d status\n", editableOK, dropDownOK, dateOK) ;
 	
-	if (editableOK == 1 && dropDownOK == 1 && dateOK == 1)
+	if (editableOK == 1 && dropDownOK == 1)
 	{
 		ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire, ficheCoureur->nom) ;
 		ficheCoureur->points = 200 ;
@@ -312,7 +312,7 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	texteNotesMax = gtk_label_new("Notes maximales du profil choisi") ;
 	gtk_grid_attach(GTK_GRID (grilleCreation), texteNotesMax, 10, 3, 2, 1) ;
 
-	if (editableOK == 1 && dropDownOK == 1 && dateOK == 1)
+	if (editableOK == 1 && dropDownOK == 1)
 	{
 		ficheCoureur->points = 200 ;
 		GtkWidget *boutonValider ;
@@ -337,6 +337,7 @@ void ecrireDate(GtkWidget *calendrier, gpointer user_data)
 	int positionInitiale = 623 ;
 	fseek(fichier, positionInitiale, SEEK_SET) ;
 	fscanf(fichier, "%d", &anneeCourante) ;
+	fclose(fichier) ;
 	
 	if ((ficheCoureur->annee) + 18 < anneeCourante)
 	{
