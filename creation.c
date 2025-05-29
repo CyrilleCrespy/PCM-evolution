@@ -58,66 +58,12 @@ void peuplerListe(char *liste)
 	}
 }
 
-int verificationExistanceDuFichier(GtkWidget *boutonValider, int *pointeur)
+void suppressionCreation(GtkWidget *boutonOui, gpointer user_data)
 {
-	GtkWidget *champNom = (GtkWidget*)pointeur ;
-	GtkWidget *messageErreur ;
-	GtkWidget *boutonSuppression ;
-	
-	const gchar *nomFichier = gtk_editable_get_text(GTK_EDITABLE(champNom)) ;
-	memcpy(nomDeFichier, nomFichier, strlen(nomFichier)) ;
-	
-	char message[500] ;
-
-	FILE* fichier = NULL ;
-	fichier = fopen(nomFichier, "r") ;
-
-	if (fichier != NULL)
-	{
-		fclose(fichier) ;
-		GtkWidget *boiteDialogue ;
-		GtkWidget *grilleDialogue ;
-		
-		GtkWidget *question ;
-		GtkWidget *oui ;
-		GtkWidget *non ;
-		
-		grilleDialogue = gtk_grid_new() ;
-		
-		boiteDialogue = gtk_application_window_new (PCM_Evolution) ;
-		gtk_window_set_title (GTK_WINDOW (boiteDialogue), "Supprimer le fichier ?") ;
-		
-		question = gtk_label_new("Voulez-vous supprimer le fichier portant déjà ce nom ?") ;
-		oui = gtk_button_new_with_label("Oui") ;
-		non = gtk_button_new_with_label("Non") ;
-		
-		gtk_grid_attach(GTK_GRID(grilleDialogue), question, 0, 0, 5, 1) ;
-		gtk_grid_attach(GTK_GRID(grilleDialogue), oui, 0, 1, 1, 1) ;
-		gtk_grid_attach(GTK_GRID(grilleDialogue), non, 2, 1, 1, 1) ;
-		
-		gtk_window_set_child(GTK_WINDOW (boiteDialogue), grilleDialogue) ;
-		
-		gtk_window_present(GTK_WINDOW (boiteDialogue));
-		
-		g_signal_connect(oui, "clicked", G_CALLBACK(suppressionCreation), GTK_WINDOW(boiteDialogue)) ;
-		g_signal_connect_swapped(non, "clicked", G_CALLBACK(gtk_window_destroy), GTK_WINDOW(boiteDialogue)) ;
-		
-		g_print("Type de boiteDialogue : %s.\n", G_OBJECT_TYPE_NAME(boiteDialogue)) ;
-		
-		remplirJournal("Fiche du même nom existante.") ;
-	}
-	else
-	{
-		remplirJournal("Fiche inexistante. Création.") ;
-		initialisationCoureur(NULL, NULL) ;
-	}	
-}
-
-void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur)
-{
-	GtkWindow *boiteDialogue = (GtkWindow*) pointeur ;
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
+	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
 	char fichierMax[254] ;
-	if (remove(nomDeFichier) == 0)
+	if (remove(ficheCoureur->nom) == 0)
 	{
 		remplirJournal("Fiche supprimée à la demande de l'utilisateur.") ;
 		printf("Fichier coureur supprim%s.\n", é) ;
@@ -127,7 +73,7 @@ void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur)
 		remplirJournal("Suppression du fichier coureur impossible.") ;
 		perror("Suppression du fichier coureur impossible.\n") ;
 	}
-	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	sprintf(fichierMax, "%s_max", ficheCoureur->nom) ;
 	if (remove(fichierMax) == 0)
 	{
 		printf("Fichier max supprim%s.\n", é) ;
@@ -138,17 +84,19 @@ void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur)
 		perror("Suppression du fichier max impossible.\n") ;
 		remplirJournal("Suppression du fichier max impossible.") ;
 	}
-	gtk_window_close(GTK_WINDOW(boiteDialogue)) ;
-	initialisationCoureur(NULL, NULL) ;
+	initialisationCoureur(NULL, ficheSignal) ;
 }
 
-void verificationEditable(GtkWidget *objet, int *pointeur)
+void verificationEditable(GtkWidget *objet, gpointer user_data)
 {
 	editableOK = 1 ;	
 	
-	StructFicheSignal *ficheSignal = (StructFicheSignal*)pointeur ;
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
+	GtkWidget *grilleCreation = (GtkWidget*)ficheSignal->grilleCreation ;
+	
+	printf("%s NOM AP\n", ficheSignal->ficheCoureur->nom) ;
 	
 	//On transformme le gchar en un int.
 	
@@ -244,22 +192,28 @@ void verificationEditable(GtkWidget *objet, int *pointeur)
 		}
 	}
 	
+	printf("%d %d %d status\n", editableOK, dropDownOK, dateOK) ;
+	
 	if (editableOK == 1 && dropDownOK == 1 && dateOK == 1)
 	{
+		ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire, ficheCoureur->nom) ;
 		ficheCoureur->points = 200 ;
 		ficheCoureur->potentiel = 4 ;
 		GtkWidget *boutonValider ;
 		boutonValider = gtk_button_new_with_label("Valider") ;
 		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
-		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheCoureur) ;
+		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheSignal) ;
 	}
 }
 
-void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur)
+void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_data)
 {
-	StructFicheSignal *ficheSignal = (StructFicheSignal*)pointeur ;
+	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
+	GtkWidget *grilleCreation = (GtkWidget*)ficheSignal->grilleCreation ;
+	
+	printf("%s NOM AP\n", ficheSignal->ficheCoureur->nom) ;
 	
 	//On vérifie que les courses ne soient pas en doublon.
 	
@@ -307,6 +261,7 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur)
 		printf("Courses valides : trois courses différentes ont été choisies.\n") ;
 		validationCourses = gtk_label_new("Courses valides : trois courses différentes ont été choisies.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), validationCourses, 10, 2, 2, 1) ;
+		dropDownOK = 1 ;
 	}
 	
 	GObject *pays = gtk_drop_down_get_selected_item(ficheJoueur->pays) ;
@@ -329,13 +284,12 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur)
 	g_print("Principal : %d.", ficheCoureur->principal) ;
 	g_print("Secondaire : %d.", ficheCoureur->secondaire) ;
 	
-	ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire) ; //En fonction du style primaire et du style secondaire, détermine un code combinant ces deux paramètres. Il est utile pour chercher dans le fichier idoine les notes maximales attribuéer défaut à la combinaisons de styles désirée.
+	ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire, ficheCoureur->nom) ; //En fonction du style primaire et du style secondaire, détermine un code combinant ces deux paramètres. Il est utile pour chercher dans le fichier idoine les notes maximales attribuéer défaut à la combinaisons de styles désirée.
 
 	for (compteur = 0 ; compteur < 14 ; compteur ++)
 	{
 		char *noteAfficher ;
 		noteAfficher = g_malloc(8) ;
-		//ficheCoureur->notes[compteur] = g_malloc(sizeof(int)) ;
 		ficheCoureur->notes[compteur] = determinerNotesMax(ficheCoureur->style, compteur) ;
 		GtkWidget *texteCarac ;
 		GtkWidget *texteNote ;
@@ -364,7 +318,7 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur)
 		GtkWidget *boutonValider ;
 		boutonValider = gtk_button_new_with_label("Valider") ;
 		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
-		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheCoureur) ;
+		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheSignal) ;
 	}
 }
 
@@ -394,7 +348,7 @@ void ecrireDate(GtkWidget *calendrier, gpointer user_data)
 	}
 }
 
-int calculStyle(int principal, int secondaire)
+int calculStyle(int principal, int secondaire, char nom[250])
 {
 	int style ;
 	int maximum[14] = {0} ;
@@ -405,7 +359,7 @@ int calculStyle(int principal, int secondaire)
 	
 	principal = (principal) * 7 ;
 	style = principal + secondaire ;
-	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	sprintf(fichierMax, "%s_max", nom) ;
 	fichier = fopen(fichierMax, "w+") ;
 	if (fichier == NULL)
 	{

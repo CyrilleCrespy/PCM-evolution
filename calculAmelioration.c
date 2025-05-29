@@ -2,6 +2,7 @@ int calculAugmentation(GtkWidget *boutonPlus, gpointer user_data)
 {
 	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	GtkWidget *grilleModif = (GtkWidget*)ficheCalcul->grilleModif ;
 	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
 	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 
@@ -55,6 +56,7 @@ int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
 {
 	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	GtkWidget *grilleModif = (GtkWidget*)ficheCalcul->grilleModif ;
 	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
 	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 
@@ -105,6 +107,7 @@ void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 {
 	StructFicheCalcul *ficheCalcul = (StructFicheCalcul*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
+	GtkWidget *grilleModif = (GtkWidget*)ficheCalcul->grilleModif ;
 	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
 	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 	int positionInitiale ;
@@ -181,6 +184,8 @@ void ajoutPoints(GtkWidget *objet, gpointer user_data)
 {
 	SignalPoints *signalPoints = (SignalPoints*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)signalPoints->coureur ;
+	GtkWidget *grilleModif = (GtkWidget*)signalPoints->grilleModif ;
+	
 	GtkWidget *ajoutPoints = (GtkWidget*)signalPoints->points ;
 	
 	GtkWidget *afficherPoints ;

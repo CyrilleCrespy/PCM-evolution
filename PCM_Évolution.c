@@ -19,7 +19,6 @@ char *abbreviations[14] = {"PLA", "MON", "MMO", "VAL",\
 "CLM", "PRO", "PAV", "SPR", "ACC", "DES", "BAR",\
 "END", "RES", "REC"} ;
 int notesInitiales[14] = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50} ;
-char nomDeFichier[250] ;
 char paves[10] ;
 int points ;
 
@@ -48,6 +47,7 @@ int main(int argc, char *argv[])
 	int status ;
 	gtk_init() ;
 	PCM_Evolution = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS) ;
+	
 	g_signal_connect (PCM_Evolution, "activate", G_CALLBACK (initialisationFenetre), NULL) ;
 	status = g_application_run (G_APPLICATION (PCM_Evolution), argc, argv) ;
 	g_object_unref (PCM_Evolution) ;	
@@ -66,68 +66,6 @@ int determinerNotesMax(int style, int compteur)
 	fscanf(fichier, "%d", &maximumDetermine) ;
 	fclose(fichier) ;
 	return maximumDetermine ;
-}
-
-int retrouverNotesMax(int compteur)
-{
-	FILE* fichier = NULL ;
-	char fichierMax[255] ;
-	sprintf(fichierMax, "%s_max", nomDeFichier) ;
-	int maximumDetermine ;
-	int positionInitiale ;
-	
-	fichier = fopen(fichierMax, "r") ;
-	
-	if(fichier == NULL)
-	{
-		printf("Erreur, impossible de lire %s. Dans PCM_%svolution.c, int retrouverNotesMax.\n", fichierMax, É) ;
-	}
-	positionInitiale = 0 + (compteur * DECALAGE) ;
-	fseek(fichier, positionInitiale, SEEK_SET) ;
-	fscanf(fichier, "%d", &maximumDetermine) ;
-	fclose(fichier) ;
-	return maximumDetermine ;
-}
-
-void viderBuffer()
-{
-	int vider = 0 ;
-	while (vider != '\n' && vider != EOF)
-	{
-		vider = getchar() ;
-	}
-}
-
-void suppressionEspace()
-{
-	while (nomDeFichier[strlen(nomDeFichier)] == 32 || nomDeFichier[strlen(nomDeFichier)] == 92)
-	{
-		if (nomDeFichier[strlen(nomDeFichier)] == 32 || nomDeFichier[strlen(nomDeFichier)] == 92)
-		{
-			nomDeFichier[strlen(nomDeFichier) - 1] = '\0' ;
-			printf("%s\n", nomDeFichier) ;
-			getchar() ;
-		}
-	}
-}
-
-void corrigerNomDeFichier()
-{
-	long unsigned int compteur ; //Long unsigned int pour la comparaison avec strlen.
-	int espaces = 0 ;
-	char nomProvisoire[250] = {0} ;
-	for (compteur = 0 ; compteur < strlen(nomDeFichier + espaces) ; compteur ++)
-	{
-		if (nomDeFichier[compteur] == 36 || nomDeFichier[compteur] == 39 || nomDeFichier[compteur] == 10)
-		{
-			nomProvisoire[compteur + espaces] = '\0' ;
-		}
-		else
-		{
-			nomProvisoire[compteur + espaces] = nomDeFichier[compteur] ;
-		}
-	}
-	memcpy(nomDeFichier, nomProvisoire, 250) ;
 }
 
 void remplirJournal(char *message)

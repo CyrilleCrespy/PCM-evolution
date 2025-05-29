@@ -1,5 +1,6 @@
 typedef struct //Strucuture de la fiche enregistrée.
 {
+	gchar nom[250] ;
 	int jour ;
 	int mois ; 
 	int annee ;
@@ -20,6 +21,7 @@ typedef struct //Strucuture de la fiche enregistrée.
 
 typedef struct //Structure passée aux fonctions de calcul
 {
+	GtkWidget *grilleModif ;
 	StructFicheCoureur *originel ;
 	int selection ;
 } StructFicheCalcul ;
@@ -39,6 +41,9 @@ typedef struct //Struture des champs de la fenêtre d'initialisation renvoyés v
 
 typedef struct
 {
+	GtkWidget *grilleCreation ;
+	GtkWidget *fenetrePrincipale ;
+	GtkWidget *champNomDeFichier ;
 	StructFicheJoueur *ficheJoueur ;
 	StructFicheCoureur *ficheCoureur ;
 } StructFicheSignal ;
@@ -47,6 +52,7 @@ typedef struct
 {
 	StructFicheCoureur *coureur ;
 	GtkWidget *points ;
+	GtkWidget *grilleModif ;
 } SignalPoints ;
 
 int creation(char *caracteristiques[]) ; //Choix 1 du menu
@@ -55,32 +61,31 @@ int editableOK = 1 ;
 int dropDownOK = 1 ;
 int dateOK = 1 ;
 
-int verificationExistanceDuFichier(GtkWidget *boutonValider, int *pointeur) ;
-void suppressionCreation(GtkWidget *boutonOui, GtkWindow *pointeur) ;
-void verificationEditable(GtkWidget *objet, int *pointeur) ;
-void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, int *pointeur) ;
+int verificationExistanceDuFichier(GtkWidget *boutonValider, gpointer user_data) ;
+void suppressionCreation(GtkWidget *boutonOui, gpointer user_data) ;
+void verificationEditable(GtkWidget *objet, gpointer user_data) ;
+void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_data) ;
 void ecrireDate(GtkWidget *calendrier, gpointer user_data) ;
 void viderBuffer() ;
 int confirmationEntree() ;
 void remplirJournal(char *message) ;
 int choixPrincipal() ;
 int choixSecondaire() ;
-int calculStyle(int principal, int secondaire) ;
+int calculStyle(int principal, int secondaire, char nom[]) ;
 int choixJourDeNaissance(int jourMax) ;
 void annuler(GtkWidget *boutonAnnuler, gpointer user_data) ;
 void validerCoureur(GtkWidget *boutonValider, int *pointeur) ;
 void peuplerListe(char *liste) ;
-char *propositionDonnees(int typeFichier, char premiereLettre) ;
 void demandeNomDeFichier() ;
-void trouverFichier (GtkWidget *boutonValider, int *pointeur) ;
-void afficherCoureur() ;
-void afficherNotes(GtkWidget *objet, StructFicheCoureur *ficheCoureur) ;
+void trouverFichier (GtkWidget *boutonValider, gpointer user_data) ;
+void afficherCoureur(gpointer user_data) ;
+void afficherNotes(GtkWidget *objet, gpointer user_data) ;
 void boutonsNotes(StructFicheCoureur *ficheCoureur, int compteur) ;
 void modification(int session, int points, char *caracteristiques[], int taille) ;
 void enregistrer(StructFicheCoureur *ficheCoureur) ;
 void enregistrerMax(StructFicheCoureur *ficheCoureur) ;
-void creerCopie() ;
-void restaurerSauvegarde() ;
+void creerCopie(char nom[250]) ;
+void restaurerSauvegarde(char nom[250]) ;
 int verifierDonnees(StructFicheCoureur *ficheCoureur) ;
 int determinerNotesMax(int style, int compteur) ;
 int retrouverNotesMax(int compteur) ;

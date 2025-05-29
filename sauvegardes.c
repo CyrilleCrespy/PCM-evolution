@@ -2,11 +2,10 @@ void enregistrer(StructFicheCoureur* pointeur)
 {	
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)pointeur ;
 	FILE* fichier = NULL ;
-	suppressionEspace() ; //On retire les caractères de fin de ligne issus des données entrées par l'utilsateur.
-	printf("Tentative d'ouverture de '%s.\n", nomDeFichier) ;
-	fichier = fopen(nomDeFichier, "w+") ;
+	printf("Tentative d'ouverture de '%s.\n", ficheCoureur->nom) ;
+	fichier = fopen(ficheCoureur->nom, "w+") ;
 
-	if (remove(nomDeFichier) == 0) //Suppression du fichier avec les données
+	if (remove(ficheCoureur->nom) == 0) //Suppression du fichier avec les données
 	{
 		printf("Fichier pr%sc%sdent supprim%s.\n", é, é, é) ;
 	}
@@ -15,14 +14,14 @@ void enregistrer(StructFicheCoureur* pointeur)
 		printf("Pas de fichier %s supprimer.\n", à) ;
 	}
 
-	fichier = fopen(nomDeFichier, "w+") ;
+	fichier = fopen(ficheCoureur->nom, "w+") ;
 	if (fichier != NULL)
 	{
-		printf("Fichier %s ouvert.\n", nomDeFichier) ;
+		printf("Fichier %s ouvert.\n", ficheCoureur->nom) ;
 	}
 	else
 	{
-		printf("Ouverture du fichier %s impossible.\n", nomDeFichier) ;
+		printf("Ouverture du fichier %s impossible.\n", ficheCoureur->nom) ;
 		perror("Erreur dans modification.c, void enregistrer.\n") ;
 		exit(EXIT_FAILURE) ;
 	}
@@ -55,7 +54,7 @@ void enregistrer(StructFicheCoureur* pointeur)
 	FILE *maximum = NULL ;
 	
 	enregistrerMax(ficheCoureur) ;
-	creerCopie() ;
+	creerCopie(ficheCoureur->nom) ;
 }
 
 void enregistrerMax(StructFicheCoureur *pointeur)
@@ -65,7 +64,8 @@ void enregistrerMax(StructFicheCoureur *pointeur)
 	char fichierMax[255] ;
 	int compteur = 0 ;
 	
-	sprintf(fichierMax, "%s_max", nomDeFichier) ;
+	sprintf(fichierMax, "%s_max", ficheCoureur->nom) ;
+	printf("%s _MAX \n", fichierMax) ;
 	fichier = fopen(fichierMax, "w+") ;
 	if(fichier == NULL)
 	{
@@ -82,14 +82,14 @@ void enregistrerMax(StructFicheCoureur *pointeur)
 	fclose(fichier) ;
 }
 
-void creerCopie()
+void creerCopie(char nom[250])
 {
 	FILE *fichier1, *fichier2 = NULL ;
 	char fichierCopie[255] ;
 	char ch ;
 	
-	sprintf(fichierCopie, "%s_cop", nomDeFichier) ;
-	fichier1 = fopen(nomDeFichier, "r") ;
+	sprintf(fichierCopie, "%s_cop", nom) ;
+	fichier1 = fopen(nom, "r") ;
 	fichier2 = fopen(fichierCopie, "w+") ;
 	
 	while((ch = getc(fichier1)) != EOF)
@@ -165,15 +165,15 @@ int verifierDonnees(StructFicheCoureur *pointeur)
 	return 1 ;
 }
 
-void restaurerSauvegarde()
+void restaurerSauvegarde(char nom[250])
 {
 	FILE *fichier1, *fichier2 = NULL ;
 	char fichierCopie[255] ;
 	char ch ;
 	
-	sprintf(fichierCopie, "%s_cop", nomDeFichier) ;
+	sprintf(fichierCopie, "%s_cop", nom) ;
 	fichier1 = fopen(fichierCopie, "r") ;
-	fichier2 = fopen(nomDeFichier, "w+") ;
+	fichier2 = fopen(nom, "w+") ;
 	
 	while((ch = getc(fichier1)) != EOF)
 	{
