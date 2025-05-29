@@ -219,6 +219,7 @@ void initialisationCoureur(GtkWidget *boutonNouvelleFiche, gpointer user_data)
 	g_signal_connect(ficheJoueur->course1, "notify::selected-item", G_CALLBACK(verificationDropDown), ficheSignal) ;
 	g_signal_connect(ficheJoueur->course2, "notify::selected-item", G_CALLBACK(verificationDropDown), ficheSignal) ;
 	g_signal_connect(ficheJoueur->course3, "notify::selected-item", G_CALLBACK(verificationDropDown), ficheSignal) ;
+	g_signal_connect(ficheJoueur->pays, "notify::selected-item", G_CALLBACK(verificationDropDown), ficheSignal) ;
 	g_signal_connect(boutonAnnuler, "clicked", G_CALLBACK(annuler), ficheSignal->fenetrePrincipale) ;
 
 	gtk_stack_set_visible_child_name (GTK_STACK (pile), "Création de coureur") ;
