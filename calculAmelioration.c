@@ -24,7 +24,8 @@ int calculAugmentation(GtkWidget *boutonPlus, gpointer user_data)
 		if (ficheCoureur->points >= coutEvolution)
 		{
 			ficheCoureur->notes[ficheCalcul->selection] += 1 ;
-			ficheCoureur->points = (ficheCoureur->points) - coutEvolution ;
+			ficheCoureur->points = ficheCoureur->points - coutEvolution ;
+			ficheCoureur->pointsDepenses = ficheCoureur->pointsDepenses + coutEvolution ;
 			enregistrer(ficheCoureur) ;
 		}
 	}
@@ -76,7 +77,8 @@ int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
 		fscanf(fichier, "%d", &coutEvolution) ;
 		fclose(fichier) ;
 		ficheCoureur->notes[ficheCalcul->selection] -= 1 ;
-		ficheCoureur->points = (ficheCoureur->points) + coutEvolution ;
+		ficheCoureur->points = ficheCoureur->points + coutEvolution ;
+		ficheCoureur->pointsDepenses = ficheCoureur->pointsDepenses - coutEvolution ;
 		enregistrer(ficheCoureur) ;
 	}
 	
@@ -133,6 +135,7 @@ void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 		
 		ficheCoureur->notesMax[ficheCalcul->selection] = ficheCoureur->notesMax[ficheCalcul->selection] + bonus ;
 		ficheCoureur->points = ficheCoureur->points - cout ;
+		ficheCoureur->pointsDepenses = ficheCoureur->pointsDepenses + cout ;
 		ficheCoureur->potentiel ++ ;
 		
 		GtkWidget *afficherPotentiel ;
