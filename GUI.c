@@ -129,8 +129,8 @@ void initialisationCoureur(GtkWidget *boutonNouvelleFiche, gpointer user_data)
 	GtkWidget *grilleCreation = gtk_grid_new() ;
 	ficheSignal->grilleCreation = GTK_WIDGET(grilleCreation) ;
 
-	const char *types[8] = {"Courses par étapes", "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-	"Baroud", "Classiques du Nord", NULL} ;
+	const char *types[8] = {"Courses par étapes", "Grimpeur", "Contre-la-montre", "Sprinteur",\
+	"Puncheur", "Classiques du Nord", "Baroudeur", "NULL"} ;
 
 	texteTaille = gtk_label_new("Taille") ;
 	ficheJoueur->taille = gtk_entry_new() ;
