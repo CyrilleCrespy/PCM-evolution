@@ -198,6 +198,7 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 	{
 		ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire, ficheCoureur->nom) ;
 		ficheCoureur->points = 200 ;
+		ficheCoureur->pointsDepenses = 0 ;
 		ficheCoureur->potentiel = 4 ;
 		GtkWidget *boutonValider ;
 		boutonValider = gtk_button_new_with_label("Valider") ;
@@ -315,6 +316,8 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	if (editableOK == 1 && dropDownOK == 1)
 	{
 		ficheCoureur->points = 200 ;
+		ficheCoureur->pointsDepenses = 0 ;
+		ficheCoureur->potentiel = 4 ;
 		GtkWidget *boutonValider ;
 		boutonValider = gtk_button_new_with_label("Valider") ;
 		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;

@@ -69,6 +69,7 @@ void afficherCoureur(gpointer user_data)
 	fscanf(fichier, "%s %*s %*s %*s", &ficheCoureur->course3[0]) ;
 	fscanf(fichier, "%s %*s", &ficheCoureur->pays[0]) ;
 	fscanf(fichier, "%d %*s", &ficheCoureur->points) ;
+	fscanf(fichier, "%d %*s", &ficheCoureur->pointsDepenses) ;
 	fscanf(fichier, "%d %*s", &ficheCoureur->potentiel) ;
 	
 	for(compteur = 0 ; compteur < 14 ; compteur ++)

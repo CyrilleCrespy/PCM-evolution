@@ -7,7 +7,3 @@ PCM_Évolution: PCM_Évolution.c
 	pkg-config --exists gtk4 && echo "OK" || echo "GTK4 not found" && exit
 	$(CC) $(CFLAGS) PCM_Évolution.c -o PCM_Évolution $(CLIBS)
 	@echo "Executable file PCM_Évolution created"
-clean:
-	@rm PCM_Évolution.o &>/dev/null
-	@exit
-	@echo "PCM_Évolution.o erased."

@@ -36,6 +36,7 @@ void enregistrer(StructFicheCoureur* pointeur)
 	fprintf(fichier, "%s course favorite 3\n", ficheCoureur->course3) ;
 	fprintf(fichier, "%s nationalite\n", ficheCoureur->pays) ;
 	fprintf(fichier, "%d points\n", ficheCoureur->points) ;
+	fprintf(fichier, "%d points dépensés\n", ficheCoureur->pointsDepenses) ;
 	fprintf(fichier, "%d potentiel\n", ficheCoureur->potentiel) ;
 	
 	char *caracteristiques[14] = {"Plaine", "Montagne", "Moyenne_montagne", "Vallon", "Contre-la-montre", "Prologue", "Paves",\

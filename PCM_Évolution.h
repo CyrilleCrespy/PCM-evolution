@@ -16,6 +16,7 @@ typedef struct //Strucuture de la fiche enregistrée.
 	int notes[14] ;
 	int notesMax[14] ;
 	int points ;
+	int pointsDepenses ;
 	int potentiel ;
 } StructFicheCoureur ;
 
