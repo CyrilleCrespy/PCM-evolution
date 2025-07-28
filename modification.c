@@ -48,8 +48,6 @@ void afficherCoureur(gpointer user_data)
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par %stapes", é) ;
-	char *types[7] = {cpe, "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-"Baroud", "Classiques du Nord"} ;
 
 	int notesInitiales[14] = {0} ;
 
@@ -124,9 +122,6 @@ void afficherNotes(GtkWidget *objet, gpointer user_data)
 	
 	fclose(fichierMax) ;
 	enregistrer(ficheCoureur) ;
-		
-	char *types[7] = {"Courses par étapes", "Grimpeur", "Sprint", "Contre-la-montre", "Puncheur",\
-	"Baroud", "Classiques_du_nord"} ;
 		
 	GtkWidget *texteFiche ;
 	GtkWidget *texteTaille ;

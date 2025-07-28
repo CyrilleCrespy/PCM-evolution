@@ -1,3 +1,6 @@
+const char *types[8] = {"Courses par étapes", "Grimpeur", "Contre-la-montre", "Sprinteur",\
+"Puncheur", "Classiques du Nord", "Baroudeur", NULL} ;
+
 typedef struct //Strucuture de la fiche enregistrée.
 {
 	gchar nom[250] ;
