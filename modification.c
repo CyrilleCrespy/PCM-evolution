@@ -12,7 +12,7 @@ void trouverFichier (GtkWidget *boutonValider, gpointer user_data)
 	fichier = fopen(nomFichier, "r") ;
 	g_print("Fichier : %s\n", nomFichier) ;
 
-	if (fichier == NULL)
+	if (fichier == NULL) //Le fichier demandé par l'utilisateur n'existe pas (il doit être dans le dossier courant).
 	{
 		GtkWidget *grilleExiste ;
 		grilleDialogue = gtk_grid_new() ;
@@ -32,11 +32,14 @@ void trouverFichier (GtkWidget *boutonValider, gpointer user_data)
 	{
 		fclose(fichier) ;
 		g_print("Fichier lu avec succès.\n") ;
-		afficherCoureur(ficheSignal) ;
+		chargerCoureur(ficheSignal) ;
 	}
 }
 
-void afficherCoureur(gpointer user_data)
+/*La fiche du coureur existe (on l'a vérifié dans trouverFichier), et on charge les informations inscrites dans le fichier directement
+dans la structure StructFicheCoureur.*/
+
+void chargerCoureur(gpointer user_data)
 {	
 	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
@@ -107,13 +110,10 @@ void afficherNotes(GtkWidget *objet, gpointer user_data)
 	
 	int compteur ;
 	FILE* fichierMax = NULL ;
-	printf("%s NOM\n", ficheCoureur->nom) ;
 	char *nomFichierMax = malloc(strlen(ficheCoureur->nom) + sizeof(char) * 5);
 	strcpy(nomFichierMax, ficheCoureur->nom) ;
 	strcat(nomFichierMax, "_max") ;
-	printf("%s \n", nomFichierMax) ;
 	fichierMax = fopen(nomFichierMax, "r") ;
-	printf("%s FICHIERMAX \n", nomFichierMax) ;
 
 	for(compteur = 0 ; compteur < 14 ; compteur ++)
 	{

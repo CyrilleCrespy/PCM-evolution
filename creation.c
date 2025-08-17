@@ -1,3 +1,8 @@
+/*La liste des pays et courses disponibles n'est pas intégrée dans le code, mais a deux fichiers textes, qui doivent être disponibles
+lors de l'exécution du programme. Ce dernier va ensuite lire ligne à ligne chaque fichier pour constituer, à chaque démarrage,
+les deux listes qui sont utilisés lors de la création du personnage. Cela permet d'ajouter ou d'enlever des pays au gré des besoins
+que pourraient avoir le créateur de la partie.*/
+
 void peuplerListe(char *liste)
 {
 	int compteur = 0 ;
@@ -58,6 +63,8 @@ void peuplerListe(char *liste)
 	}
 }
 
+//Le fichier existe et l'utilisateur veut le supprimer pour en recréer un du même nom.
+
 void suppressionCreation(GtkWidget *boutonOui, gpointer user_data)
 {
 	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
@@ -66,7 +73,6 @@ void suppressionCreation(GtkWidget *boutonOui, gpointer user_data)
 	if (remove(ficheCoureur->nom) == 0)
 	{
 		remplirJournal("Fiche supprimée à la demande de l'utilisateur.") ;
-		printf("Fichier coureur supprim%s.\n", é) ;
 	}
 	else
 	{
@@ -96,8 +102,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
 	GtkWidget *grilleCreation = (GtkWidget*)ficheSignal->grilleCreation ;
 	
-	printf("%s NOM AP\n", ficheSignal->ficheCoureur->nom) ;
-	
 	//On transformme le gchar en un int.
 	
 	const gchar *taille_str = gtk_editable_get_text(GTK_EDITABLE(ficheJoueur->taille)) ;
@@ -123,7 +127,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		if(ficheCoureur->taille < 150)
 		{
 			GtkWidget *erreur ;
-			printf("Trop petit.\n") ;
 			erreur = gtk_label_new("La taille entrée est trop petite. Minimum : 150.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
 			editableOK = 0 ;
@@ -131,7 +134,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		else if(ficheCoureur->taille > 200)
 		{
 			GtkWidget *erreur ;
-			printf("Trop grand.\n") ;
 			erreur = gtk_label_new("La taille entrée est trop grande. Maximum : 200.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
 			editableOK = 0 ;
@@ -141,7 +143,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 			GtkWidget *validation ;
 			printf("Taille valide.\n") ;
 			validation = gtk_label_new("La taille entrée est valide.") ;
-			printf("1\n") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), validation, 10, 0, 2, 1) ;
 		}
 	}
@@ -170,15 +171,13 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		if(ficheCoureur->poids < 50)
 		{
 			GtkWidget *erreur ;
-			printf("Trop petit.\n") ;
 			erreur = gtk_label_new("Le poids entré est trop petit. Minimum : 50.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
 			editableOK = 0 ;
 		}
 		else if(ficheCoureur->poids > 100)
 		{
-			GtkWidget *erreur ;
-			printf("Trop grand.\n") ;
+			GtkWidget *erreur ;;
 			erreur = gtk_label_new("Le poids entré est trop grand. Maximum : 100.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
 			editableOK = 0 ;
@@ -186,13 +185,10 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		else
 		{
 			GtkWidget *validation ;
-			printf("Taille valide.\n") ;
 			validation = gtk_label_new("Le poids entré est valide.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), validation, 10, 1, 2, 1) ;
 		}
 	}
-	
-	printf("%d %d %d status\n", editableOK, dropDownOK, dateOK) ;
 	
 	if (editableOK == 1 && dropDownOK == 1)
 	{
@@ -213,8 +209,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
 	GtkWidget *grilleCreation = (GtkWidget*)ficheSignal->grilleCreation ;
-	
-	printf("%s NOM AP\n", ficheSignal->ficheCoureur->nom) ;
 	
 	//On vérifie que les courses ne soient pas en doublon.
 	
@@ -250,7 +244,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	if (strcmp(ficheCoureur->course1, ficheCoureur->course2) == 0 || strcmp(ficheCoureur->course2, ficheCoureur->course3) == 0 || strcmp(ficheCoureur->course1, ficheCoureur->course3) == 0)
 	{
 		GtkWidget *erreurCourses ;
-		printf("Courses invalides : choisis-en trois différentes.\n") ;
 		erreurCourses = gtk_label_new("Courses invalides : choisis-en trois différentes.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), erreurCourses, 10, 2, 2, 1) ;
 		dropDownOK = 0 ;
@@ -259,7 +252,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	{
 		g_print("Validation.\n%s\n%s\n%s\n", ficheCoureur->course1, ficheCoureur->course2, ficheCoureur->course3) ;
 		GtkWidget *validationCourses ;
-		printf("Courses valides : trois courses différentes ont été choisies.\n") ;
 		validationCourses = gtk_label_new("Courses valides : trois courses différentes ont été choisies.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), validationCourses, 10, 2, 2, 1) ;
 		dropDownOK = 1 ;
@@ -305,7 +297,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 		g_free(noteAfficher) ;
 		
 		ficheCoureur->notes[compteur] = 50 ; //On initialise la valeur par défaut de chaque note.
-		printf("Note actuelle : %d.\n", ficheCoureur->notes[compteur]) ;
 	}
 		
 	GtkWidget *texteNotesMax ;
@@ -367,7 +358,6 @@ int calculStyle(int principal, int secondaire, char nom[250])
 	fichier = fopen(fichierMax, "w+") ;
 	if (fichier == NULL)
 	{
-		printf("Impossible d'ouvrir le fichier %s en %scriture. Dans creation.c, int calculStyle.\n", fichierMax, é) ;
 		perror("Erreur.\n") ;
 		exit(EXIT_FAILURE) ;
 	}
@@ -384,7 +374,6 @@ int calculStyle(int principal, int secondaire, char nom[250])
 		}
 		else
 		{
-			printf("Erreur lors de l'%scriture du maximum %d.\n", é, compteur + 1) ;
 			perror("Erreur.\n") ;
 			exit(EXIT_FAILURE) ;
 		}
