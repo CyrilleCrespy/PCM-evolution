@@ -56,7 +56,6 @@ void chargerCoureur(gpointer user_data)
 
 	FILE *fichier = NULL ;
 	fichier = fopen(ficheCoureur->nom, "r") ;
-	printf("Ouverture de %s.\n", ficheCoureur->nom) ;
 	fscanf(fichier, "%d %*s %*s %d %*s %*s %d", &ficheCoureur->style, &ficheCoureur->principal, &ficheCoureur->secondaire) ;
 	fscanf(fichier, "%d %*s", &ficheCoureur->taille) ;
 	fscanf(fichier, "%d %*s", &ficheCoureur->poids) ;

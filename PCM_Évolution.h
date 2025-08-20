@@ -82,7 +82,7 @@ void validerCoureur(GtkWidget *boutonValider, int *pointeur) ;
 void peuplerListe(char *liste) ;
 void demandeNomDeFichier() ;
 void trouverFichier (GtkWidget *boutonValider, gpointer user_data) ;
-void afficherCoureur(gpointer user_data) ;
+void chargerCoureur(gpointer user_data) ;
 void afficherNotes(GtkWidget *objet, gpointer user_data) ;
 void boutonsNotes(StructFicheCoureur *ficheCoureur, int compteur) ;
 void modification(int session, int points, char *caracteristiques[], int taille) ;
