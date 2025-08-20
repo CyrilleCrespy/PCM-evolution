@@ -201,10 +201,17 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
 		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheSignal) ;
 	}
+	else
+	{
+		GtkWidget *boutonVide ;
+		boutonVide = gtk_button_new_with_label("") ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), boutonVide, 1, 8, 5, 1) ;
+	}
 }
 
 void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_data)
 {
+	dropDownOK = 1 ;
 	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
@@ -241,7 +248,7 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	}
 	
 	//Si une comparaison renvoie 0 (même tableau de char deux fois), on affiche une erreur, car on souhaite que l'utilisateur choisisse trois courses.
-	if (strcmp(ficheCoureur->course1, ficheCoureur->course2) == 0 || strcmp(ficheCoureur->course2, ficheCoureur->course3) == 0 || strcmp(ficheCoureur->course1, ficheCoureur->course3) == 0)
+	if ((strcmp(ficheCoureur->course1, ficheCoureur->course2)) == 0 || (strcmp(ficheCoureur->course2, ficheCoureur->course3)) == 0 || (strcmp(ficheCoureur->course1, ficheCoureur->course3) == 0))
 	{
 		GtkWidget *erreurCourses ;
 		erreurCourses = gtk_label_new("Courses invalides : choisis-en trois différentes.") ;
@@ -313,6 +320,12 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 		boutonValider = gtk_button_new_with_label("Valider") ;
 		gtk_grid_attach(GTK_GRID (grilleCreation), boutonValider, 1, 8, 5, 1) ;
 		g_signal_connect(boutonValider, "clicked", G_CALLBACK(afficherNotes), ficheSignal) ;
+	}
+	else
+	{
+		GtkWidget *boutonVide ;
+		boutonVide = gtk_button_new_with_label("") ;
+		gtk_grid_attach(GTK_GRID (grilleCreation), boutonVide, 1, 8, 5, 1) ;
 	}
 }
 
