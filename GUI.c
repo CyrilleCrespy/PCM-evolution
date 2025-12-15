@@ -44,8 +44,6 @@ void initialisationFenetre (GtkApplication* PCM_Evolution, gpointer user_data)
 	gtk_grid_attach(GTK_GRID (grilleMenu), boutonAncienneFiche, 0, 10, 10, 5) ;
 	gtk_grid_attach(GTK_GRID (grilleMenu), boutonQuitter, 0, 20, 10, 5) ;
 	
-	g_print("Bienvenue dans PCM %svolution.\n", É) ; 
-	
 	g_assert(G_IS_APPLICATION (PCM_Evolution)) ;
 	
 	g_signal_connect(boutonNouvelleFiche, "clicked", G_CALLBACK(fenetreNouvelleFiche), NULL) ;
