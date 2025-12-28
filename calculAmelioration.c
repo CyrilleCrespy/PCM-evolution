@@ -47,10 +47,10 @@ int calculAugmentation(GtkWidget *boutonPlus, gpointer user_data)
 	
 	determinerCouleurNote(afficherMAJ) ;
 	
-	printf("%d noteChoisie\n", noteChoisie) ;
 	gtk_grid_attach(GTK_GRID (grilleModif), afficherMAJ, 4, ficheCalcul->selection, 1, 1) ;
 	
 	g_main_context_iteration(NULL, FALSE) ;
+	return 0 ;
 }
 
 int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
@@ -59,12 +59,11 @@ int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
 	GtkWidget *grilleModif = (GtkWidget*)ficheCalcul->grilleModif ;
 	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
-	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 
 	if(noteChoisie <= 50)
 	{
 		printf("Diminution impossible.\n") ;
-		return 0 ;
+		return -1 ;
 	}
 	else
 	{	
@@ -99,10 +98,10 @@ int calculDiminution(GtkWidget *boutonMoins, gpointer user_data)
 	
 	determinerCouleurNote(afficherMAJ) ;
 	
-	printf("%d noteChoisie\n", noteChoisie) ;
 	gtk_grid_attach(GTK_GRID (grilleModif), afficherMAJ, 4, ficheCalcul->selection, 1, 1) ;
 	
 	g_main_context_iteration(NULL, FALSE) ;
+	return 0 ;
 }
 
 void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
@@ -111,7 +110,6 @@ void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheCalcul->originel ;
 	GtkWidget *grilleModif = (GtkWidget*)ficheCalcul->grilleModif ;
 	int noteChoisie = (int)ficheCoureur->notes[ficheCalcul->selection] ;
-	int noteMax = (int)ficheCoureur->notesMax[ficheCalcul->selection] ;
 	int positionInitiale ;
 	int cout ;
 	int bonus ;
@@ -140,7 +138,6 @@ void determinerCoutPotentiel(GtkWidget *objet, gpointer user_data)
 		
 		GtkWidget *afficherPotentiel ;
 		GtkWidget *afficherPoints ;
-		GtkWidget *afficherMax ;
 		
 		char *potentiel ;
 		potentiel = (char *)malloc(2 * sizeof(char)) ;
@@ -200,10 +197,7 @@ void ajoutPoints(GtkWidget *objet, gpointer user_data)
 		pointsAjoutes = "0" ;
 	}
 	long ajouterPoints = strtol(pointsAjoutes, &charFin, 10) ;
-	printf("%ld POINTS\n", ajouterPoints) ;
-	printf("%d ACTUEL\n", ficheCoureur->points) ;
 	ficheCoureur->points = ficheCoureur->points + ajouterPoints ;
-	printf("%d ACTUEL\n", ficheCoureur->points) ;
 	
 	char *nombrePoints ;
 	nombrePoints = (char *)malloc(10 * sizeof(char)) ;

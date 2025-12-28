@@ -6,7 +6,6 @@ void trouverFichier (GtkWidget *boutonValider, gpointer user_data)
 	GtkWidget *grilleDialogue ;
 	const char *nomFichier = gtk_editable_get_text(GTK_EDITABLE(champNom)) ;
 	strcpy(ficheCoureur->nom, nomFichier) ;
-	char message[500] ;
 
 	FILE* fichier = NULL ;
 	fichier = fopen(nomFichier, "r") ;
@@ -14,7 +13,6 @@ void trouverFichier (GtkWidget *boutonValider, gpointer user_data)
 
 	if (fichier == NULL) //Le fichier demandé par l'utilisateur n'existe pas (il doit être dans le dossier courant).
 	{
-		GtkWidget *grilleExiste ;
 		grilleDialogue = gtk_grid_new() ;
 		
 		if(gtk_stack_get_child_by_name(GTK_STACK (pile), "Le fichier existe") == NULL)
@@ -46,13 +44,10 @@ void chargerCoureur(gpointer user_data)
 	ficheCoureur->style = 0 ;
 	
 	int compteur ;
-	char messageJournal[100] ;
 	int fichierOK ;
 
 	char cpe[30] ;
 	sprintf(cpe, "Courses par éstapes") ;
-
-	int notesInitiales[14] = {0} ;
 
 	FILE *fichier = NULL ;
 	fichier = fopen(ficheCoureur->nom, "r") ;

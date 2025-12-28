@@ -2,22 +2,21 @@ void enregistrer(StructFicheCoureur* pointeur)
 {	
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)pointeur ;
 	FILE* fichier = NULL ;
-	printf("Tentative d'ouverture de '%s.\n", ficheCoureur->nom) ;
 	fichier = fopen(ficheCoureur->nom, "w+") ;
 
 	if (remove(ficheCoureur->nom) == 0) //Suppression du fichier avec les données
 	{
-		printf("Fichier pr%sc%sdent supprim%s.\n", é, é, é) ;
+		remplirJournal("Fichier précédent supprimé.") ;
 	}
 	else
 	{
-		printf("Pas de fichier %s supprimer.\n", à) ;
+		remplirJournal("Pas de fichier à supprimer.") ;
 	}
 
 	fichier = fopen(ficheCoureur->nom, "w+") ;
 	if (fichier != NULL)
 	{
-		printf("Fichier %s ouvert.\n", ficheCoureur->nom) ;
+		remplirJournal("Fichier ouvert.") ;
 	}
 	else
 	{
@@ -52,8 +51,6 @@ void enregistrer(StructFicheCoureur* pointeur)
 
 	fclose(fichier) ;
 	
-	FILE *maximum = NULL ;
-	
 	enregistrerMax(ficheCoureur) ;
 	creerCopie(ficheCoureur->nom) ;
 }
@@ -66,7 +63,6 @@ void enregistrerMax(StructFicheCoureur *pointeur)
 	int compteur = 0 ;
 	
 	sprintf(fichierMax, "%s_max", ficheCoureur->nom) ;
-	printf("%s _MAX \n", fichierMax) ;
 	fichier = fopen(fichierMax, "w+") ;
 	if(fichier == NULL)
 	{
@@ -76,7 +72,7 @@ void enregistrerMax(StructFicheCoureur *pointeur)
 	{
 		while (compteur < 14)
 		{
-			fprintf(fichier, u8"%d\n", ficheCoureur->notesMax[compteur]) ;
+			fprintf(fichier, "%d\n", ficheCoureur->notesMax[compteur]) ;
 			compteur ++ ;
 		}
 	}
@@ -104,7 +100,6 @@ void creerCopie(char nom[250])
 int verifierDonnees(StructFicheCoureur *pointeur)
 {
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur *)pointeur ;
-	FILE* fichier = NULL ;
 	int compteur = 0 ;
 	int erreur = 0 ;
 
@@ -150,7 +145,6 @@ int verifierDonnees(StructFicheCoureur *pointeur)
 	}
 	if (erreur == 1)
 	{
-		printf("Erreur. Donn%ses enregistr%s impossibles.\n", é, é) ;
 		getchar() ;
 		return 0 ;
 	}

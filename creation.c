@@ -5,14 +5,13 @@ que pourraient avoir le créateur de la partie.*/
 
 void peuplerListe(char *liste)
 {
-	int compteur = 0 ;
 	FILE* fichier = NULL ;
 	fichier = fopen(liste, "r") ;
-	if (liste == "pays")
+	if (strcmp(liste, "pays") == 0)
 	{
 		pays = g_list_store_new(G_TYPE_OBJECT) ;
 	}
-	if (liste == "courses")
+	if (strcmp(liste, "courses") == 0)
 	{
 		courses = g_list_store_new(G_TYPE_OBJECT) ;
 	}
@@ -26,11 +25,11 @@ void peuplerListe(char *liste)
 		}
 		else
 		{
-			if (liste == "pays")
+			int compteur ;
+			if (strcmp(liste, "pays") == 0)
 			{	
 				char tampon[500] ;
 				fgets(tampon, 500, fichier) ;
-				int compteur ;
 				for (compteur = 0 ; tampon[compteur] != '\0' ; compteur ++)
 				{
 					if (tampon[compteur] == '\n' || tampon[compteur] == '\r')
@@ -42,11 +41,10 @@ void peuplerListe(char *liste)
 				tampon[compteur] = '\0' ;
 				g_list_store_append(G_LIST_STORE(pays), gtk_string_object_new(tampon)) ;
 			}
-			else if (liste == "courses")
+			else if (strcmp(liste, "courses") == 0)
 			{
 				char tampon[500] ;
 				fgets(tampon, 500, fichier) ;
-				int compteur ;
 				for (compteur = 0 ; tampon[compteur] != '\0' ; compteur ++)
 				{
 					if (tampon[compteur] == '\n' || tampon[compteur] == '\r')

@@ -75,7 +75,7 @@ int confirmationEntree() ;
 void remplirJournal(char *message) ;
 int choixPrincipal() ;
 int choixSecondaire() ;
-int calculStyle(int principal, int secondaire, char nom[]) ;
+int calculStyle(int principal, int secondaire, char nom[250]) ;
 int choixJourDeNaissance(int jourMax) ;
 void annuler(GtkWidget *boutonAnnuler, gpointer user_data) ;
 void validerCoureur(GtkWidget *boutonValider, int *pointeur) ;

@@ -56,7 +56,6 @@ void initialisationFenetre (GtkApplication* PCM_Evolution, gpointer user_data)
 void fenetreNouvelleFiche(GtkApplication* PCM_Evolution, gpointer user_data)
 {
 	GtkWidget *grilleNouveau ;
-	GtkWidget *grillePrincipale ;
 	GtkWidget *textePresentation ;
 	GtkWidget *texteNomDeFichier ;	
 	GtkWidget *boutonValider ;
@@ -101,7 +100,6 @@ void initialisationCoureur(GtkWidget *boutonNouvelleFiche, gpointer user_data)
 	//Les éléments interactifs qui doivent être transmis au signal de validation sont définis dans PCM_Évolution.h
 	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheJoueur *ficheJoueur = (StructFicheJoueur*)ficheSignal->ficheJoueur ;
-	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
 	
 	ficheJoueur = malloc(sizeof(StructFicheJoueur)) ;
 	ficheSignal->ficheJoueur = ficheJoueur ;
@@ -115,7 +113,6 @@ void initialisationCoureur(GtkWidget *boutonNouvelleFiche, gpointer user_data)
 	GtkWidget *texteCourse3 ;
 	GtkWidget *textePays ;
 	GtkWidget *texteDateNaissance ;
-	GtkWidget *boutonValider ;
 	GtkWidget *boutonAnnuler ;
 	
 	if (ficheJoueur == NULL)
@@ -224,14 +221,10 @@ int verificationExistanceDuFichier(GtkWidget *boutonValider, gpointer user_data)
 {
 	StructFicheSignal *ficheSignal = (StructFicheSignal*)user_data ;
 	StructFicheCoureur *ficheCoureur = (StructFicheCoureur*)ficheSignal->ficheCoureur ;
-	GtkWidget *messageErreur ;
-	GtkWidget *boutonSuppression ;
 	
 	const gchar *nomFichier = gtk_editable_get_text(GTK_EDITABLE(ficheSignal->champNomDeFichier)) ;
 		
 	strcpy(ficheCoureur->nom, nomFichier) ;
-	
-	char message[500] ;
 
 	FILE* fichier = NULL ;
 	fichier = fopen(ficheCoureur->nom, "r") ;
@@ -271,6 +264,7 @@ int verificationExistanceDuFichier(GtkWidget *boutonValider, gpointer user_data)
 		remplirJournal("Fiche inexistante. Création.") ;
 		initialisationCoureur(NULL, ficheSignal) ;
 	}	
+	return 0 ;
 }
 
 void determinerCouleurNote(GtkWidget *pointeur)
@@ -305,7 +299,6 @@ void determinerCouleurNote(GtkWidget *pointeur)
 void demandeNomDeFichier ()
 {
 	GtkWidget *demandeNom ;
-	GtkWidget *champNom ;
 	GtkWidget *boutonValider ;
 	GtkWidget *boutonAnnuler ;
 	GtkWidget *grilleChercherFiche ;
