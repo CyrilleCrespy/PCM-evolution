@@ -107,32 +107,8 @@ void viderGrillePrincipale() ;
 void determinerCouleurNote(GtkWidget *note) ;
 
 #ifdef Windows
-#define é "\x82"
-#define É "\x90"
-#define è "\x8A"
-#define à "\x85"
-#define À "\xB7"
-#define ê "\x88"
-#define î "\x8C"
-#define û "\x96"
-#define tiret "\xC4"
-#define clear "cls"
-#define symboleNumero "\xA7"
-#define DECALAGE 4
 #define ECRIRE_TEMPS (fprintf(fichier, "%lld : %s\n", horodatage, message))
 
 #else //Pour les systèmes d'exploitation normalement constitués
-#define é "é"
-#define É "É"
-#define è "è"
-#define à "à"
-#define À "À"
-#define ê "Ê"
-#define î "î"
-#define û "û"
-#define tiret "─"
-#define clear "clear"
-#define symboleNumero "°"
-#define DECALAGE 3
 #define ECRIRE_TEMPS (fprintf(fichier, "%ld : %s\n", horodatage, message))
 #endif

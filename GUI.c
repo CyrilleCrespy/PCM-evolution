@@ -230,7 +230,6 @@ int verificationExistanceDuFichier(GtkWidget *boutonValider, gpointer user_data)
 	const gchar *nomFichier = gtk_editable_get_text(GTK_EDITABLE(ficheSignal->champNomDeFichier)) ;
 		
 	strcpy(ficheCoureur->nom, nomFichier) ;
-	g_print("%s NOM VE\n", ficheCoureur->nom) ;
 	
 	char message[500] ;
 

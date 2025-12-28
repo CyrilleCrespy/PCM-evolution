@@ -50,7 +50,7 @@ void chargerCoureur(gpointer user_data)
 	int fichierOK ;
 
 	char cpe[30] ;
-	sprintf(cpe, "Courses par %stapes", é) ;
+	sprintf(cpe, "Courses par éstapes") ;
 
 	int notesInitiales[14] = {0} ;
 
@@ -80,11 +80,11 @@ void chargerCoureur(gpointer user_data)
 	fichierOK = verifierDonnees(ficheCoureur) ;
 	if (fichierOK == 1)
 	{
-		printf("Fichier de sauvegarde OK.\n") ;
+		remplirJournal("Fichier de sauvegarde OK.") ;
 	}
 	else
 	{
-		printf("Fichier de sauvegarde mal enregistr%s. Restauration.\n", é) ;
+		remplirJournal("Fichier de sauvegarde mal enregistré. Restauration.") ;
 		restaurerSauvegarde(ficheCoureur->nom) ;
 	}
 	

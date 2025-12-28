@@ -82,7 +82,6 @@ void suppressionCreation(GtkWidget *boutonOui, gpointer user_data)
 	sprintf(fichierMax, "%s_max", ficheCoureur->nom) ;
 	if (remove(fichierMax) == 0)
 	{
-		printf("Fichier max supprim%s.\n", é) ;
 		remplirJournal("Fichier max supprimé.") ;
 	}
 	else
@@ -115,7 +114,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 	//Taille.
 	if (*charFin != '\0')
 	{
-		g_print("Erreur de conversion.\n") ;
 		GtkWidget *erreur ;
 		erreur = gtk_label_new("Entre uniquement une taille composée de trois chiffres.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 0, 2, 1) ;
@@ -141,7 +139,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 		else
 		{
 			GtkWidget *validation ;
-			printf("Taille valide.\n") ;
 			validation = gtk_label_new("La taille entrée est valide.") ;
 			gtk_grid_attach(GTK_GRID(grilleCreation), validation, 10, 0, 2, 1) ;
 		}
@@ -159,7 +156,6 @@ void verificationEditable(GtkWidget *objet, gpointer user_data)
 	
 	if (*charFin != '\0')
 	{
-		g_print("Erreur de conversion.\n") ;
 		GtkWidget *erreur ;
 		erreur = gtk_label_new("Entre uniquement un poids composé de deux à trois chiffres.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), erreur, 10, 1, 2, 1) ;
@@ -257,7 +253,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	}
 	else
 	{
-		g_print("Validation.\n%s\n%s\n%s\n", ficheCoureur->course1, ficheCoureur->course2, ficheCoureur->course3) ;
 		GtkWidget *validationCourses ;
 		validationCourses = gtk_label_new("Courses valides : trois courses différentes ont été choisies.") ;
 		gtk_grid_attach(GTK_GRID(grilleCreation), validationCourses, 10, 2, 2, 1) ;
@@ -280,9 +275,6 @@ void verificationDropDown(GtkWidget *objet, GParamSpec *pspec, gpointer user_dat
 	
 	ficheCoureur->principal = gtk_drop_down_get_selected(ficheJoueur->principal) ;
 	ficheCoureur->secondaire = gtk_drop_down_get_selected(ficheJoueur->secondaire) ;
-	
-	g_print("Principal : %d.", ficheCoureur->principal) ;
-	g_print("Secondaire : %d.", ficheCoureur->secondaire) ;
 	
 	ficheCoureur->style = calculStyle(ficheCoureur->principal, ficheCoureur->secondaire, ficheCoureur->nom) ; //En fonction du style primaire et du style secondaire, détermine un code combinant ces deux paramètres. Il est utile pour chercher dans le fichier idoine les notes maximales attribuéer défaut à la combinaisons de styles désirée.
 
