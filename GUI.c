@@ -254,7 +254,7 @@ int verificationExistanceDuFichier(GtkWidget *boutonValider, gpointer user_data)
 		gtk_grid_attach(GTK_GRID(grilleDialogue), non, 2, 1, 1, 1) ;
 		
 		g_signal_connect(oui, "clicked", G_CALLBACK(suppressionCreation), ficheSignal) ;
-		g_signal_connect(non, "clicked", G_CALLBACK(gtk_window_destroy), GTK_WINDOW(ficheSignal->fenetrePrincipale)) ;
+		g_signal_connect(non, "clicked", G_CALLBACK(annuler), ficheSignal->fenetrePrincipale) ;
 		
 		gtk_stack_set_visible_child_name (GTK_STACK (pile), "Supprimer le fichier ?") ;
 		remplirJournal("Fiche du même nom existante.") ;
