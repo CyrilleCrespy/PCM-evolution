@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	peuplerListe("courses") ;
 	int status ;
 	gtk_init() ;
-	PCM_Evolution = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS) ;
+	PCM_Evolution = gtk_application_new ("application.pcm.evo", G_APPLICATION_DEFAULT_FLAGS) ;
 	
 	g_signal_connect (PCM_Evolution, "activate", G_CALLBACK (initialisationFenetre), NULL) ;
 	status = g_application_run (G_APPLICATION (PCM_Evolution), argc, argv) ;
