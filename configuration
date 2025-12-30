@@ -1,8 +1,8 @@
 Pot1  Pot2:0:00000
-Pot2  Pot3:0:00000
+Pot2  Pot3:0:00020
 Pot3  Pot4:2:00020
 Pot4  Pot5:2:00020
-Pot5  Pot6:2:00020
+Pot5  Pot6:2:00000
 Pot6  Pot7:0:00000
 Pot7  Pot8:0:00000
 50  03
@@ -76,12 +76,3 @@ Pot7  Pot8:0:00000
 83  06
 84  06
 2025
-
-//Fichier de configuration.
-L'évolution du potentiel est réglé palier par palier, avec plusieurs indications.
-La première est le système d'évolution :
-0 = cette augmentation n'est pas définie.
-1 = points d'évolution (achetés sur la chaîne).
-2 = points de chaîne.
-Les augmentations de potentiel sont énumérées notes par notes de 50 à 84, le programme se rapporte automatiquement à ligne qui correspond à la note dont le joueur veut augmenter le potentiel. Il détermine de combien peut augmenter ladite note en fonction du chiffre indiqué à droite.
-Ensuite, ce sont le coût de chaque augmentation de note par niveau.
