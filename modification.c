@@ -255,7 +255,7 @@ void afficherNotes(GtkWidget *objet, gpointer user_data)
 		ficheCopie[compteur] = malloc(sizeof(StructFicheCalcul)) ;
 	}
 	
-	for (compteur = 0 ; compteur < 14 ; compteur ++) //Chaque ligne associée à une note est reconstruite dynamiquement à chaque change de l'utilisateur.
+	for (compteur = 0 ; compteur < 14 ; compteur ++) //Chaque ligne associée à une note est reconstruite dynamiquement à chaque changement de l'utilisateur.
 	{
 		ficheCopie[compteur]->originel = ficheCoureur ;
 		ficheCopie[compteur]->selection = compteur ;
